@@ -71,33 +71,34 @@ const Rectangle REGIONES[4]={
 };
 const char* TOTAL_LOSAS="TOTAL LOSAS: %d/%d";
 
+// Variables globales
+
 Texture2D rogues;
 Texture2D tiles;
 
-int total_losas;
-int losas_dibujadas;
-
-Camera2D camara;
-
-int rango_horizontal;
-int rango_vertical;
-
 Personaje kit;
 
+int screenWidth;
+int screenHeight;
+int total_losas;
+int losas_dibujadas;
+int rango_horizontal;
+int rango_vertical;
+float delta;
+
+Camera2D camara;
 Vector2 destino;
 
-int main() {
-    // Initialization
-    //--------------------------------------------------------------------------------------
-    inicializar();
-    //--------------------------------------------------------------------------------------
 
+int main() {
+    inicializar();
 
     // Main game loop
     while (!WindowShouldClose()) {    // Detect window close button or ESC key
+        delta=GetFrameTime();
+        actualizar();
         BeginDrawing();
         ClearBackground(BLACK);
-        actualizar();
         dibujar();
         EndDrawing();
     }
@@ -111,8 +112,8 @@ int main() {
 }
 
 void inicializar() {
-    int screenWidth = 800;
-    int screenHeight = 450;
+    screenWidth = 1200;
+    screenHeight = 675;
 
     InitWindow(screenWidth, screenHeight, "Rogues");
 
@@ -150,15 +151,22 @@ void inicializar() {
 void actualizar() {
     kit.direccion.x=0;
     kit.direccion.y=0;
-    if (IsKeyDown(KEY_LEFT)) kit.direccion.x-=1;
-    if (IsKeyDown(KEY_RIGHT)) kit.direccion.x+=1;
+    if (IsKeyDown(KEY_LEFT)) {
+            kit.direccion.x-=1;
+            kit.area.width*=(kit.area.width < 0)? 1 : -1;
+    }
+    if (IsKeyDown(KEY_RIGHT)) {
+            kit.direccion.x+=1;
+            kit.area.width*=(kit.area.width > 0)? 1 : -1;
+    }
     if (IsKeyDown(KEY_UP)) kit.direccion.y-=1;
     if (IsKeyDown(KEY_DOWN)) kit.direccion.y+=1;
 
     // Normalizamos la direccion
     kit.direccion=Vector2Normalize(kit.direccion);
-    destino=Vector2Add(kit.posicion, Vector2Scale(kit.direccion, kit.velocidad*GetFrameTime()));
+    destino=Vector2Add(kit.posicion, Vector2Scale(kit.direccion, kit.velocidad*delta));
 
+    // Comprobamos que podemos movernos en la dirección pulsada
     if (!posicion_libre(destino)) return;
     kit.posicion=destino;
 
@@ -199,10 +207,10 @@ void dibujar() {
     EndMode2D();
 
     // Texto
-    Vector2 pospan=GetWorldToScreen2D(kit.posicion, camara);
-    DrawText(TextFormat("%d", GetFPS()), 10, 420, DIM_TEXTO, RED);
-    DrawText(TextFormat(TOTAL_LOSAS, losas_dibujadas, total_losas), 125, 420, DIM_TEXTO, RED);
-    DrawText(TextFormat("%.2f,%.2f / %.0f,%.0f", kit.posicion.x, kit.posicion.y, kit.losa.x, kit.losa.y), 350, 420, DIM_TEXTO, YELLOW);
+    //Vector2 pospan=GetWorldToScreen2D(kit.posicion, camara); // NO entiendo su uso
+    DrawText(TextFormat("%d", GetFPS()), 10, 650, DIM_TEXTO, RED);
+    DrawText(TextFormat(TOTAL_LOSAS, losas_dibujadas, total_losas), 125, 650, DIM_TEXTO, BLUE);
+    DrawText(TextFormat("%.2f,%.2f / %.0f,%.0f", kit.posicion.x, kit.posicion.y, kit.losa.x, kit.losa.y), 350, 650, DIM_TEXTO, YELLOW);
 }
 
 bool posicion_libre(Vector2) {
@@ -210,8 +218,8 @@ bool posicion_libre(Vector2) {
     int col=(int)(floor(destino.x/ANCHO_LOSA));
     int fila=(int)(floor(destino.y/ALTO_LOSA));
 
-    for (int i=fila; i<fila+1; i++) {
-        for (int j=col; j<col+1; j++) {
+    for (int i=fila; i<=fila+1; i++) {
+        for (int j=col; j<=col+1; j++) {
             if (ESCENARIO[i][j] <= 2) return false;
         }
     }
