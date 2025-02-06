@@ -1,0 +1,26 @@
+# depslib dependency file v1.0
+1738857902 source:c:\users\joelc\documents\programacion\projectc\practica\rogue\main.c
+	"raylib.h"
+	"raymath.h"
+	"stdio.h"
+	"stdbool.h"
+	"math.h"
+	"personaje.h"
+	"escenario.h"
+
+1738854152 c:\users\joelc\documents\programacion\projectc\practica\rogue\escenario.h
+
+1738858451 source:c:\users\joelc\documents\programacion\projectc\practica\rogue\personaje.c
+	"personaje.h"
+	"raymath.h"
+	"escenario.h"
+
+1738858795 c:\users\joelc\documents\programacion\projectc\practica\rogue\personaje.h
+	"raylib.h"
+
+1738856817 source:c:\users\joelc\documents\programacion\projectc\practica\rogue\escenario.c
+	"raylib.h"
+	"math.h"
+	"escenario.h"
+	"personaje.h"
+
