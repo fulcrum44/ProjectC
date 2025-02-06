@@ -1,9 +1,0 @@
-# depslib dependency file v1.0
-1738756644 source:c:\users\joelc\documents\proyectoscodeblocks\rogue_v0\main.c
-	"raylib.h"
-	"raymath.h"
-
-1738775674 source:c:\users\joelc\documents\programacion\projectc\practica\rogue_v0\main.c
-	"raylib.h"
-	"raymath.h"
-
