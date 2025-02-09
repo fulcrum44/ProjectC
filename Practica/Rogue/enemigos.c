@@ -67,7 +67,17 @@ void crear_enemigo() {
     enemigos[indice].area=(Rectangle){160,0,32,32};
     enemigos[indice].activo=true;
     enemigos[indice].velocidad=100;
-    enemigos[indice].desplazamiento=(Vector2){0,0};
+
+    do { // De inicio un enemigo suponemos que está patrullando y se mueve hacia un lado cambiando de dirección al encontrarse un muro
+        // Queremos solamente -1 ó 1 para determinar el sentido del movimiento
+        enemigos[indice].desplazamiento.x=rand()%3-1;
+        enemigos[indice].desplazamiento.y=rand()%3-1;
+    } while (enemigos[indice].desplazamiento.x == 0 && enemigos[indice].desplazamiento.y == 0 );
+    enemigos[indice].estado=PATRULLANDO;
+    enemigos[indice].vida=vida_enemigo();
+    // Hemos estado usando Rectangle para dibujar un trozo de un spritesheet que es algo puramente estático. Podemos usar igualmente la función para seleccionar una parte de nuestro dibujo en ejecución del juego y hacerlo dinámico como es un hitbox de un personaje o un enemigo
+    enemigos[indice].hitbox=(Rectangle){enemigos[indice].posicion.x, enemigos[indice].posicion.y, ANCHO_LOSA, ALTO_LOSA};
+    enemigos[indice].textoVida=(Vector2){enemigos[indice].posicion.x+12, enemigos[indice].posicion.y-10};
 
 }
 
@@ -75,19 +85,7 @@ void actualizar_enemigos() {
     // Configuramos el desplazamiento de los enemigos activos
     for (int i=0; i<MAX_ENEMIGOS; i++) {
         if (enemigos[i].activo) {
-            // Restamos las coordenadas en las que se ubican personaje y enemigo. Tanto si el resultado es negativo o positivo, obtendremos el desplazamiento que debe realizar el enemigo para llegar hasta el personaje.
-            enemigos[i].desplazamiento=Vector2Subtract(ren.posicion, enemigos[i].posicion);
-
-            if (fabs(enemigos[i].desplazamiento.x) >= 200 || fabs(enemigos[i].desplazamiento.y) >= 200) continue;
-
-            // Normalizamos desplazamiento
-            enemigos[i].desplazamiento=Vector2Normalize(enemigos[i].desplazamiento);
-            Vector2 destino=Vector2Add(enemigos[i].posicion, Vector2Scale(enemigos[i].desplazamiento, enemigos[i].velocidad*delta));
-
-            if (posicion_libre(destino)) enemigos[i].posicion=destino;
-
-            enemigos[i].losa.x=enemigos[i].posicion.x/ANCHO_LOSA;
-            enemigos[i].losa.y=enemigos[i].posicion.y/ALTO_LOSA;
+            actualizar_enemigo(&enemigos[i]);
         }
     }
 
@@ -103,6 +101,7 @@ void dibujar_enemigos() {
     for (int i=0; i<MAX_ENEMIGOS; i++) {
         if (!enemigos[i].activo) continue; // Solo dibujamos los enemigos activos
         DrawTextureRec(rogues, enemigos[i].area, enemigos[i].posicion, WHITE);
+        DrawText(TextFormat("%.0f", enemigos[i].vida), enemigos[i].textoVida.x, enemigos[i].textoVida.y, 8, (enemigos[i].vida < 30)? RED : GREEN);
     }
 }
 
@@ -112,4 +111,52 @@ float tiempo_aparicion() {
 
 void libera_enemigos() {
     free(nidos);
+}
+
+float vida_enemigo() {
+    return rand()%(MAX_VIDA_ENEMIGOS-MIN_VIDA_ENEMIGOS)+MIN_VIDA_ENEMIGOS;
+}
+
+void actualizar_enemigo(Enemigo *e) {
+    // Comprobamos el estado del enemigo
+    if (CheckCollisionRecs(e->hitbox, ren.hitbox)) e->estado=ATACANDO;
+    else if (Vector2Distance(e->posicion, ren.posicion) <= ALCANCE_ATAQUE) e->estado=CAZANDO;
+    else e->estado=PATRULLANDO;
+
+    // Acción del enemigo según su estado
+    switch (e->estado) {
+        case PATRULLANDO:
+            break;
+
+        case CAZANDO:
+            // Restamos las coordenadas en las que se ubican personaje y enemigo. Tanto si el resultado es negativo o positivo, obtendremos el desplazamiento que debe realizar el enemigo para llegar hasta el personaje.
+            e->desplazamiento=Vector2Subtract(ren.posicion, e->posicion);
+            break;
+
+        case ATACANDO:
+            e->desplazamiento.x=0;
+            e->desplazamiento.y=0;
+            e->vida-=RATIO_ATAQUE*delta;
+            ren.vida-=actualizar_vida_personaje();
+
+            if (e->vida <= 0) e->activo=false; // Enemigo eliminado
+            break;
+    }
+
+    // Desplazamiento
+    // Normalizamos desplazamiento
+    e->desplazamiento=Vector2Normalize(e->desplazamiento);
+    Vector2 destino=Vector2Add(e->posicion, Vector2Scale(e->desplazamiento, e->velocidad*delta));
+
+    if (posicion_libre(destino)) {
+            e->posicion=destino;
+            e->losa=(Vector2){floor(e->posicion.x/ANCHO_LOSA), floor(e->posicion.y/ALTO_LOSA)};
+            e->hitbox.x=e->posicion.x;
+            e->hitbox.y=e->posicion.y;
+            e->textoVida.x=e->posicion.x+12;
+            e->textoVida.y=e->posicion.y-10;
+    } else {
+        e->desplazamiento.x*=-1;
+        e->desplazamiento.y*=-1;
+    }
 }

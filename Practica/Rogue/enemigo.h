@@ -3,6 +3,16 @@
 #define MAX_ENEMIGOS 20
 #define MIN_TIEMPO_APARICION 3
 #define MAX_TIEMPO_APARICION 6
+#define MIN_VIDA_ENEMIGOS 40
+#define MAX_VIDA_ENEMIGOS 60
+#define ALCANCE_ATAQUE 100
+#define RATIO_ATAQUE 10
+
+typedef enum {
+    PATRULLANDO,
+    CAZANDO,
+    ATACANDO,
+} Estado;
 
 typedef struct {
     Rectangle area;
@@ -11,6 +21,10 @@ typedef struct {
     int velocidad;
     Vector2 losa;
     bool activo;
+    int estado;
+    float vida;
+    Rectangle hitbox;
+    Vector2 textoVida;
 } Enemigo;
 
 extern Texture2D rogues;
@@ -22,4 +36,5 @@ void actualizar_enemigos();
 void dibujar_enemigos();
 void libera_enemigos();
 float tiempo_aparicion();
-
+float vida_enemigo();
+void actualizar_enemigo(Enemigo*);
