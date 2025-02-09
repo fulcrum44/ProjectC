@@ -124,9 +124,25 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="crono.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="crono.h" />
+		<Unit filename="enemigo.h" />
+		<Unit filename="enemigos.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="escenario.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="escenario.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="personaje.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="personaje.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

@@ -6,6 +6,7 @@
 
 #include "personaje.h"
 #include "escenario.h"
+#include "enemigo.h"
 
 #define DIM_TEXTO 14
 
@@ -45,6 +46,7 @@ int main() {
         dibujar();
         EndDrawing();
     }
+    libera_enemigos();
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
@@ -68,6 +70,14 @@ void inicializar() {
     rogues = LoadTexture("rogues.png");
     tiles = LoadTexture("tiles.png");
 
+    // Cámara
+    camara=(Camera2D) {
+        (Vector2){screenWidth/2, screenHeight/2},
+        Vector2Zero(),
+        0.0f,
+        1.5f
+    };
+
     // Contamos losas
     total_losas=0;
     for (int i=0; i<ALTO_ESCENARIO; i++) {
@@ -79,17 +89,14 @@ void inicializar() {
     // Preparamos personaje
     ren=crear_personaje();
 
-    // Cámara
-    camara=(Camera2D) {
-        (Vector2){screenWidth/2, screenHeight/2},
-        Vector2Zero(),
-        0.0f,
-        1.5f
-    };
+    // Preparamos enemigos
+    inicilizar_enemigos();
+
 }
 
 void actualizar() {
     actualizar_personaje(&ren);
+    actualizar_enemigos();
 
     // Seguimiento cámara-personaje
     camara.target=ren.posicion;
@@ -101,7 +108,10 @@ void dibujar() {
     // Dibujamos el escenario
     losas_dibujadas=dibuja_escenario();
 
-    // Dibujamos el personaje - // preferible que sea lo último dibujado
+    // Dibujamos enemigos
+    dibujar_enemigos();
+
+    // Dibujamos el personaje - // preferible que sea lo último dibujado si queremos que se sobreponga ante todo sin ninguna configuración específica
     dibujar_personaje(&ren);
 
     EndMode2D();

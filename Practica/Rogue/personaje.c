@@ -11,7 +11,7 @@ Personaje crear_personaje() {
     ren.area = (Rectangle){64, 64, 32, 32};
     ren.posicion = (Vector2){200, 200};
     ren.desplazamiento = (Vector2){0, 0};
-    ren.velocidad=100;
+    ren.velocidad=110;
 
     return ren;
 }

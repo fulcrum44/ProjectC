@@ -7,4 +7,4 @@ int dibuja_escenario();
 extern const int ANCHO_LOSA;
 extern const int ALTO_LOSA;
 extern const int ESCENARIO[ALTO_ESCENARIO][ANCHO_ESCENARIO];
-extern const Rectangle REGIONES[4];
+extern const Rectangle REGIONES[5];

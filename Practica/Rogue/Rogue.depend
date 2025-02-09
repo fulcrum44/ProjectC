@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1738857902 source:c:\users\joelc\documents\programacion\projectc\practica\rogue\main.c
+1738949356 source:c:\users\joelc\documents\programacion\projectc\practica\rogue\main.c
 	"raylib.h"
 	"raymath.h"
 	"stdio.h"
@@ -7,10 +7,11 @@
 	"math.h"
 	"personaje.h"
 	"escenario.h"
+	"enemigo.h"
 
-1738854152 c:\users\joelc\documents\programacion\projectc\practica\rogue\escenario.h
+1738866711 c:\users\joelc\documents\programacion\projectc\practica\rogue\escenario.h
 
-1738858451 source:c:\users\joelc\documents\programacion\projectc\practica\rogue\personaje.c
+1738953221 source:c:\users\joelc\documents\programacion\projectc\practica\rogue\personaje.c
 	"personaje.h"
 	"raymath.h"
 	"escenario.h"
@@ -18,9 +19,32 @@
 1738858795 c:\users\joelc\documents\programacion\projectc\practica\rogue\personaje.h
 	"raylib.h"
 
-1738856817 source:c:\users\joelc\documents\programacion\projectc\practica\rogue\escenario.c
+1738866711 source:c:\users\joelc\documents\programacion\projectc\practica\rogue\escenario.c
 	"raylib.h"
 	"math.h"
 	"escenario.h"
 	"personaje.h"
+
+1738949613 c:\users\joelc\documents\programacion\projectc\practica\rogue\enemigo.h
+	"raylib.h"
+
+1738953179 source:c:\users\joelc\documents\programacion\projectc\practica\rogue\enemigos.c
+	"stdio.h"
+	"stdlib.h"
+	"raylib.h"
+	"raymath.h"
+	"time.h"
+	"enemigo.h"
+	"crono.h"
+	"escenario.h"
+	"personaje.h"
+
+1738864178 c:\users\joelc\documents\programacion\projectc\practica\rogue\crono.h
+	"stdbool.h"
+
+1738865583 source:c:\users\joelc\documents\programacion\projectc\practica\rogue\crono.c
+	"stdbool.h"
+	"crono.h"
+	"stddef.h"
+	"raylib.h"
 
