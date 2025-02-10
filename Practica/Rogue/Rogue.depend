@@ -58,7 +58,7 @@
 1739173844 c:\users\joelc\desktop\programacion\projectc\practica\rogue\crono.h
 	"stdbool.h"
 
-1739174656 source:c:\users\joelc\desktop\programacion\projectc\practica\rogue\enemigos.c
+1739181195 source:c:\users\joelc\desktop\programacion\projectc\practica\rogue\enemigos.c
 	"stdio.h"
 	"stdlib.h"
 	"math.h"
@@ -94,7 +94,7 @@
 	"escenario.h"
 	"enemigo.h"
 
-1739173844 source:c:\users\joelc\desktop\programacion\projectc\practica\rogue\personaje.c
+1739181195 source:c:\users\joelc\desktop\programacion\projectc\practica\rogue\personaje.c
 	"personaje.h"
 	"raymath.h"
 	"escenario.h"

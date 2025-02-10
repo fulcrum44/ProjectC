@@ -33,12 +33,16 @@ int rango_vertical;
 float delta;
 
 Camera2D camara;
+Music musica;
+Sound sonido;
+
 
 int main() {
     inicializar();
 
     // Main game loop
     while (!WindowShouldClose()) {    // Detect window close button or ESC key
+        UpdateMusicStream(musica);
         delta=GetFrameTime();
         actualizar();
         BeginDrawing();
@@ -47,11 +51,12 @@ int main() {
         EndDrawing();
     }
     libera_enemigos();
-
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
+    UnloadTexture(tiles);
+    UnloadTexture(rogues);
+    UnloadMusicStream(musica);
+    UnloadSound(sonido);
+    CloseAudioDevice();
     CloseWindow();        // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
 
     return 0;
 }
@@ -79,6 +84,12 @@ void inicializar() {
     rango_horizontal=((screenWidth/ANCHO_LOSA+5)/2)/camara.zoom; // Añadimos uno porque es muy fácil estar en un rango que incluya media celda en los lados, por lo que la añadimos directamente en caso de ser así y prevenimos fallos.
     rango_vertical=((screenHeight/ALTO_LOSA+5)/2)/camara.zoom;
 
+    // Audio
+    InitAudioDevice();
+    musica=LoadAudioStream("musica.mp3");
+    musica.looping=true;
+    sonido=LoadSound("golpe.wav");
+
     // Contamos losas
     total_losas=0;
     for (int i=0; i<ALTO_ESCENARIO; i++) {
@@ -92,6 +103,7 @@ void inicializar() {
 
     // Preparamos enemigos
     inicilizar_enemigos();
+
 
 }
 
