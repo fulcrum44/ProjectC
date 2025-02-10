@@ -63,8 +63,6 @@ void inicializar() {
     InitWindow(screenWidth, screenHeight, "Rogues");
 
     SetTargetFPS(60);
-    rango_horizontal=(screenWidth/2)/ANCHO_LOSA+1; // Añadimos uno porque es muy fácil estar en un rango que incluya media celda en los lados, por lo que la añadimos directamente en caso de ser así y prevenimos fallos.
-    rango_vertical=(screenHeight/2)/ALTO_LOSA+1;
 
     // Texturas
     rogues = LoadTexture("rogues.png");
@@ -77,6 +75,9 @@ void inicializar() {
         0.0f,
         1.5f
     };
+
+    rango_horizontal=((screenWidth/ANCHO_LOSA+5)/2)/camara.zoom; // Añadimos uno porque es muy fácil estar en un rango que incluya media celda en los lados, por lo que la añadimos directamente en caso de ser así y prevenimos fallos.
+    rango_vertical=((screenHeight/ALTO_LOSA+5)/2)/camara.zoom;
 
     // Contamos losas
     total_losas=0;

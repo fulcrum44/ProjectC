@@ -14,7 +14,6 @@ typedef struct {
     Vector2 losa;
     Rectangle hitbox;
     float vida;
-    Vector2 textoVida;
 } Personaje;
 
 Personaje crear_personaje();

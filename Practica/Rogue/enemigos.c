@@ -27,11 +27,9 @@ void inicilizar_enemigos() {
             if (ESCENARIO[i][j] == 4) {
                 if (contador_nidos == 0) nidos=malloc(sizeof(Vector2));
                 else {
-                    Vector2 *aux=realloc(nidos, sizeof(Vector2) * (contador_nidos+1));
-                    if (aux == NULL) exit(-1);
-                    nidos=aux;
+                    nidos=realloc(nidos, sizeof(Vector2) * (contador_nidos+1));
                 }
-
+                if (nidos == NULL) exit(-1);
                 nidos[contador_nidos]=(Vector2){j,i};
                 contador_nidos++;
             }
@@ -63,7 +61,8 @@ void crear_enemigo() {
     // Asignamos aleatoriamente el nido del enemigo y asignamos la posición del nido como posición inicial de nuestro nuevo enemigo
     Vector2 nido_elegido=nidos[rand()%contador_nidos];
 
-    enemigos[indice].posicion=(Vector2){nido_elegido.x * ANCHO_LOSA, nido_elegido.y * ALTO_LOSA};
+    enemigos[indice].posicion.x=nido_elegido.x * ANCHO_LOSA;
+    enemigos[indice].posicion.y=nido_elegido.y * ALTO_LOSA;
     enemigos[indice].area=(Rectangle){160,0,32,32};
     enemigos[indice].activo=true;
     enemigos[indice].velocidad=100;
@@ -77,7 +76,6 @@ void crear_enemigo() {
     enemigos[indice].vida=vida_enemigo();
     // Hemos estado usando Rectangle para dibujar un trozo de un spritesheet que es algo puramente estático. Podemos usar igualmente la función para seleccionar una parte de nuestro dibujo en ejecución del juego y hacerlo dinámico como es un hitbox de un personaje o un enemigo
     enemigos[indice].hitbox=(Rectangle){enemigos[indice].posicion.x, enemigos[indice].posicion.y, ANCHO_LOSA, ALTO_LOSA};
-    enemigos[indice].textoVida=(Vector2){enemigos[indice].posicion.x+12, enemigos[indice].posicion.y-10};
 
 }
 
@@ -101,7 +99,7 @@ void dibujar_enemigos() {
     for (int i=0; i<MAX_ENEMIGOS; i++) {
         if (!enemigos[i].activo) continue; // Solo dibujamos los enemigos activos
         DrawTextureRec(rogues, enemigos[i].area, enemigos[i].posicion, WHITE);
-        DrawText(TextFormat("%.0f", enemigos[i].vida), enemigos[i].textoVida.x, enemigos[i].textoVida.y, 8, (enemigos[i].vida < 30)? RED : GREEN);
+        DrawText(TextFormat("%.0f", enemigos[i].vida), enemigos[i].posicion.x+12, enemigos[i].posicion.y-10, 8, (enemigos[i].vida < 30)? RED : GREEN);
     }
 }
 
@@ -153,8 +151,6 @@ void actualizar_enemigo(Enemigo *e) {
             e->losa=(Vector2){floor(e->posicion.x/ANCHO_LOSA), floor(e->posicion.y/ALTO_LOSA)};
             e->hitbox.x=e->posicion.x;
             e->hitbox.y=e->posicion.y;
-            e->textoVida.x=e->posicion.x+12;
-            e->textoVida.y=e->posicion.y-10;
     } else {
         e->desplazamiento.x*=-1;
         e->desplazamiento.y*=-1;

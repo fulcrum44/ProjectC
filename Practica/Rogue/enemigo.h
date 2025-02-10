@@ -24,7 +24,6 @@ typedef struct {
     int estado;
     float vida;
     Rectangle hitbox;
-    Vector2 textoVida;
 } Enemigo;
 
 extern Texture2D rogues;

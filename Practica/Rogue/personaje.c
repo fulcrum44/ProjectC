@@ -14,7 +14,6 @@ Personaje crear_personaje() {
     ren.velocidad=110;
     ren.hitbox=(Rectangle){ren.posicion.x, ren.posicion.y, ANCHO_LOSA, ALTO_LOSA};
     ren.vida=VIDA_PERSONAJE;
-    ren.textoVida=(Vector2){ren.posicion.x+12, ren.posicion.y-10};
 
     return ren;
 }
@@ -47,7 +46,6 @@ void actualizar_personaje(Personaje *p) {
     p->losa.y=p->posicion.y/ALTO_LOSA;
     p->hitbox.x=p->posicion.x;
     p->hitbox.y=p->posicion.y;
-    p->textoVida=(Vector2){p->posicion.x+12, p->posicion.y-10};
 }
 
 float actualizar_vida_personaje() { // Teniendo la función aquí en el archivo de personaje tenemos más control concreto de la vida del personaje sin meternos en el código del enemigo directamente.
@@ -56,5 +54,5 @@ float actualizar_vida_personaje() { // Teniendo la función aquí en el archivo de
 
 void dibujar_personaje(Personaje *p) {
     DrawTextureRec(rogues, p->area, p->posicion, WHITE);
-    DrawText(TextFormat("%.0f", p->vida), p->textoVida.x, p->textoVida.y, 8, (p->vida < 30)? RED : GREEN);
+    DrawText(TextFormat("%.0f", p->vida), p->posicion.x+12, p->posicion.y-10, 8, (p->vida < 30)? RED : GREEN);
 }
