@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1739361185 source:c:\users\joelc\desktop\programacion\projectc\practica\platform\main.c
+	"stdlib.h"
+	"raylib.h"
+	"mundo.h"
+
+1739360566 c:\users\joelc\desktop\programacion\projectc\practica\platform\mundo.h
+
+1739361380 source:c:\users\joelc\desktop\programacion\projectc\practica\platform\mundo.c
+	"stdio.h"
+	"stdlib.h"
+	"string.h"
+	"stdbool.h"
+	"mundo.h"
+	"raylib.h"
+
