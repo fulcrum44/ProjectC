@@ -57,8 +57,8 @@ void inicializar() {
     // rango_horizontal=((screenWidth/54+5)/2)/camara.zoom; // Añadimos uno porque es muy fácil estar en un rango que incluya media celda en los lados, por lo que la añadimos directamente en caso de ser así y prevenimos fallos.
     // rango_vertical=((screenHeight/alto_losa+5)/2)/camara.zoom;
 
-    inicializa_personaje();
     crear_personaje(&personaje);
+    inicializa_textura_personaje();
 
 }
 

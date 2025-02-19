@@ -6,6 +6,7 @@
 
 Texture2D sprite;
 float duracion_fotograma=TIEMPO_FOTOGRAMA;
+int orientacion;
 
 extern float delta;
 extern int *terreno;
@@ -15,64 +16,81 @@ extern int alto_losa;
 extern int ancho_losa;
 
 
-void inicializa_personaje() { // Ahora mismo va a parecer un poco innecesario pero luego le podemos dar uso de verdad si tenemos varios personajes.
-    sprite=LoadTexture("resources\\character\\PNG\\Unarmed_Idle\\Unarmed_Idle_full.png");
+void inicializa_textura_personaje() { // Ahora mismo va a parecer un poco innecesario pero luego le podemos dar uso de verdad si tenemos varios personajes.
+    sprite=LoadTexture(PERSONAJE_QUIETO);
 }
 
 void crear_personaje(Personaje *p) {
-    //p->area=(Rectangle){64, 64, 32, 32};
     p->posicion=(Vector2){200, 200};
     p->direccion_desplazamiento=(Vector2){0,0};
     p->velocidad=110;
+    p->textura_activa=PARADO;
     p->tiempo=0;
     p->fotograma_actual=0;
     p->fotograma=(Rectangle){0,0, ANCHO_FOTOGRAMA, ALTO_FOTOGRAMA};
-    p->estado=PARADO;
-    p->hitbox.x=p->posicion.x+25;
-    p->hitbox.y=p->posicion.y+41;
+    p->hb_posicion.x=p->posicion.x+HB_X_ORIGEN;
+    p->hb_posicion.y=p->posicion.y+HB_Y_ORIGEN;
 }
 
 void actualizar_personaje(Personaje *p) {
     actualizar_fotogramas_personaje(p);
 
+    p->estado=PARADO;
     p->direccion_desplazamiento.x=0;
     p->direccion_desplazamiento.y=0;
 
     if (IsKeyDown(KEY_LEFT)) {
         p->estado=CORRIENDO;
         p->direccion_desplazamiento.x=-1;
+        orientacion=ORIENTACION_IZQ;
     }
     if (IsKeyDown(KEY_RIGHT)) {
         p->estado=CORRIENDO;
         p->direccion_desplazamiento.x=1;
+        orientacion=ORIENTACION_DER;
     }
     if (IsKeyDown(KEY_UP)) {
         p->estado=CORRIENDO;
         p->direccion_desplazamiento.y=-1;
+        orientacion=ORIENTACION_ARRIBA;
     }
     if (IsKeyDown(KEY_DOWN)) {
         p->estado=CORRIENDO;
         p->direccion_desplazamiento.y=1;
+        orientacion=ORIENTACION_ABAJO;
+    }
+
+    // Comprobamos el estado del personaje y su dirección cargamos las texturas correspondientes
+
+    if (p->estado == CORRIENDO || p->estado == PARADO) p->fotograma.y=ALTO_FOTOGRAMA * orientacion; // Cambio de direccion en los fotogramas
+
+    if (p->estado == PARADO && !p->textura_activa == PARADO) {
+        UnloadTexture(sprite);
+        sprite=LoadTexture(PERSONAJE_QUIETO);
+        p->textura_activa=PARADO;
+    } else if (p->estado == CORRIENDO && !p->textura_activa == CORRIENDO) {
+        UnloadTexture(sprite);
+        sprite=LoadTexture(PERSONAJE_CORRIENDO);
+        p->textura_activa=CORRIENDO;
     }
 
     // Normalizamos
     p->direccion_desplazamiento=Vector2Normalize(p->direccion_desplazamiento);
     Vector2 destino=Vector2Add(p->posicion, Vector2Scale(p->direccion_desplazamiento, p->velocidad*delta));
-    //Vector2 destino_hitbox=Vector2Add(p->hitbox, Vector2Scale(p->direccion_desplazamiento, p->velocidad*delta));
+    Vector2 destino_hitbox=Vector2Add(p->hb_posicion, Vector2Scale(p->direccion_desplazamiento, p->velocidad*delta));
 
+    // DEBUG
     //printf("\nDestino(%0.2f, %0.2f)", destino.x, destino.y);
-
-   // printf("\n%d", *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (6 * ancho_sala) + 6));
+    // printf("\n%d", *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (6 * ancho_sala) + 6));
 
     // Comprobamos si personaje se puede mover en la dirección pulsada
-    if (!suelo_transitable(&p->losa, destino)) {
+    if (!suelo_transitable(&p->losa, destino_hitbox)) {
         //printf("\nNo transitable");
         return;
     }
     p->posicion=destino;
+    p->hb_posicion=destino_hitbox;
 
-    //p->hitbox.x=p->posicion.x+25;
-    //p->hitbox.y=p->posicion.y+41;
 }
 
 void actualizar_fotogramas_personaje(Personaje *p) {
@@ -95,25 +113,45 @@ void dibujar_personaje(Personaje *p) {
     DrawTextureRec(sprite, p->fotograma, p->posicion, WHITE);
     //DrawTextureRec(sprite, p->area, p->posicion, WHITE);
 
-    //DrawRectangle(200,200,30,30,WHITE);
+    //DrawRectangle(p->hb_posicion.x,p->hb_posicion.y,15,7,WHITE);
 }
 
 bool suelo_transitable(Vector2 *losa, Vector2 destino) {
-    // El array terreno contiene los datos de cada losa y sus capas de la sala
-    // Convertimos coordenadas del destino en losas
+    int losa_x, losa_y;
+    int esquina=0;
+    bool transitable;
+    int estado_terreno;
 
-    int losa_x=floor(destino.x/ancho_losa);
-    int losa_y=floor(destino.y/alto_losa);
+    do {
+        transitable=true;
+        esquina++;
+        switch(esquina) {
+            case 1:
+                losa_x=floor(destino.x/ancho_losa);
+                losa_y=floor(destino.y/alto_losa);
+                break;
 
-    //printf("\n%d - %d", losa_x, losa_y);
-    int estado_terreno=*(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y * ancho_sala) + losa_x);
+            case 2:
+                losa_x=floor((destino.x+HB_LONG_HORIZONTAL)/ancho_losa);
+                losa_y=floor(destino.y/alto_losa);
+                break;
 
-    //printf("\n%d", ancho_sala);
-    //printf("\n%d", alto_sala);
+            case 3:
+                losa_x=floor(destino.x/ancho_losa);
+                losa_y=floor((destino.y+HB_LONG_VERTICAL)/alto_losa);
+                break;
 
-    printf("\n%d", estado_terreno);
+            case 4:
+                losa_x=floor((destino.x+HB_LONG_HORIZONTAL)/ancho_losa);
+                losa_y=floor((destino.y+HB_LONG_VERTICAL)/alto_losa);
+                break;
 
-    if (estado_terreno != 0) return true;
+        }
+        estado_terreno=*(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y * ancho_sala) + losa_x);
+        if (estado_terreno == 0) transitable=false;
+    } while (transitable && esquina < 4);
+
+    if (transitable) return true;
     else return false;
 }
 
