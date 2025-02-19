@@ -3,7 +3,6 @@
 #include "string.h"
 #include "raylib.h"
 #include "room.h"
-#include "unistd.h"
 
 int nivel_actual;
 char nombre_archivo[20];
@@ -33,7 +32,7 @@ int preparar_juego() {
     if (cantidad_niveles == 0) return(-1);
 
     // Empezamos el juego en la sala de preparación
-    inicializa_nivel(1);
+    inicializa_nivel(0);
 
     return 0;
 }
@@ -57,6 +56,7 @@ void inicializa_nivel(int nivel) {
     sscanf(strstr(datos_archivo, ETIQ_ALTO_LOSA)+strlen(ETIQ_ALTO_LOSA), "%d", &alto_losa);
     sscanf(strstr(datos_archivo, ETIQ_NOMBRE_TILESET)+strlen(ETIQ_NOMBRE_TILESET), "%[^\n]", nombre_tileset);
 
+    // DEBUG
     printf("\n%d", ancho_sala);
     printf("\n%d", alto_sala);
     printf("\n%d", col_tileset);
@@ -64,7 +64,6 @@ void inicializa_nivel(int nivel) {
     printf("\n%d", ancho_losa);
     printf("\n%d\n", alto_losa);
 
-    //UnloadFileText(nombre_archivo);
     datos_archivo=LoadFileText(nombre_archivo);
 
     // Leemos y guardamos los datos propios de la configuración de aspecto de la sala.
@@ -89,8 +88,21 @@ void inicializa_nivel(int nivel) {
         cursor=strstr(cursor, ETIQ_DATOS_SALA)+strlen(ETIQ_DATOS_SALA); // El cursor se moverá al inicio de los datos que estamos leyendo de la siguiente capa.
     }
 
+    //Debug
+    /*for (int i=0; i<CANTIDAD_CAPAS_SALA; i++) {
+        printf("\n\n Capa: %d", i);
+        for (int j=0; j<alto_sala; j++) {
+            printf("\n");
+            for (int k=0; k<ancho_sala; k++) {
+                printf("%d ", *(terreno + (i * ancho_sala * alto_sala) + (j * ancho_sala) + k));
+            }
+        }
+    } */
+
+     printf("\n\n%d\n\n", *(terreno + (1 * ancho_sala * alto_sala) + (8 * ancho_sala) + 10));
+
     // Cargamos texturas
-    volcan=LoadTexture("src\\volcano_set.png");
+    volcan=LoadTexture("resources\\volcano_set.png");
 
     // Array con las texturas de la sala
     int filas_tileset=losas_tileset/col_tileset;
@@ -101,15 +113,13 @@ void inicializa_nivel(int nivel) {
             exit(-1);
     }
 
-    tiles[0]=(Rectangle){0,0,0,0}; // Los indices de un tileset empiezan en 0. Inutilizamos la primera posicion del array.
+    tiles[0]=(Rectangle){0,0,0,0}; // Los indices de un tileset empiezan en 1. Inutilizamos la primera posicion del array.
 
     for (int i=0; i<filas_tileset; i++) {
         for (int j=0; j<col_tileset; j++) {
-            tiles[1 + (i * col_tileset) + j]=(Rectangle){j*ancho_losa, i*alto_losa, ancho_losa, alto_losa};
+            tiles[1+(i * col_tileset) + j]=(Rectangle){j*ancho_losa, i*alto_losa, ancho_losa, alto_losa};
         }
     }
-
-    printf("\nHola");
 }
 
 void dibuja_nivel() {

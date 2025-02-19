@@ -14,6 +14,9 @@
 #define ETIQ_ANCHO_LOSA "\"tilewidth\":"
 #define ETIQ_ALTO_LOSA "\"tileheight\":"
 
+// ETIQUETAS CAPAS
+#define CAPA_SUELO 1
+
 int preparar_juego();
 void inicializa_nivel(int);
 void dibuja_nivel();

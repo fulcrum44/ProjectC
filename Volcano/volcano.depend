@@ -1,15 +1,27 @@
 # depslib dependency file v1.0
-1739754645 source:c:\users\joelc\documents\programacion\projectc\volcano\main.c
+1739894595 source:c:\users\joelc\documents\programacion\projectc\volcano\main.c
+	"stdlib.h"
 	"raylib.h"
+	"raymath.h"
 	"room.h"
+	"character.h"
 
-1739747606 c:\users\joelc\documents\programacion\projectc\volcano\room.h
+1739897377 c:\users\joelc\documents\programacion\projectc\volcano\room.h
 
-1739755051 source:c:\users\joelc\documents\programacion\projectc\volcano\room.c
+1739923523 source:c:\users\joelc\documents\programacion\projectc\volcano\room.c
 	"stdio.h"
 	"stdlib.h"
 	"string.h"
 	"raylib.h"
 	"room.h"
-	"unistd.h"
+
+1739923197 source:c:\users\joelc\documents\programacion\projectc\volcano\character.c
+	"stdio.h"
+	"raylib.h"
+	"raymath.h"
+	"character.h"
+	"room.h"
+
+1739899475 c:\users\joelc\documents\programacion\projectc\volcano\character.h
+	"raylib.h"
 
