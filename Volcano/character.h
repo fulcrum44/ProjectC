@@ -24,6 +24,7 @@ typedef struct {
     int fotograma_actual;
     Rectangle fotograma;
     Estado estado;
+    Rectangle hitbox;
 } Personaje;
 
 void inicializa_personaje();

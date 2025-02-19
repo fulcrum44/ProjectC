@@ -28,6 +28,8 @@ void crear_personaje(Personaje *p) {
     p->fotograma_actual=0;
     p->fotograma=(Rectangle){0,0, ANCHO_FOTOGRAMA, ALTO_FOTOGRAMA};
     p->estado=PARADO;
+    p->hitbox.x=p->posicion.x+25;
+    p->hitbox.y=p->posicion.y+41;
 }
 
 void actualizar_personaje(Personaje *p) {
@@ -39,13 +41,16 @@ void actualizar_personaje(Personaje *p) {
     if (IsKeyDown(KEY_LEFT)) {
         p->estado=CORRIENDO;
         p->direccion_desplazamiento.x=-1;
-    } else if (IsKeyDown(KEY_RIGHT)) {
+    }
+    if (IsKeyDown(KEY_RIGHT)) {
         p->estado=CORRIENDO;
         p->direccion_desplazamiento.x=1;
-    } else if (IsKeyDown(KEY_UP)) {
+    }
+    if (IsKeyDown(KEY_UP)) {
         p->estado=CORRIENDO;
         p->direccion_desplazamiento.y=-1;
-    } else if (IsKeyDown(KEY_DOWN)) {
+    }
+    if (IsKeyDown(KEY_DOWN)) {
         p->estado=CORRIENDO;
         p->direccion_desplazamiento.y=1;
     }
@@ -53,8 +58,9 @@ void actualizar_personaje(Personaje *p) {
     // Normalizamos
     p->direccion_desplazamiento=Vector2Normalize(p->direccion_desplazamiento);
     Vector2 destino=Vector2Add(p->posicion, Vector2Scale(p->direccion_desplazamiento, p->velocidad*delta));
+    //Vector2 destino_hitbox=Vector2Add(p->hitbox, Vector2Scale(p->direccion_desplazamiento, p->velocidad*delta));
 
-    // printf("\nDestino(%0.2f, %0.2f)", destino.x, destino.y);
+    //printf("\nDestino(%0.2f, %0.2f)", destino.x, destino.y);
 
    // printf("\n%d", *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (6 * ancho_sala) + 6));
 
@@ -64,6 +70,9 @@ void actualizar_personaje(Personaje *p) {
         return;
     }
     p->posicion=destino;
+
+    //p->hitbox.x=p->posicion.x+25;
+    //p->hitbox.y=p->posicion.y+41;
 }
 
 void actualizar_fotogramas_personaje(Personaje *p) {
@@ -93,10 +102,14 @@ bool suelo_transitable(Vector2 *losa, Vector2 destino) {
     // El array terreno contiene los datos de cada losa y sus capas de la sala
     // Convertimos coordenadas del destino en losas
 
-    int losa_x=(int)destino.x/ancho_sala;
-    int losa_y=(int)destino.y/alto_sala;
+    int losa_x=floor(destino.x/ancho_losa);
+    int losa_y=floor(destino.y/alto_losa);
 
-    int estado_terreno=*(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_x * ancho_sala) + losa_y);
+    //printf("\n%d - %d", losa_x, losa_y);
+    int estado_terreno=*(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y * ancho_sala) + losa_x);
+
+    //printf("\n%d", ancho_sala);
+    //printf("\n%d", alto_sala);
 
     printf("\n%d", estado_terreno);
 

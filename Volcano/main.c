@@ -73,5 +73,7 @@ void dibujar() {
     dibuja_nivel();
     dibujar_personaje(&personaje);
 
+
     EndMode2D();
+    DrawText(TextFormat("Posicion: %.2f, %.2f", personaje.posicion.x, personaje.posicion.y), 250, 350, 12, GREEN);
 }
