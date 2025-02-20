@@ -52,5 +52,6 @@ void actualizar_personaje(Personaje*);
 void dibujar_personaje(Personaje*);
 void actualizar_fotogramas_personaje(Personaje*);
 bool suelo_transitable(Vector2*, Vector2);
+bool hb_esquina(Vector2);
 
 

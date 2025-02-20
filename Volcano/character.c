@@ -39,22 +39,22 @@ void actualizar_personaje(Personaje *p) {
     p->direccion_desplazamiento.x=0;
     p->direccion_desplazamiento.y=0;
 
-    if (IsKeyDown(KEY_LEFT)) {
+    if (IsKeyDown(KEY_A)) {
         p->estado=CORRIENDO;
         p->direccion_desplazamiento.x=-1;
         orientacion=ORIENTACION_IZQ;
     }
-    if (IsKeyDown(KEY_RIGHT)) {
+    if (IsKeyDown(KEY_D)) {
         p->estado=CORRIENDO;
         p->direccion_desplazamiento.x=1;
         orientacion=ORIENTACION_DER;
     }
-    if (IsKeyDown(KEY_UP)) {
+    if (IsKeyDown(KEY_W)) {
         p->estado=CORRIENDO;
         p->direccion_desplazamiento.y=-1;
         orientacion=ORIENTACION_ARRIBA;
     }
-    if (IsKeyDown(KEY_DOWN)) {
+    if (IsKeyDown(KEY_S)) {
         p->estado=CORRIENDO;
         p->direccion_desplazamiento.y=1;
         orientacion=ORIENTACION_ABAJO;
@@ -98,7 +98,7 @@ void actualizar_fotogramas_personaje(Personaje *p) {
     //printf("\nDelta: %.2f", p->tiempo);
     if (p->tiempo >= duracion_fotograma) {
         p->fotograma_actual++;
-        p->fotograma_actual%=FOTOGRAMAS;
+        p->fotograma_actual%=FOTOGRAMAS; // Si orientacion_p es 3 el personaje está mirando hacia arriba
         p->tiempo=0;
         p->fotograma.x=p->fotograma_actual * ANCHO_FOTOGRAMA;
 
@@ -122,9 +122,14 @@ bool suelo_transitable(Vector2 *losa, Vector2 destino) {
     bool transitable;
     int estado_terreno;
 
+
     do {
         transitable=true;
         esquina++;
+
+        // DEBO REVISAR //losa_x=floor(destino.x + (esquina-1%2 * HB_LONG_HORIZONTAL)/ancho_losa);
+        //losa_y=floor(destino.y + (esquina/2 * HB_LONG_VERTICAL)/alto_losa);
+
         switch(esquina) {
             case 1:
                 losa_x=floor(destino.x/ancho_losa);

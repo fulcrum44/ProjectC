@@ -8,8 +8,12 @@ void inicializar();
 void actualizar();
 void dibujar();
 
-const int screenWidth = 1440;
-const int screenHeight = 1080;
+//const int screenWidth = 1440;
+//const int screenHeight = 1080;
+
+const int screenWidth = 1080;
+const int screenHeight = 720;
+
 float delta;
 int rango_horizontal;
 int rango_vertical;
