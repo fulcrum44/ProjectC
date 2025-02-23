@@ -16,6 +16,7 @@
 
 // ETIQUETAS CAPAS
 #define CAPA_SUELO 1
+#define CAPA_COLISION 4
 
 int preparar_juego();
 void inicializa_nivel(int);

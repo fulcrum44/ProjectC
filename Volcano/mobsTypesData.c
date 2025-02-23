@@ -37,9 +37,9 @@ const Dimensiones HITBOX_COLISIONES[]={
     (Dimensiones){16, 16}, // DUENDE_MAGMA
     (Dimensiones){16, 16}, // CHISPA_MAGMA
     (Dimensiones){16, 13}, // SLIME
-    (Dimensiones){16, 1}, // CENTINELA
-    (Dimensiones){16, 4}, // SETA_MAGMA
-    (Dimensiones){16, 3} // CABEZON
+    (Dimensiones){1, 16}, // CENTINELA
+    (Dimensiones){4, 16}, // SETA_MAGMA
+    (Dimensiones){3, 16} // CABEZON
 };
 
 const Vector2 ORIGEN_HB[]={ // Los vectores que tienen el valor {0,0} no se usarán. El origen del hitbox es el mismo que el de la textura.
@@ -52,12 +52,12 @@ const Vector2 ORIGEN_HB[]={ // Los vectores que tienen el valor {0,0} no se usar
 };
 
 const int VELOCIDADES[]={
-    100,
-    100,
-    100,
-    100,
-    100,
-    100,
+    10,
+    10,
+    10,
+    10,
+    10,
+    10,
 };
 
 const int MONSTRUO_VIDA[]={

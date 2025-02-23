@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1740271576 source:c:\users\joelc\documents\programacion\projectc\volcano\main.c
+1740314662 source:c:\users\joelc\documents\programacion\projectc\volcano\main.c
 	"stdlib.h"
 	"raylib.h"
 	"raymath.h"
@@ -7,23 +7,26 @@
 	"character.h"
 	"mobs.h"
 
-1739979390 c:\users\joelc\documents\programacion\projectc\volcano\room.h
+1740338995 c:\users\joelc\documents\programacion\projectc\volcano\room.h
 
-1740252944 source:c:\users\joelc\documents\programacion\projectc\volcano\room.c
+1740343685 source:c:\users\joelc\documents\programacion\projectc\volcano\room.c
 	"stdio.h"
 	"stdlib.h"
 	"string.h"
 	"raylib.h"
 	"room.h"
+	"character.h"
+	"mobs.h"
 
-1740257290 source:c:\users\joelc\documents\programacion\projectc\volcano\character.c
+1740347821 source:c:\users\joelc\documents\programacion\projectc\volcano\character.c
 	"stdio.h"
+	"string.h"
 	"raylib.h"
 	"raymath.h"
 	"character.h"
 	"room.h"
 
-1740246714 c:\users\joelc\documents\programacion\projectc\volcano\character.h
+1740347861 c:\users\joelc\documents\programacion\projectc\volcano\character.h
 	"raylib.h"
 
 1740052344 source:c:\users\joelc\desktop\programacion\projectc\volcano\character.c
@@ -52,14 +55,17 @@
 	"raylib.h"
 	"room.h"
 
-1740273711 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
+1740330063 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
 	"stdio.h"
 	"stdlib.h"
 	"string.h"
+	"time.h"
 	"raylib.h"
+	"raymath.h"
 	"mobs.h"
+	"character.h"
 
-1740273830 c:\users\joelc\documents\programacion\projectc\volcano\mobs.h
+1740329971 c:\users\joelc\documents\programacion\projectc\volcano\mobs.h
 	"raylib.h"
 	"mobsTypesData.h"
 
@@ -78,7 +84,7 @@
 	"raylib.h"
 	"dimensiones_struct.h"
 
-1740273905 source:c:\users\joelc\documents\programacion\projectc\volcano\mobstypesdata.c
+1740316824 source:c:\users\joelc\documents\programacion\projectc\volcano\mobstypesdata.c
 	"raylib.h"
 	"dimensiones_struct.h"
 

@@ -3,6 +3,8 @@
 #include "string.h"
 #include "raylib.h"
 #include "room.h"
+#include "character.h"
+#include "mobs.h"
 
 int nivel_actual;
 char nombre_archivo[20];
@@ -15,9 +17,13 @@ int col_tileset;
 int losas_tileset;
 int ancho_losa;
 int alto_losa;
+int losa_x_reja;
+int losa_y_reja;
 
 Texture2D volcan;
 Rectangle *tiles;
+
+extern Personaje personaje;
 
 int preparar_juego() {
     int indice=0;
@@ -32,7 +38,7 @@ int preparar_juego() {
     if (cantidad_niveles == 0) return(-1);
 
     // Empezamos el juego en la sala de preparación
-    inicializa_nivel(1);
+    inicializa_nivel(0);
 
     return 0;
 }
@@ -80,6 +86,12 @@ void inicializa_nivel(int nivel) {
         for (int j=0; j<alto_sala; j++){
             for (int k=0; k<ancho_sala; k++){
                 sscanf(cursor, "%d", (terreno + (i * ancho_sala * alto_sala) + (j * ancho_sala) + k));
+
+                if (*(terreno + (i * ancho_sala * alto_sala) + (j * ancho_sala) + k) == 827) {
+                    losa_x_reja=k;
+                    losa_y_reja=j;
+                }
+
                 if (j == alto_sala - 1 && k == ancho_sala - 1) continue; // No queremos cambiar aún el cursor cuando llegemos al último dato leído de la capa actual.
                 cursor=strstr(cursor, ",")+2;
                 //printf("\nCursor: %d", cursor);
@@ -99,8 +111,6 @@ void inicializa_nivel(int nivel) {
             }
         }
     } */
-
-     printf("\n\n%d\n\n", *(terreno + (1 * ancho_sala * alto_sala) + (8 * ancho_sala) + 10));
 
     // Cargamos texturas
     volcan=LoadTexture("resources\\volcano_set.png");
@@ -138,11 +148,14 @@ void dibuja_nivel() {
 void finaliza_nivel() {
     free(terreno);
     free(tiles);
-    UnloadTexture(volcan); // Realmente no haría falta ya que en todos los niveles uso las mismas texturas
+    libera_monstruos();
+    //UnloadTexture(volcan); // Realmente no haría falta ya que en todos los niveles uso las mismas texturas
 }
 
 void siguiente_nivel() {
     finaliza_nivel();
     nivel_actual++;
     inicializa_nivel(nivel_actual);
+    posicion_inicial_nivel(&personaje);
+    inicializa_monstruos();
 }

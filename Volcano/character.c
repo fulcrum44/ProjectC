@@ -1,4 +1,5 @@
 #include "stdio.h"
+#include "string.h"
 #include "raylib.h"
 #include "raymath.h"
 #include "character.h"
@@ -14,6 +15,9 @@ extern int alto_sala;
 extern int ancho_sala;
 extern int alto_losa;
 extern int ancho_losa;
+extern char *datos_archivo;
+extern int losa_x_reja;
+extern int losa_y_reja;
 
 
 void inicializa_textura_personaje() { // Ahora mismo va a parecer un poco innecesario pero luego le podemos dar uso de verdad si tenemos varios personajes.
@@ -21,15 +25,13 @@ void inicializa_textura_personaje() { // Ahora mismo va a parecer un poco innece
 }
 
 void crear_personaje(Personaje *p) {
-    p->posicion=(Vector2){250, 200}; // ESTO DEBE VARIAR SEGÚN EL NIVEL EN EL QUE ENTREMOS
+    posicion_inicial_nivel(p); // ESTO DEBE VARIAR SEGÚN EL NIVEL EN EL QUE ENTREMOS
     p->direccion_desplazamiento=(Vector2){0,0};
     p->velocidad=110;
     p->textura_activa=P_PARADO;
     p->tiempo=0;
     p->fotograma_actual=0;
     p->fotograma=(Rectangle){0,0, ANCHO_FOTOGRAMA, ALTO_FOTOGRAMA};
-    p->hb_posicion.x=p->posicion.x+HB_X_ORIGEN;
-    p->hb_posicion.y=p->posicion.y+HB_Y_ORIGEN;
 }
 
 void actualizar_personaje(Personaje *p) {
@@ -39,26 +41,39 @@ void actualizar_personaje(Personaje *p) {
     p->direccion_desplazamiento.x=0;
     p->direccion_desplazamiento.y=0;
 
-    if (IsKeyDown(KEY_A)) {
+    bool arriba = IsKeyDown(KEY_W);
+    bool izquierda = IsKeyDown(KEY_A);
+    bool abajo = IsKeyDown(KEY_S);
+    bool derecha = IsKeyDown(KEY_D);
+
+    if (izquierda) {
         p->estado=P_CORRIENDO;
         p->direccion_desplazamiento.x=-1;
         orientacion=ORIENTACION_IZQ;
     }
-    if (IsKeyDown(KEY_D)) {
+    if (derecha) {
         p->estado=P_CORRIENDO;
         p->direccion_desplazamiento.x=1;
         orientacion=ORIENTACION_DER;
     }
-    if (IsKeyDown(KEY_W)) {
+    if (arriba) {
         p->estado=P_CORRIENDO;
         p->direccion_desplazamiento.y=-1;
         orientacion=ORIENTACION_ARRIBA;
     }
-    if (IsKeyDown(KEY_S)) {
+    if (abajo) {
         p->estado=P_CORRIENDO;
         p->direccion_desplazamiento.y=1;
         orientacion=ORIENTACION_ABAJO;
     }
+
+    if ((derecha || izquierda) && !suelo_transitable(Vector2Add(p->hb_posicion, (Vector2){(derecha)? 1 : -1, 0}))) {
+        p->direccion_desplazamiento.x=0;
+    }
+    if ((arriba || abajo) && !suelo_transitable(Vector2Add(p->hb_posicion, (Vector2){0, (abajo)? 1 : -1}))) {
+        p->direccion_desplazamiento.y=0;
+    }
+
 
     // Comprobamos el estado del personaje y su dirección cargamos las texturas correspondientes
 
@@ -85,9 +100,9 @@ void actualizar_personaje(Personaje *p) {
 
     // Comprobamos si personaje se puede mover en la dirección pulsada. Usamos la hb_posicion para eso.
     if (!suelo_transitable(destino_hitbox)) {
-        //printf("\nNo transitable");
         return;
     }
+
     p->posicion=destino;
     p->hb_posicion=destino_hitbox;
 
@@ -113,7 +128,7 @@ void dibujar_personaje(Personaje *p) {
     DrawTextureRec(sprite, p->fotograma, p->posicion, WHITE);
     //DrawTextureRec(sprite, p->area, p->posicion, WHITE);
 
-    //DrawRectangle(p->hb_posicion.x,p->hb_posicion.y,15,7,WHITE);
+    DrawRectangle(p->hb_posicion.x,p->hb_posicion.y,HB_LONG_HORIZONTAL,HB_LONG_VERTICAL,WHITE);
 }
 
 bool suelo_transitable(Vector2 destino) { // Antes le pasabamos el puntero a Vector2 losa. Puede que más adelante lo use.
@@ -153,10 +168,32 @@ bool suelo_transitable(Vector2 destino) { // Antes le pasabamos el puntero a Vec
 
         }
         estado_terreno=*(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y * ancho_sala) + losa_x);
+
+        //printf("\n%d", estado_terreno);
         if (estado_terreno == 0) transitable=false;
+        if (estado_terreno == 463) siguiente_nivel();
+        if (estado_terreno == 776) {
+            *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y * ancho_sala) + losa_x)=777;
+            printf("\nREJA: %d - %d", losa_y_reja, losa_x_reja);
+            *(terreno + (CAPA_COLISION * ancho_sala * alto_sala) + (losa_y_reja * ancho_sala) + losa_x_reja)=0;
+            *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y_reja * ancho_sala) + losa_x_reja)=854;
+        }
     } while (transitable && esquina < 4);
 
     if (transitable) return true;
-    else return true;
+    else return false;
+}
+
+void posicion_inicial_nivel(Personaje *p) {
+    char *cursor;
+
+    cursor=strstr(datos_archivo, ETIQ_NOMBRE_PERSONAJE)+strlen(ETIQ_NOMBRE_PERSONAJE);
+    sscanf(strstr(cursor, ETIQ_X_OBJETO)+strlen(ETIQ_X_OBJETO), "%f", &p->posicion.x);
+    sscanf(strstr(cursor, ETIQ_Y_OBJETO)+strlen(ETIQ_Y_OBJETO), "%f", &p->posicion.y);
+
+    printf("\nx: %f - y: %f", p->posicion.x, p->posicion.y);
+
+    p->hb_posicion.x=p->posicion.x+HB_X_ORIGEN;
+    p->hb_posicion.y=p->posicion.y+HB_Y_ORIGEN;
 }
 

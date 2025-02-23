@@ -73,6 +73,7 @@ void inicializar() {
 
 void actualizar() {
     actualizar_personaje(&personaje);
+    actualizar_monstruos();
     camara.target=personaje.posicion;
 }
 

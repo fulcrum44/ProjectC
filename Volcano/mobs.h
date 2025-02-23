@@ -7,8 +7,15 @@
 
 #define TIPOS_MONSTRUO 6
 
+// DATOS ESTADO MONSTRUOS
+#define PROB_CAMBIO_DIRECCION 2
+#define RANGO_VISION 50
+#define RANGO_ATAQUE 5
+
+// DATOS FOTOGRAMAS
 #define TIEMPO_FOTOGRAMA 0.15f
 
+// ETIQUETAS EXTRACCIÓN DATOS MONSTRUOS
 #define ETIQ_OBJETOS_SALA "\"objects\":["
 #define ETIQ_TIPO_OBJETO "\"type\":\""
 #define ETIQ_X_OBJETO "\"x\":"
@@ -39,6 +46,7 @@ typedef struct {
 typedef enum {
     M_PARADO,
     M_DEAMBULANDO,
+    M_PERSIGUIENDO,
     M_ATACANDO,
 } EstadoMonstruo;
 
@@ -56,10 +64,14 @@ typedef struct {
     EstadoMonstruo textura_activa;
     Vector2 hb_posicion; // Este
     Rectangle hitbox_ataque; // También podemos acceder a eso a traves del tipo
+    int vida;
+    int ataque_hp;
 } Monstruo;
 
 void inicializa_monstruos();
 void actualizar_monstruos();
 void actualizar_monstruo(Monstruo*);
 void dibujar_monstruos();
+void actualizar_fotogramas_monstruo(Monstruo*);
+void libera_monstruos();
 EtiquetaMonstruo conversion_char_enum(char*);

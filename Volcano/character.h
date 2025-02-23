@@ -10,10 +10,16 @@
 #define TIEMPO_FOTOGRAMA 0.15f
 
 // DIMENSIONES Y POSICION HITBOX RELATIVAS PERSONAJE
-#define HB_X_ORIGEN 24
+#define HB_X_ORIGEN 26
 #define HB_Y_ORIGEN 37
 #define HB_LONG_VERTICAL 7
-#define HB_LONG_HORIZONTAL 15
+#define HB_LONG_HORIZONTAL 13
+
+// POSICIONES INCIALES NIVEL
+#define ETIQ_NOMBRE_PERSONAJE "\"name\":\"personaje\","
+#define ETIQ_X_OBJETO "\"x\":"
+#define ETIQ_Y_OBJETO "\"y\":"
+
 
 // ORIENTACIONES PERSONAJE
 #define ORIENTACION_ABAJO 0
@@ -53,5 +59,6 @@ void dibujar_personaje(Personaje*);
 void actualizar_fotogramas_personaje(Personaje*);
 bool suelo_transitable(Vector2);
 bool hb_esquina(Vector2);
+void posicion_inicial_nivel(Personaje*);
 
 
