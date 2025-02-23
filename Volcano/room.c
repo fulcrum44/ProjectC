@@ -32,7 +32,7 @@ int preparar_juego() {
     if (cantidad_niveles == 0) return(-1);
 
     // Empezamos el juego en la sala de preparación
-    inicializa_nivel(0);
+    inicializa_nivel(1);
 
     return 0;
 }
@@ -54,7 +54,7 @@ void inicializa_nivel(int nivel) {
     sscanf(strstr(datos_archivo, ETIQ_LOSAS_TILESET)+strlen(ETIQ_LOSAS_TILESET), "%d", &losas_tileset);
     sscanf(strstr(datos_archivo, ETIQ_ANCHO_LOSA)+strlen(ETIQ_ANCHO_LOSA), "%d", &ancho_losa);
     sscanf(strstr(datos_archivo, ETIQ_ALTO_LOSA)+strlen(ETIQ_ALTO_LOSA), "%d", &alto_losa);
-    sscanf(strstr(datos_archivo, ETIQ_NOMBRE_TILESET)+strlen(ETIQ_NOMBRE_TILESET), "%[^\n]", nombre_tileset);
+    sscanf(strstr(datos_archivo, ETIQ_NOMBRE_TILESET)+strlen(ETIQ_NOMBRE_TILESET), "%[^\"]", nombre_tileset); // No lo estoy usando?
 
     // DEBUG
     printf("\n%d", ancho_sala);
@@ -63,6 +63,7 @@ void inicializa_nivel(int nivel) {
     printf("\n%d", losas_tileset);
     printf("\n%d", ancho_losa);
     printf("\n%d\n", alto_losa);
+    printf("%s", nombre_tileset);
 
     datos_archivo=LoadFileText(nombre_archivo);
 

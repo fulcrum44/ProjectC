@@ -128,9 +128,18 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="character.h" />
+		<Unit filename="dimensiones_struct.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="mobs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="mobs.h" />
+		<Unit filename="mobsTypesData.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="mobsTypesData.h" />
 		<Unit filename="room.c">
 			<Option compilerVar="CC" />
 		</Unit>

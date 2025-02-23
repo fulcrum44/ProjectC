@@ -3,16 +3,17 @@
 #include "raymath.h"
 #include "room.h"
 #include "character.h"
+#include "mobs.h"
 
 void inicializar();
 void actualizar();
 void dibujar();
 
-//const int screenWidth = 1440;
-//const int screenHeight = 1080;
+const int screenWidth = 1440;
+const int screenHeight = 1080;
 
-const int screenWidth = 1080;
-const int screenHeight = 720;
+//const int screenWidth = 1080;
+//const int screenHeight = 720;
 
 float delta;
 int rango_horizontal;
@@ -61,8 +62,12 @@ void inicializar() {
     // rango_horizontal=((screenWidth/54+5)/2)/camara.zoom; // Añadimos uno porque es muy fácil estar en un rango que incluya media celda en los lados, por lo que la añadimos directamente en caso de ser así y prevenimos fallos.
     // rango_vertical=((screenHeight/alto_losa+5)/2)/camara.zoom;
 
+    // Personaje
     crear_personaje(&personaje);
     inicializa_textura_personaje();
+
+    // Monstruos
+    inicializa_monstruos();
 
 }
 
@@ -75,8 +80,8 @@ void dibujar() {
     BeginMode2D(camara);
 
     dibuja_nivel();
+    dibujar_monstruos();
     dibujar_personaje(&personaje);
-
 
     EndMode2D();
     DrawText(TextFormat("Posicion: %.2f, %.2f", personaje.posicion.x, personaje.posicion.y), 250, 350, 12, GREEN);

@@ -21,10 +21,10 @@ void inicializa_textura_personaje() { // Ahora mismo va a parecer un poco innece
 }
 
 void crear_personaje(Personaje *p) {
-    p->posicion=(Vector2){200, 200};
+    p->posicion=(Vector2){250, 200}; // ESTO DEBE VARIAR SEGÚN EL NIVEL EN EL QUE ENTREMOS
     p->direccion_desplazamiento=(Vector2){0,0};
     p->velocidad=110;
-    p->textura_activa=PARADO;
+    p->textura_activa=P_PARADO;
     p->tiempo=0;
     p->fotograma_actual=0;
     p->fotograma=(Rectangle){0,0, ANCHO_FOTOGRAMA, ALTO_FOTOGRAMA};
@@ -35,43 +35,43 @@ void crear_personaje(Personaje *p) {
 void actualizar_personaje(Personaje *p) {
     actualizar_fotogramas_personaje(p);
 
-    p->estado=PARADO;
+    p->estado=P_PARADO;
     p->direccion_desplazamiento.x=0;
     p->direccion_desplazamiento.y=0;
 
     if (IsKeyDown(KEY_A)) {
-        p->estado=CORRIENDO;
+        p->estado=P_CORRIENDO;
         p->direccion_desplazamiento.x=-1;
         orientacion=ORIENTACION_IZQ;
     }
     if (IsKeyDown(KEY_D)) {
-        p->estado=CORRIENDO;
+        p->estado=P_CORRIENDO;
         p->direccion_desplazamiento.x=1;
         orientacion=ORIENTACION_DER;
     }
     if (IsKeyDown(KEY_W)) {
-        p->estado=CORRIENDO;
+        p->estado=P_CORRIENDO;
         p->direccion_desplazamiento.y=-1;
         orientacion=ORIENTACION_ARRIBA;
     }
     if (IsKeyDown(KEY_S)) {
-        p->estado=CORRIENDO;
+        p->estado=P_CORRIENDO;
         p->direccion_desplazamiento.y=1;
         orientacion=ORIENTACION_ABAJO;
     }
 
     // Comprobamos el estado del personaje y su dirección cargamos las texturas correspondientes
 
-    if (p->estado == CORRIENDO || p->estado == PARADO) p->fotograma.y=ALTO_FOTOGRAMA * orientacion; // Cambio de direccion en los fotogramas
+    if (p->estado == P_CORRIENDO || p->estado == P_PARADO) p->fotograma.y=ALTO_FOTOGRAMA * orientacion; // Cambio de direccion en los fotogramas
 
-    if (p->estado == PARADO && !p->textura_activa == PARADO) {
+    if (p->estado == P_PARADO && !p->textura_activa == P_PARADO) {
         UnloadTexture(sprite);
         sprite=LoadTexture(PERSONAJE_QUIETO);
-        p->textura_activa=PARADO;
-    } else if (p->estado == CORRIENDO && !p->textura_activa == CORRIENDO) {
+        p->textura_activa=P_PARADO;
+    } else if (p->estado == P_CORRIENDO && !p->textura_activa == P_CORRIENDO) {
         UnloadTexture(sprite);
         sprite=LoadTexture(PERSONAJE_CORRIENDO);
-        p->textura_activa=CORRIENDO;
+        p->textura_activa=P_CORRIENDO;
     }
 
     // Normalizamos
@@ -83,8 +83,8 @@ void actualizar_personaje(Personaje *p) {
     //printf("\nDestino(%0.2f, %0.2f)", destino.x, destino.y);
     // printf("\n%d", *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (6 * ancho_sala) + 6));
 
-    // Comprobamos si personaje se puede mover en la dirección pulsada
-    if (!suelo_transitable(&p->losa, destino_hitbox)) {
+    // Comprobamos si personaje se puede mover en la dirección pulsada. Usamos la hb_posicion para eso.
+    if (!suelo_transitable(destino_hitbox)) {
         //printf("\nNo transitable");
         return;
     }
@@ -116,13 +116,13 @@ void dibujar_personaje(Personaje *p) {
     //DrawRectangle(p->hb_posicion.x,p->hb_posicion.y,15,7,WHITE);
 }
 
-bool suelo_transitable(Vector2 *losa, Vector2 destino) {
+bool suelo_transitable(Vector2 destino) { // Antes le pasabamos el puntero a Vector2 losa. Puede que más adelante lo use.
     int losa_x, losa_y;
     int esquina=0;
     bool transitable;
     int estado_terreno;
 
-
+    // hb_posicion es un punto en la coordenadas, pero vamos a simular un rectangulo moviendo el vector para poder comprobar las cuatro esquinas del rectángulo ficticio
     do {
         transitable=true;
         esquina++;
@@ -157,6 +157,6 @@ bool suelo_transitable(Vector2 *losa, Vector2 destino) {
     } while (transitable && esquina < 4);
 
     if (transitable) return true;
-    else return false;
+    else return true;
 }
 

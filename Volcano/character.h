@@ -27,23 +27,23 @@
 
 
 typedef enum {
-    PARADO,
-    CORRIENDO,
-    ATACANDO,
-} Estado;
+    P_PARADO,
+    P_CORRIENDO,
+    P_ATACANDO,
+} EstadoPersonaje;
 
 typedef struct {
     Vector2 posicion;
     Vector2 direccion_desplazamiento;
     int velocidad;
-    Vector2 losa;
+    // Vector2 losa; // No lo estamos usando ahora mismo
     float tiempo;
     int fotograma_actual;
     Rectangle fotograma;
-    Estado estado;
-    Estado textura_activa;
+    EstadoPersonaje estado;
+    EstadoPersonaje textura_activa;
     Vector2 hb_posicion;
-    Rectangle hitbox;
+    Rectangle hitbox_ataque; // Este será el hitbox para el combate
 } Personaje;
 
 void crear_personaje(Personaje*);
@@ -51,7 +51,7 @@ void inicializa_textura_personaje();
 void actualizar_personaje(Personaje*);
 void dibujar_personaje(Personaje*);
 void actualizar_fotogramas_personaje(Personaje*);
-bool suelo_transitable(Vector2*, Vector2);
+bool suelo_transitable(Vector2);
 bool hb_esquina(Vector2);
 
 
