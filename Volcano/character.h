@@ -40,6 +40,7 @@
 #define BOTON 776
 #define BOTON_PULSADO 777
 #define REJA_ABIERTA 854
+#define REJA_CERRADA 827
 
 
 typedef enum {

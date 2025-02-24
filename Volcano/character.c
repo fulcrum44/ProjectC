@@ -18,6 +18,7 @@ extern int ancho_losa;
 extern char *datos_archivo;
 extern int losa_x_reja;
 extern int losa_y_reja;
+extern int total_botones;
 
 
 void inicializa_textura_personaje() { // Ahora mismo va a parecer un poco innecesario pero luego le podemos dar uso de verdad si tenemos varios personajes.
@@ -116,8 +117,6 @@ void actualizar_fotogramas_personaje(Personaje *p) {
         p->fotograma_actual%=FOTOGRAMAS; // Si orientacion_p es 3 el personaje está mirando hacia arriba
         p->tiempo=0;
         p->fotograma.x=p->fotograma_actual * ANCHO_FOTOGRAMA;
-
-        //if (p->fotograma_actual == 0) p->fotograma.y+=ALTO_FOTOGRAMA; // Para un animacion en una posicion no hay que bajar en el eje Y
     }
 
     //printf("\n%d", p->fotograma_actual);
@@ -207,9 +206,14 @@ bool hb_esquina(Vector2 esquina, int sujeto) {
 
     if (losa_esquina == BOTON) {
         *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y * ancho_sala) + losa_x)=BOTON_PULSADO;
+        total_botones--;
+
         // DEBUG//printf("\nREJA: %d - %d", losa_y_reja, losa_x_reja);
-        *(terreno + (CAPA_COLISION * ancho_sala * alto_sala) + (losa_y_reja * ancho_sala) + losa_x_reja)=0;
-        *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y_reja * ancho_sala) + losa_x_reja)=REJA_ABIERTA;
+
+        if (total_botones <= 0) { // Todos los botones tienen que haber sido pulsados para que la reja se abra
+            *(terreno + (CAPA_COLISION * ancho_sala * alto_sala) + (losa_y_reja * ancho_sala) + losa_x_reja)=0;
+            *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y_reja * ancho_sala) + losa_x_reja)=REJA_ABIERTA;
+        }
     }
 
     return true;

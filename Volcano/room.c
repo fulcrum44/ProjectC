@@ -19,6 +19,7 @@ int ancho_losa;
 int alto_losa;
 int losa_x_reja;
 int losa_y_reja;
+int total_botones=0;
 
 Texture2D volcan;
 Rectangle *tiles;
@@ -82,22 +83,23 @@ void inicializa_nivel(int nivel) {
 
     cursor=strstr(datos_archivo, ETIQ_DATOS_SALA)+strlen(ETIQ_DATOS_SALA);
     for (int i=0; i<CANTIDAD_CAPAS_SALA; i++){
-        //printf("\nCursor: %d", cursor);
         for (int j=0; j<alto_sala; j++){
             for (int k=0; k<ancho_sala; k++){
                 sscanf(cursor, "%d", (terreno + (i * ancho_sala * alto_sala) + (j * ancho_sala) + k));
 
-                if (*(terreno + (i * ancho_sala * alto_sala) + (j * ancho_sala) + k) == 827) {
+                // Almacenamos en una variable aparte los botones presentes en el terreno del nivel actual.
+                if (*(terreno + (i * ancho_sala * alto_sala) + (j * ancho_sala) + k) == BOTON) total_botones++;
+
+                // Almacenamos también la posición en losas donde se encuentra la reja cerrada del nivel actual.
+                if (*(terreno + (i * ancho_sala * alto_sala) + (j * ancho_sala) + k) == REJA_CERRADA) {
                     losa_x_reja=k;
                     losa_y_reja=j;
                 }
 
                 if (j == alto_sala - 1 && k == ancho_sala - 1) continue; // No queremos cambiar aún el cursor cuando llegemos al último dato leído de la capa actual.
-                cursor=strstr(cursor, ",")+2;
-                //printf("\nCursor: %d", cursor);
+                cursor=strstr(cursor, ",")+2; // Reasiganos el cursor a nuestra conveniencia.
             }
         }
-        // cursor=strstr(datos_archivo, ETIQ_DATOS_SALA)+strlen(ETIQ_DATOS_SALA); /////////////////////// ESTO ESTABA JODIENDO EL DIBUJADO ////////////////////////////
         cursor=strstr(cursor, ETIQ_DATOS_SALA)+strlen(ETIQ_DATOS_SALA); // El cursor se moverá al inicio de los datos que estamos leyendo de la siguiente capa.
     }
 
