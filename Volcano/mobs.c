@@ -112,9 +112,6 @@ void actualizar_monstruos() {
 void actualizar_monstruo(Monstruo* m) {
     //toDO // actualizar_fotogramas_monstruo(m);
 
-    //m->direccion_desplazamiento.x=0;
-    //m->direccion_desplazamiento.y=0;
-
     // Calculamos la distancia del monstruo con respecto al personaje. Lo guardamos primero en una variable aparte.
     Vector2 diferencia=Vector2Subtract(personaje.posicion, m->posicion);
     float distancia=Vector2Distance(m->posicion, personaje.posicion);
@@ -147,7 +144,7 @@ void actualizar_monstruo(Monstruo* m) {
     // Desplazamiento
     Vector2 destino = Vector2Add(m->posicion, Vector2Scale(m->direccion_desplazamiento, m->velocidad * delta));
     Vector2 destino_hitbox = Vector2Add(m->hb_posicion, Vector2Scale(m->direccion_desplazamiento, m->velocidad * delta));
-    if (!suelo_transitable(destino_hitbox)) {
+    if (!suelo_transitable(destino_hitbox, MONSTRUO)) {
         return;
     }
 

@@ -67,10 +67,10 @@ void actualizar_personaje(Personaje *p) {
         orientacion=ORIENTACION_ABAJO;
     }
 
-    if ((derecha || izquierda) && !suelo_transitable(Vector2Add(p->hb_posicion, (Vector2){(derecha)? 1 : -1, 0}))) {
+    if ((derecha || izquierda) && !suelo_transitable(Vector2Add(p->hb_posicion, (Vector2){(derecha)? 1 : -1, 0}), PERSONAJE)) {
         p->direccion_desplazamiento.x=0;
     }
-    if ((arriba || abajo) && !suelo_transitable(Vector2Add(p->hb_posicion, (Vector2){0, (abajo)? 1 : -1}))) {
+    if ((arriba || abajo) && !suelo_transitable(Vector2Add(p->hb_posicion, (Vector2){0, (abajo)? 1 : -1}), PERSONAJE)) {
         p->direccion_desplazamiento.y=0;
     }
 
@@ -99,7 +99,7 @@ void actualizar_personaje(Personaje *p) {
     // printf("\n%d", *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (6 * ancho_sala) + 6));
 
     // Comprobamos si personaje se puede mover en la dirección pulsada. Usamos la hb_posicion para eso.
-    if (!suelo_transitable(destino_hitbox)) {
+    if (!suelo_transitable(destino_hitbox, PERSONAJE)) {
         return;
     }
 
@@ -131,21 +131,19 @@ void dibujar_personaje(Personaje *p) {
     DrawRectangle(p->hb_posicion.x,p->hb_posicion.y,HB_LONG_HORIZONTAL,HB_LONG_VERTICAL,WHITE);
 }
 
-bool suelo_transitable(Vector2 destino) { // Antes le pasabamos el puntero a Vector2 losa. Puede que más adelante lo use.
-    int losa_x, losa_y;
-    int esquina=0;
-    bool transitable;
-    int estado_terreno;
+bool suelo_transitable(Vector2 destino, int sujeto) { // Antes le pasabamos el puntero a Vector2 losa. Puede que más adelante lo use.
+    //int losa_x, losa_y;
+    //int esquina=0;
+    //bool transitable;
+    //int estado_terreno;
 
     // hb_posicion es un punto en la coordenadas, pero vamos a simular un rectangulo moviendo el vector para poder comprobar las cuatro esquinas del rectángulo ficticio
-    do {
-        transitable=true;
-        esquina++;
+    //do {
+        //transitable=true;
+        //esquina++;
 
-        // DEBO REVISAR //losa_x=floor(destino.x + (esquina-1%2 * HB_LONG_HORIZONTAL)/ancho_losa);
-        //losa_y=floor(destino.y + (esquina/2 * HB_LONG_VERTICAL)/alto_losa);
-
-        switch(esquina) {
+        // PUEDO HACER LO DEL SWITCH EN UNA FUNCION QUE LE PASE LA POSICION DE CADA ESQUINA. LLAMAMOS CUATRO VECES LA FUNCIONY SI UNO FALLA HACEMOS RETURN DIRECTAMENTE
+        /*switch(esquina) {
             case 1:
                 losa_x=floor(destino.x/ancho_losa);
                 losa_y=floor(destino.y/alto_losa);
@@ -166,22 +164,55 @@ bool suelo_transitable(Vector2 destino) { // Antes le pasabamos el puntero a Vec
                 losa_y=floor((destino.y+HB_LONG_VERTICAL)/alto_losa);
                 break;
 
-        }
-        estado_terreno=*(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y * ancho_sala) + losa_x);
+        }*/
+
+        //printf("\n%d - %d", losa_y, losa_x);
+        //estado_terreno=*(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y * ancho_sala) + losa_x);
 
         //printf("\n%d", estado_terreno);
-        if (estado_terreno == 0) transitable=false;
+
+    if (!hb_esquina((Vector2){destino.x, destino.y}, sujeto)) return false;
+    if (!hb_esquina((Vector2){destino.x+HB_LONG_HORIZONTAL, destino.y}, sujeto)) return false;
+    if (!hb_esquina((Vector2){destino.x+HB_LONG_HORIZONTAL, destino.y+HB_LONG_VERTICAL}, sujeto)) return false;
+    if (!hb_esquina((Vector2){destino.x+HB_LONG_HORIZONTAL, destino.y+HB_LONG_VERTICAL}, sujeto)) return false;
+
+
+        /*if (estado_terreno == SUELO_NO_TRANSITABLE) transitable=false;
         if (estado_terreno == 463) siguiente_nivel();
         if (estado_terreno == 776) {
-            *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y * ancho_sala) + losa_x)=777;
+            *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y * ancho_sala) + losa_x)=BOTON_PULSADO;
             printf("\nREJA: %d - %d", losa_y_reja, losa_x_reja);
             *(terreno + (CAPA_COLISION * ancho_sala * alto_sala) + (losa_y_reja * ancho_sala) + losa_x_reja)=0;
-            *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y_reja * ancho_sala) + losa_x_reja)=854;
-        }
-    } while (transitable && esquina < 4);
+            *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y_reja * ancho_sala) + losa_x_reja)=REJA_ABIERTA;
+        }*/
+    //} while (transitable && esquina < 4);
 
-    if (transitable) return true;
-    else return false;
+    return true;
+}
+
+bool hb_esquina(Vector2 esquina, int sujeto) {
+    int losa_esquina;
+    int losa_x, losa_y;
+
+    losa_x=floor(esquina.x/ancho_losa);
+    losa_y=floor(esquina.y/alto_losa);
+
+    losa_esquina=*(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y * ancho_sala) + losa_x);
+
+    if (losa_esquina == SUELO_NO_TRANSITABLE) return false;
+
+    if (sujeto == MONSTRUO) return true;
+
+    if (losa_esquina == PUERTA_SIGUIENTE_NIVEL) siguiente_nivel();
+
+    if (losa_esquina == BOTON) {
+        *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y * ancho_sala) + losa_x)=BOTON_PULSADO;
+        // DEBUG//printf("\nREJA: %d - %d", losa_y_reja, losa_x_reja);
+        *(terreno + (CAPA_COLISION * ancho_sala * alto_sala) + (losa_y_reja * ancho_sala) + losa_x_reja)=0;
+        *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y_reja * ancho_sala) + losa_x_reja)=REJA_ABIERTA;
+    }
+
+    return true;
 }
 
 void posicion_inicial_nivel(Personaje *p) {

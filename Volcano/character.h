@@ -2,6 +2,9 @@
 
 #include "raylib.h"
 
+#define PERSONAJE 0
+#define MONSTRUO 1
+
 // DATOS FOTOGRAMAS
 #define ALTO_FOTOGRAMA 64
 #define ANCHO_FOTOGRAMA 64
@@ -31,6 +34,13 @@
 #define PERSONAJE_QUIETO "resources\\character\\PNG\\Unarmed_Idle\\Unarmed_Idle_full.png"
 #define PERSONAJE_CORRIENDO "resources\\character\\PNG\\Unarmed_Run\\Unarmed_Run_full.png"
 
+// TIPOS DE SUELO
+#define SUELO_NO_TRANSITABLE 0
+#define PUERTA_SIGUIENTE_NIVEL 463
+#define BOTON 776
+#define BOTON_PULSADO 777
+#define REJA_ABIERTA 854
+
 
 typedef enum {
     P_PARADO,
@@ -57,8 +67,8 @@ void inicializa_textura_personaje();
 void actualizar_personaje(Personaje*);
 void dibujar_personaje(Personaje*);
 void actualizar_fotogramas_personaje(Personaje*);
-bool suelo_transitable(Vector2);
-bool hb_esquina(Vector2);
+bool suelo_transitable(Vector2, int);
+bool hb_esquina(Vector2, int);
 void posicion_inicial_nivel(Personaje*);
 
 

@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1740314662 source:c:\users\joelc\documents\programacion\projectc\volcano\main.c
+1740402213 source:c:\users\joelc\documents\programacion\projectc\volcano\main.c
 	"stdlib.h"
 	"raylib.h"
 	"raymath.h"
@@ -7,7 +7,7 @@
 	"character.h"
 	"mobs.h"
 
-1740338995 c:\users\joelc\documents\programacion\projectc\volcano\room.h
+1740409934 c:\users\joelc\documents\programacion\projectc\volcano\room.h
 
 1740343685 source:c:\users\joelc\documents\programacion\projectc\volcano\room.c
 	"stdio.h"
@@ -18,7 +18,7 @@
 	"character.h"
 	"mobs.h"
 
-1740347821 source:c:\users\joelc\documents\programacion\projectc\volcano\character.c
+1740421843 source:c:\users\joelc\documents\programacion\projectc\volcano\character.c
 	"stdio.h"
 	"string.h"
 	"raylib.h"
@@ -26,7 +26,7 @@
 	"character.h"
 	"room.h"
 
-1740347861 c:\users\joelc\documents\programacion\projectc\volcano\character.h
+1740421739 c:\users\joelc\documents\programacion\projectc\volcano\character.h
 	"raylib.h"
 
 1740052344 source:c:\users\joelc\desktop\programacion\projectc\volcano\character.c
@@ -55,7 +55,7 @@
 	"raylib.h"
 	"room.h"
 
-1740330063 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
+1740433985 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
 	"stdio.h"
 	"stdlib.h"
 	"string.h"
@@ -65,7 +65,7 @@
 	"mobs.h"
 	"character.h"
 
-1740329971 c:\users\joelc\documents\programacion\projectc\volcano\mobs.h
+1740434190 c:\users\joelc\documents\programacion\projectc\volcano\mobs.h
 	"raylib.h"
 	"mobsTypesData.h"
 
