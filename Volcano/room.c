@@ -22,6 +22,7 @@ int losa_y_reja;
 int total_botones=0;
 
 Texture2D volcan;
+Texture2D cofres;
 Rectangle *tiles;
 
 extern Personaje personaje;
@@ -61,7 +62,7 @@ void inicializa_nivel(int nivel) {
     sscanf(strstr(datos_archivo, ETIQ_LOSAS_TILESET)+strlen(ETIQ_LOSAS_TILESET), "%d", &losas_tileset);
     sscanf(strstr(datos_archivo, ETIQ_ANCHO_LOSA)+strlen(ETIQ_ANCHO_LOSA), "%d", &ancho_losa);
     sscanf(strstr(datos_archivo, ETIQ_ALTO_LOSA)+strlen(ETIQ_ALTO_LOSA), "%d", &alto_losa);
-    sscanf(strstr(datos_archivo, ETIQ_NOMBRE_TILESET)+strlen(ETIQ_NOMBRE_TILESET), "%[^\"]", nombre_tileset); // No lo estoy usando?
+    //sscanf(strstr(datos_archivo, ETIQ_NOMBRE_TILESET)+strlen(ETIQ_NOMBRE_TILESET), "%[^\"]", nombre_tileset); // No lo estoy usando?
 
     // DEBUG
     printf("\n%d", ancho_sala);
@@ -70,7 +71,7 @@ void inicializa_nivel(int nivel) {
     printf("\n%d", losas_tileset);
     printf("\n%d", ancho_losa);
     printf("\n%d\n", alto_losa);
-    printf("%s", nombre_tileset);
+    //printf("%s", nombre_tileset);
 
     datos_archivo=LoadFileText(nombre_archivo);
 
@@ -116,6 +117,7 @@ void inicializa_nivel(int nivel) {
 
     // Cargamos texturas
     volcan=LoadTexture("resources\\volcano_set.png");
+    cofres=LoadTexture("resources\\craftables.png");
 
     // Array con las texturas de la sala
     int filas_tileset=losas_tileset/col_tileset;
