@@ -550,6 +550,19 @@
          "tilecount":900,
          "tileheight":16,
          "tilewidth":16
+        }, 
+        {
+         "columns":8,
+         "firstgid":901,
+         "image":"resources\/craftables.png",
+         "imageheight":1472,
+         "imagewidth":128,
+         "margin":0,
+         "name":"craftables",
+         "spacing":0,
+         "tilecount":736,
+         "tileheight":16,
+         "tilewidth":16
         }],
  "tilewidth":16,
  "type":"map",
