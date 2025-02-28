@@ -17,6 +17,7 @@
 
 // ETIQUETAS CAPAS
 #define CAPA_SUELO 1
+#define CAPA_COLISION_1 3
 #define CAPA_COLISION 4
 
 int preparar_juego();

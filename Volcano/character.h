@@ -13,8 +13,8 @@
 #define TIEMPO_FOTOGRAMA 0.15f
 
 // DIMENSIONES Y POSICION HITBOX RELATIVAS PERSONAJE
-#define HB_X_ORIGEN 26
-#define HB_Y_ORIGEN 37
+#define HB_X_ORIGEN -6
+#define HB_Y_ORIGEN -6
 #define HB_LONG_VERTICAL 7
 #define HB_LONG_HORIZONTAL 13
 
@@ -59,6 +59,7 @@ typedef struct {
     Rectangle fotograma;
     EstadoPersonaje estado;
     EstadoPersonaje textura_activa;
+    Vector2 losa;
     Vector2 hb_posicion;
     Rectangle hitbox_ataque; // Este será el hitbox para el combate
 } Personaje;
@@ -71,5 +72,6 @@ void actualizar_fotogramas_personaje(Personaje*);
 bool suelo_transitable(Vector2, int);
 bool hb_esquina(Vector2, int);
 void posicion_inicial_nivel(Personaje*);
+Vector2 conversion_coordenadas_losa(Vector2);
 
 

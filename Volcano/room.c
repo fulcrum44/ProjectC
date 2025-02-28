@@ -5,6 +5,7 @@
 #include "room.h"
 #include "character.h"
 #include "mobs.h"
+#include "cofres.h"
 
 int nivel_actual;
 char nombre_archivo[20];
@@ -22,7 +23,7 @@ int losa_y_reja;
 int total_botones=0;
 
 Texture2D volcan;
-Texture2D cofres;
+Texture2D objetos;
 Rectangle **tiles;
 
 extern Personaje personaje;
@@ -112,16 +113,22 @@ void inicializa_nivel(int nivel) {
     for (int i=0; i<CANTIDAD_CAPAS_SALA; i++){
         for (int j=0; j<alto_sala; j++){
             for (int k=0; k<ancho_sala; k++){
-                sscanf(cursor, "%d", (terreno + (i * ancho_sala * alto_sala) + (j * ancho_sala) + k));
+                //int indice=(terreno + (i * ancho_sala * alto_sala) + (j * ancho_sala) + k);
+                int indice=(i * ancho_sala * alto_sala) + (j * ancho_sala) + k;
+                sscanf(cursor, "%d", &terreno[indice]);
+
+                //sscanf(cursor, "%d", (terreno + (i * ancho_sala * alto_sala) + (j * ancho_sala) + k));
 
                 // Almacenamos en una variable aparte los botones presentes en el terreno del nivel actual.
-                if (*(terreno + (i * ancho_sala * alto_sala) + (j * ancho_sala) + k) == BOTON) total_botones++;
+                if (terreno[indice] == BOTON) total_botones++;
 
                 // Almacenamos también la posición en losas donde se encuentra la reja cerrada del nivel actual.
-                if (*(terreno + (i * ancho_sala * alto_sala) + (j * ancho_sala) + k) == REJA_CERRADA) {
+                if (terreno[indice] == REJA_CERRADA) {
                     losa_x_reja=k;
                     losa_y_reja=j;
                 }
+
+                if (terreno[indice] == 1348) almacenar_cofre(indice);
 
                 if (j == alto_sala - 1 && k == ancho_sala - 1) continue; // No queremos cambiar aún el cursor cuando llegemos al último dato leído de la capa actual.
                 cursor=strstr(cursor, ",")+2; // Avanzamos el cursor a nuestra conveniencia.
@@ -129,6 +136,9 @@ void inicializa_nivel(int nivel) {
         }
         cursor=strstr(cursor, ETIQ_DATOS_SALA)+strlen(ETIQ_DATOS_SALA); // El cursor se moverá al inicio de los datos que estamos leyendo de la siguiente capa.
     }
+
+    // Elegimos aleatoriamente el cofre que tendrá el objeto recolectable
+    asignar_cofre_objeto_recolectable();
 
     //Debug
     /*for (int i=0; i<CANTIDAD_CAPAS_SALA; i++) {
@@ -143,7 +153,7 @@ void inicializa_nivel(int nivel) {
 
     // Cargamos texturas
     volcan=LoadTexture("resources\\volcano_set.png");
-    cofres=LoadTexture("resources\\craftables.png");
+    objetos=LoadTexture("resources\\craftables.png");
 
     // Array con las texturas de la sala
     int filas_tileset[CANTIDAD_TILESETS];
@@ -185,7 +195,7 @@ void dibuja_nivel() {
                 int id_losa=terreno[(i * ancho_sala * alto_sala) + (j * ancho_sala) + k];
                 int indice_tileset=0;
 
-                if (id_losa == 0) continue;
+                //if (id_losa == 0) continue;
 
                 //printf("\n%d", losas_tileset[0]);
                 //printf("\n%d", id_losa);
@@ -200,13 +210,8 @@ void dibuja_nivel() {
                     indice_tileset++;
                 }
 
-                /*if (id_losa <= 0 || id_losa >= losas_tileset[indice_tileset]) {
-                    printf("\nERROR: ID_LOSA %d fuera de rango en tileset %d", id_losa, indice_tileset);
-                    continue;
-                }*/
-
                 Vector2 posicion={k*ancho_losa, j*alto_losa};
-                DrawTextureRec((indice_tileset == 0)? volcan : cofres, tiles[indice_tileset][id_losa], posicion, WHITE);
+                DrawTextureRec((indice_tileset == 0)? volcan : objetos, tiles[indice_tileset][id_losa], posicion, WHITE);
             }
         }
     }
@@ -222,8 +227,9 @@ void finaliza_nivel() {
     free(col_tileset);
     free(losas_tileset);
     libera_monstruos();
+    liberar_cofres();
     UnloadTexture(volcan); // Realmente no haría falta ya que en todos los niveles uso las mismas texturas
-    UnloadTexture(cofres);
+    UnloadTexture(objetos);
 }
 
 void siguiente_nivel() {
