@@ -6,9 +6,14 @@
 #include "room.h"
 #include "teclado.h"
 
-Texture2D sprite;
-float duracion_fotograma=TIEMPO_FOTOGRAMA;
+Texture2D sprite[CANTIDAD_TEXTURAS_PERSONAJE];
 int orientacion;
+
+const char *TEXTURAS_PERSONAJE[]= { // ANIMACIONES
+    "resources\\character\\PNG\\Unarmed_Idle\\Unarmed_Idle_full.png", // P_PARADO
+    "resources\\character\\PNG\\Unarmed_Run\\Unarmed_Run_full.png", // P_CORRIENDO
+    "resources\\character\\PNG\\Sword_attack\\Sword_attack_full.png" // P_ATANCANDO
+};
 
 extern float delta;
 extern int *terreno;
@@ -22,7 +27,9 @@ extern int losa_y_reja;
 extern int total_botones;
 
 void inicializa_textura_personaje() { // Ahora mismo va a parecer un poco innecesario pero luego le podemos dar uso de verdad si tenemos varios personajes.
-    sprite=LoadTexture(PERSONAJE_QUIETO);
+    for (int i=0; i<CANTIDAD_TEXTURAS_PERSONAJE; i++) {
+        sprite[i]=LoadTexture(TEXTURAS_PERSONAJE[i]);
+    }
 }
 
 void crear_personaje(Personaje *p) {
@@ -32,59 +39,71 @@ void crear_personaje(Personaje *p) {
     p->textura_activa=P_PARADO;
     p->tiempo=0;
     p->fotograma_actual=0;
+    p->fotogramas_ataque_restantes=0;
     p->fotograma=(Rectangle){0,0, ANCHO_FOTOGRAMA, ALTO_FOTOGRAMA};
 }
 
 void actualizar_personaje(Personaje *p) {
-    actualizar_fotogramas_personaje(p);
 
-    // Comprobamos qué tecla estamos pulsando para movernos. Controlamos también si el jugador está pulsado otra tecla que no sea solamente de movimiento del personaje.
-    //tecla_pulsada();
+    // Tanto si estamos apretando una tecla para movernos o pulsando el ratón para atacar, ya ha sido comprobado previamente a entrar en esta función
 
     // Comprobamos el estado del personaje y su dirección cargamos las texturas correspondientes
-
-    if (p->estado == P_CORRIENDO || p->estado == P_PARADO) p->fotograma.y=ALTO_FOTOGRAMA * orientacion; // Cambio de direccion en los fotogramas
-
     if (p->estado == P_PARADO && p->textura_activa != P_PARADO) {
-        UnloadTexture(sprite); // Ineficiente
-        sprite=LoadTexture(PERSONAJE_QUIETO);
         p->textura_activa=P_PARADO;
     } else if (p->estado == P_CORRIENDO && p->textura_activa != P_CORRIENDO) {
-        UnloadTexture(sprite); // Ineficiente
-        sprite=LoadTexture(PERSONAJE_CORRIENDO);
         p->textura_activa=P_CORRIENDO;
+    } else if (p->estado == P_ATACANDO && p->textura_activa != P_ATACANDO) {
+        p->textura_activa=P_ATACANDO;
     }
 
-    // Normalizamos
-    p->direccion_desplazamiento=Vector2Normalize(p->direccion_desplazamiento);
-    Vector2 destino=Vector2Add(p->posicion, Vector2Scale(p->direccion_desplazamiento, p->velocidad*delta));
-    Vector2 destino_hitbox=Vector2Add(p->hb_posicion, Vector2Scale(p->direccion_desplazamiento, p->velocidad*delta));
 
-    // DEBUG
-    //printf("\nDestino(%0.2f, %0.2f)", destino.x, destino.y);
-    // printf("\n%d", *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (6 * ancho_sala) + 6));
+    if (p->estado == P_CORRIENDO || p->estado == P_PARADO) {
+            p->fotograma.y=ALTO_FOTOGRAMA * orientacion; // Cambio de direccion en los fotogramas
 
-    // Comprobamos si personaje se puede mover en la dirección pulsada. Usamos la hb_posicion para eso.
-    if (!suelo_transitable(destino_hitbox, PERSONAJE)) {
-        return;
+        // Normalizamos
+        p->direccion_desplazamiento=Vector2Normalize(p->direccion_desplazamiento);
+        Vector2 destino=Vector2Add(p->posicion, Vector2Scale(p->direccion_desplazamiento, p->velocidad*delta));
+        Vector2 destino_hitbox=Vector2Add(p->hb_posicion, Vector2Scale(p->direccion_desplazamiento, p->velocidad*delta));
+
+        // Comprobamos si personaje se puede mover en la dirección pulsada. Usamos la hb_posicion para eso.
+        if (!suelo_transitable(destino_hitbox, PERSONAJE)) {
+            return;
+        }
+
+        p->posicion=destino;
+        p->hb_posicion=destino_hitbox;
+        p->losa=conversion_coordenadas_losa(p->posicion);
+
+        // Importante reiniciar estas variables para el proximo frame. Reiniciamos después de haber validado el movimiento y no antes porque la entrada por teclado se gestiona antes de entrar en actualizar_personaje()
+        // Si llegados a un frame hemos dejado de movernos no nos interesa acumular cálculos de ejecuciones anteriores. Si seguimos corriendo tampoco queremos que el desplazamiento crezca exponencialmente.
+        p->estado=P_PARADO;
+        p->direccion_desplazamiento.x=0;
+        p->direccion_desplazamiento.y=0;
     }
 
-    p->posicion=destino;
-    p->hb_posicion=destino_hitbox;
-    p->losa=conversion_coordenadas_losa(p->posicion);
-
-    // Importante reiniciar estas variables para el proximo frame. Reiniciamos después de haber validado el movimiento y no antes porque la entrada por teclado se gestiona antes de entrar en actualizar_personaje()
-    // Si llegados a un frame hemos dejado de movernos no nos interesa acumular cálculos de ejecuciones anteriores. Si seguimos corriendo tampoco queremos que el desplazamiento crezca exponencialmente.
-    p->estado=P_PARADO;
-    p->direccion_desplazamiento.x=0;
-    p->direccion_desplazamiento.y=0;
-
+    actualizar_fotogramas_personaje(p);
 }
 
 void actualizar_fotogramas_personaje(Personaje *p) {
-    p->tiempo+=delta;
     //printf("\nDelta: %.2f", p->tiempo);
-    if (p->tiempo >= duracion_fotograma) {
+    p->tiempo+=delta;
+
+    if(p->estado == P_ATACANDO) {
+        if (p->tiempo >= TIEMPO_FOTOGRAMA_ATAQUE) {
+                p->fotograma_actual++;
+                p->fotogramas_ataque_restantes--;
+                p->fotograma.x=p->fotograma_actual * ANCHO_FOTOGRAMA;
+                p->tiempo=0;
+
+                if (p->fotogramas_ataque_restantes <= 0) {
+                    p->estado=P_PARADO;
+                }
+        }
+        return;
+    }
+
+
+    if (p->tiempo >= TIEMPO_FOTOGRAMA) {
         p->fotograma_actual++;
         p->fotograma_actual%=FOTOGRAMAS; // Si orientacion_p es 3 el personaje está mirando hacia arriba
         p->tiempo=0;
@@ -95,7 +114,7 @@ void actualizar_fotogramas_personaje(Personaje *p) {
 void dibujar_personaje(Personaje *p) {
 
     //DrawTextureRec(sprite, p->fotograma, p->posicion, WHITE);
-    DrawTexturePro(sprite, p->fotograma, (Rectangle){p->posicion.x, p->posicion.y, ANCHO_FOTOGRAMA, ALTO_FOTOGRAMA}, (Vector2){31, 43}, 0.0f, WHITE);
+    DrawTexturePro(sprite[p->textura_activa], p->fotograma, (Rectangle){p->posicion.x, p->posicion.y, ANCHO_FOTOGRAMA, ALTO_FOTOGRAMA}, (Vector2){31, 43}, 0.0f, WHITE);
 
     //DrawRectangle(p->hb_posicion.x,p->hb_posicion.y,HB_LONG_HORIZONTAL,HB_LONG_VERTICAL,WHITE);
 }
@@ -158,6 +177,8 @@ void posicion_inicial_nivel(Personaje *p) {
 }
 
 void movimiento_personaje(Personaje *p, Vector2 desplazamiento, int orientacion_final) {
+    if (p->estado == P_ATACANDO) return; // Por poder podemos estar apretando una tecla de movimiento mientras estamos atacando, pero no empezará a moverse hasta el movimiento del ataque termine
+
     // Primero vamos a proceder como si el destino al que queremos movernos fuese transitable y normalizamos el desplazamiento para evitar imprecisiones.
     desplazamiento=Vector2Normalize(desplazamiento);
     Vector2 destino=Vector2Add(p->hb_posicion, Vector2Scale(desplazamiento, p->velocidad*delta));
@@ -180,3 +201,10 @@ void movimiento_personaje(Personaje *p, Vector2 desplazamiento, int orientacion_
     orientacion=orientacion_final;
 }
 
+void ataque_personaje(Personaje *p) {
+    if (p->estado != P_ATACANDO) {
+        p->estado=P_ATACANDO;
+        p->fotograma_actual=0;
+        p->fotogramas_ataque_restantes=FOTOGRAMAS;
+    }
+}

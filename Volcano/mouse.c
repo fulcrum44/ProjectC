@@ -12,6 +12,7 @@ Vector2 posicion_raton;
 extern Camera2D camara;
 extern int pantalla;
 extern bool pausa;
+extern Personaje personaje;
 
 void inicializar_raton() {
     SetMousePosition(200,200);
@@ -23,13 +24,15 @@ void actualizar_raton() {
 
     //printf("\nRaton x: %f - y: %f", posicion_raton.x, posicion_raton.y);
 
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        //Vector2 losa=conversion_coordenadas_losa(posicion_raton);
-
+    if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
         // Al entrar en las funciones, con que una devuelva true ya no se comprobará más
         if (boton_menu_principal_pulsado(posicion_raton)) return;
         if (boton_menu_pausa_pulsado(posicion_raton)) return;
-        if (cofre_pulsado(posicion_raton)) return;
+    }
 
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) ataque_personaje(&personaje);
+
+    if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
+        if (cofre_pulsado(posicion_raton)) return;
     }
 }

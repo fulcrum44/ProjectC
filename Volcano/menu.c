@@ -101,10 +101,9 @@ void dibujar_menu_principal() {
 bool boton_menu_principal_pulsado(Vector2 posicion_raton) {
     for (int i=0; i<CANTIDAD_BOTONES_MENU_PRINCIPAL; i++) {
         if (CheckCollisionPointRec(posicion_raton, botones[i].hitbox)) {
+            pantalla=botones[i].tipo;
             if (botones[i].tipo=EMPEZAR_PARTIDA) iniciar_partida();
 
-            pantalla=botones[i].tipo;
-            printf("\nPantalla: %d", pantalla);
             return true;
         }
     }

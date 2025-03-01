@@ -53,6 +53,7 @@ void inicializar() {
     // Init window
 
     InitWindow(screenWidth, screenHeight, "Volcano");
+    //ToggleFullscreen();
     SetTargetFPS(60);
 
     // Definimos la primera pantalla a mostrar y mantenemos desactivado el menu de pausa.

@@ -9,8 +9,8 @@
 #define ALTO_FOTOGRAMA 64
 #define ANCHO_FOTOGRAMA 64
 #define FOTOGRAMAS 12
-#define FOTOGRAMAS_ESPALDA 4
 #define TIEMPO_FOTOGRAMA 0.15f
+#define TIEMPO_FOTOGRAMA_ATAQUE 0.10f
 
 // DIMENSIONES Y POSICION HITBOX RELATIVAS PERSONAJE
 #define HB_X_ORIGEN -6
@@ -23,16 +23,14 @@
 #define ETIQ_X_OBJETO "\"x\":"
 #define ETIQ_Y_OBJETO "\"y\":"
 
-
 // ORIENTACIONES PERSONAJE
 #define ORIENTACION_ABAJO 0
 #define ORIENTACION_IZQ 1
 #define ORIENTACION_DER 2
 #define ORIENTACION_ARRIBA 3
 
-// ANIMACIONES
-#define PERSONAJE_QUIETO "resources\\character\\PNG\\Unarmed_Idle\\Unarmed_Idle_full.png"
-#define PERSONAJE_CORRIENDO "resources\\character\\PNG\\Unarmed_Run\\Unarmed_Run_full.png"
+// TEXTURAS
+#define CANTIDAD_TEXTURAS_PERSONAJE 3
 
 // TIPOS DE SUELO
 #define SUELO_NO_TRANSITABLE 0
@@ -56,6 +54,7 @@ typedef struct {
     // Vector2 losa; // No lo estamos usando ahora mismo
     float tiempo;
     int fotograma_actual;
+    int fotogramas_ataque_restantes;
     Rectangle fotograma;
     EstadoPersonaje estado;
     EstadoPersonaje textura_activa;
@@ -68,6 +67,7 @@ void crear_personaje(Personaje*);
 void inicializa_textura_personaje();
 void actualizar_personaje(Personaje*);
 void movimiento_personaje(Personaje*, Vector2, int);
+void ataque_personaje();
 void dibujar_personaje(Personaje*);
 void actualizar_fotogramas_personaje(Personaje*);
 bool suelo_transitable(Vector2, int);
