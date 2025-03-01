@@ -5,6 +5,8 @@
 #define CANTIDAD_CAPAS_SALA 5
 #define CANTIDAD_TILESETS 2
 
+#define NIVEL_INICIAL 0
+
 // ETIQUETAS EXTRACCIÓN DATOS ESCENARIO
 #define ETIQ_ANCHO_SALA "\"width\":"
 #define ETIQ_ALTO_SALA "\"height\":"

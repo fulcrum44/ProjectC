@@ -156,7 +156,7 @@ void dibujar_monstruos() {
     for (int i=0; i<cantidad_monstruos; i++) {
         if (!monstruos[i].activo) continue;
         DrawTextureRec(sprite_monstruos, monstruos[i].fotograma, monstruos[i].posicion, WHITE);
-        DrawRectangle(monstruos[i].hb_posicion.x,monstruos[i].hb_posicion.y,monstruos[i].tipo.hitbox_colision.ancho,monstruos[i].tipo.hitbox_colision.alto,WHITE);
+        //DrawRectangle(monstruos[i].hb_posicion.x,monstruos[i].hb_posicion.y,monstruos[i].tipo.hitbox_colision.ancho,monstruos[i].tipo.hitbox_colision.alto,WHITE);
     }
 }
 

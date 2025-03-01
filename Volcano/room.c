@@ -41,7 +41,7 @@ int preparar_juego() {
     if (cantidad_niveles == 0) return(-1);
 
     // Empezamos el juego en la sala de preparación
-    inicializa_nivel(0);
+    //inicializa_nivel(NIVEL_INICIAL);
 
     return 0;
 }

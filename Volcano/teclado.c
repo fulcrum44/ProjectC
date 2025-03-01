@@ -9,6 +9,7 @@ int orientacion_final;
 int teclas_pulsadas;
 
 extern Personaje personaje;
+extern bool pausa;
 
 MovimientoPersonaje controles[]= {
     {KEY_W, (Vector2){0, -1}, ORIENTACION_ARRIBA},
@@ -34,7 +35,7 @@ bool tecla_pulsada() {
 
     if (teclas_pulsadas > 0) movimiento_personaje(&personaje, direccion, orientacion_final);
 
-    //if (IsKeyDown(KEY_ESCAPE) || IsKeyDown(KEY_P)) dibujar_menu_pausa();
+    if (IsKeyPressed(KEY_P)) pausa=(!pausa)? true : false;
 
 
 }

@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1740784685 source:c:\users\joelc\documents\programacion\projectc\volcano\main.c
+1740859099 source:c:\users\joelc\documents\programacion\projectc\volcano\main.c
 	"stdlib.h"
 	"raylib.h"
 	"raymath.h"
@@ -9,10 +9,11 @@
 	"mouse.h"
 	"cofres.h"
 	"menu.h"
+	"teclado.h"
 
-1740623623 c:\users\joelc\documents\programacion\projectc\volcano\room.h
+1740854695 c:\users\joelc\documents\programacion\projectc\volcano\room.h
 
-1740699828 source:c:\users\joelc\documents\programacion\projectc\volcano\room.c
+1740856241 source:c:\users\joelc\documents\programacion\projectc\volcano\room.c
 	"stdio.h"
 	"stdlib.h"
 	"string.h"
@@ -22,7 +23,7 @@
 	"mobs.h"
 	"cofres.h"
 
-1740790147 source:c:\users\joelc\documents\programacion\projectc\volcano\character.c
+1740851574 source:c:\users\joelc\documents\programacion\projectc\volcano\character.c
 	"stdio.h"
 	"string.h"
 	"raylib.h"
@@ -60,7 +61,7 @@
 	"raylib.h"
 	"room.h"
 
-1740433985 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
+1740838182 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
 	"stdio.h"
 	"stdlib.h"
 	"string.h"
@@ -93,7 +94,7 @@
 	"raylib.h"
 	"dimensiones_struct.h"
 
-1740774770 source:c:\users\joelc\documents\programacion\projectc\volcano\mouse.c
+1740852345 source:c:\users\joelc\documents\programacion\projectc\volcano\mouse.c
 	"stdio.h"
 	"raylib.h"
 	"math.h"
@@ -119,19 +120,23 @@
 1740750557 c:\users\joelc\documents\programacion\projectc\volcano\cofres.h
 	"raylib.h"
 
-1740784687 c:\users\joelc\documents\programacion\projectc\volcano\menu.h
+1740855961 c:\users\joelc\documents\programacion\projectc\volcano\menu.h
 	"raylib.h"
 
-1740784686 source:c:\users\joelc\documents\programacion\projectc\volcano\menu.c
+1740858844 source:c:\users\joelc\documents\programacion\projectc\volcano\menu.c
 	"stdio.h"
 	"stdlib.h"
 	"raylib.h"
 	"menu.h"
+	"room.h"
+	"character.h"
+	"mobs.h"
+	"cofres.h"
 
 1740789019 c:\users\joelc\documents\programacion\projectc\volcano\teclado.h
 	"raylib.h"
 
-1740790289 source:c:\users\joelc\documents\programacion\projectc\volcano\teclado.c
+1740845887 source:c:\users\joelc\documents\programacion\projectc\volcano\teclado.c
 	"raylib.h"
 	"raymath.h"
 	"teclado.h"

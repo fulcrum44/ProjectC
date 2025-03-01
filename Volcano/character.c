@@ -38,13 +38,8 @@ void crear_personaje(Personaje *p) {
 void actualizar_personaje(Personaje *p) {
     actualizar_fotogramas_personaje(p);
 
-    // Importante reiniciar estas variables. Si llegados a un frame hemos dejado de movernos no nos interesa acumular cálculos de ejecuciones anteriores. Si seguimos corriendo tampoco queremos que el desplazamiento crezca exponencialmente.
-    p->estado=P_PARADO;
-    p->direccion_desplazamiento.x=0;
-    p->direccion_desplazamiento.y=0;
-
     // Comprobamos qué tecla estamos pulsando para movernos. Controlamos también si el jugador está pulsado otra tecla que no sea solamente de movimiento del personaje.
-    tecla_pulsada();
+    //tecla_pulsada();
 
     // Comprobamos el estado del personaje y su dirección cargamos las texturas correspondientes
 
@@ -78,7 +73,11 @@ void actualizar_personaje(Personaje *p) {
     p->hb_posicion=destino_hitbox;
     p->losa=conversion_coordenadas_losa(p->posicion);
 
-    //printf("\n%.f - %.f", p->losa.x, p->losa.y);
+    // Importante reiniciar estas variables para el proximo frame. Reiniciamos después de haber validado el movimiento y no antes porque la entrada por teclado se gestiona antes de entrar en actualizar_personaje()
+    // Si llegados a un frame hemos dejado de movernos no nos interesa acumular cálculos de ejecuciones anteriores. Si seguimos corriendo tampoco queremos que el desplazamiento crezca exponencialmente.
+    p->estado=P_PARADO;
+    p->direccion_desplazamiento.x=0;
+    p->direccion_desplazamiento.y=0;
 
 }
 

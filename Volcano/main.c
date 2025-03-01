@@ -7,6 +7,7 @@
 #include "mouse.h"
 #include "cofres.h"
 #include "menu.h"
+#include "teclado.h"
 
 void inicializar();
 void actualizar();
@@ -19,6 +20,8 @@ const int screenHeight = 1080;
 //const int screenHeight = 720;
 
 int pantalla;
+bool pausa;
+
 float delta;
 int rango_horizontal;
 int rango_vertical;
@@ -41,6 +44,8 @@ int main() {
     }
     CloseWindow();        // Close window and OpenGL context
 
+    liberar_menu();
+
     return 0;
 }
 
@@ -50,8 +55,9 @@ void inicializar() {
     InitWindow(screenWidth, screenHeight, "Volcano");
     SetTargetFPS(60);
 
-    // Definimos la primera pantalla a mostrar
+    // Definimos la primera pantalla a mostrar y mantenemos desactivado el menu de pausa.
     pantalla=PANTALLA_MENU;
+    pausa=false;
 
     // Inicializamos el raton
     inicializar_raton();
@@ -74,36 +80,28 @@ void inicializar() {
     // Menu
     inicializar_menu();
 
-    // Personaje
-    crear_personaje(&personaje);
-    inicializa_textura_personaje();
-
-    // Items
-    inicializa_textura_items();
-
-    // Monstruos
-    inicializa_monstruos();
-
+    // El resto de inicializaciones se pueden encontrar en menu.c
 }
 
 void actualizar() {
-    if (pantalla == PANTALLA_JUEGO) {
+    tecla_pulsada();
+    actualizar_raton();
+
+    if (pantalla == PANTALLA_JUEGO && !pausa) {
         actualizar_personaje(&personaje);
         actualizar_monstruos();
         camara.target=personaje.posicion;
     }
-
-    actualizar_raton();
 }
 
 void dibujar() {
     switch(pantalla) {
-        case 0:
+        case PANTALLA_MENU:
             ClearBackground(FONDO_MENU);
             dibujar_menu_principal();
             break;
 
-        case 1:
+        case PANTALLA_JUEGO:
             ClearBackground(BLACK);
             BeginMode2D(camara);
 
@@ -112,11 +110,12 @@ void dibujar() {
             dibujar_personaje(&personaje);
             actualizar_raton();
             dibujar_recolectable();
+            if (pausa) dibujar_menu_pausa();
             //dibujar_hitbox();
-            DrawText(TextFormat("Posicion: %.2f, %.2f", personaje.posicion.x, personaje.posicion.y), 250, 350, 12, GREEN);
-            DrawFPS(250, 450);
-
+            //DrawText(TextFormat("Posicion: %.2f, %.2f", personaje.posicion.x, personaje.posicion.y), 250, 350, 12, GREEN);
             EndMode2D();
             break;
     }
+
+    DrawFPS(100, 0);
 }

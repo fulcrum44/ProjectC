@@ -136,6 +136,10 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="menu.h" />
 		<Unit filename="mobs.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -152,6 +156,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="room.h" />
+		<Unit filename="teclado.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="teclado.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
