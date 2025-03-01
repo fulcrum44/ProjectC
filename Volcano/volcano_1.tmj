@@ -509,7 +509,6 @@
         {
          "draworder":"topdown",
          "id":7,
-         "locked":true,
          "name":"personaje",
          "objects":[
                 {
@@ -521,8 +520,8 @@
                  "type":"aparicion_personaje",
                  "visible":true,
                  "width":0,
-                 "x":487.5,
-                 "y":835.5
+                 "x":519.833333333333,
+                 "y":868.5
                 }],
          "opacity":1,
          "type":"objectgroup",

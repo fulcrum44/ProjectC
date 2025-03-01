@@ -67,6 +67,7 @@ typedef struct {
 void crear_personaje(Personaje*);
 void inicializa_textura_personaje();
 void actualizar_personaje(Personaje*);
+void movimiento_personaje(Personaje*, Vector2, int);
 void dibujar_personaje(Personaje*);
 void actualizar_fotogramas_personaje(Personaje*);
 bool suelo_transitable(Vector2, int);

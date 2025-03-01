@@ -32,7 +32,7 @@ void inicializar_menu() {
     }
 }
 
-void dibujar_menu() {
+void dibujar_menu_principal() {
     // Calculamos el centro de la pantalla
     int x_centro_pantalla=GetScreenWidth()/2;
     int y_centro_pantalla=GetScreenHeight()/2;

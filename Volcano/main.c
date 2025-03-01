@@ -100,7 +100,7 @@ void dibujar() {
     switch(pantalla) {
         case 0:
             ClearBackground(FONDO_MENU);
-            dibujar_menu();
+            dibujar_menu_principal();
             break;
 
         case 1:

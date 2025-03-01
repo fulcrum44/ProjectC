@@ -34,5 +34,6 @@ typedef struct {
 } Boton;
 
 void inicializar_menu();
-void dibujar_menu();
+void dibujar_menu_principal();
 bool boton_menu_pulsado(Vector2);
+void dibujar_menu_pausa();
