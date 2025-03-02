@@ -44,21 +44,16 @@ void crear_personaje(Personaje *p) {
 }
 
 void actualizar_personaje(Personaje *p) {
-
     // Tanto si estamos apretando una tecla para movernos o pulsando el ratón para atacar, ya ha sido comprobado previamente a entrar en esta función
 
     // Comprobamos el estado del personaje y su dirección cargamos las texturas correspondientes
-    if (p->estado == P_PARADO && p->textura_activa != P_PARADO) {
-        p->textura_activa=P_PARADO;
-    } else if (p->estado == P_CORRIENDO && p->textura_activa != P_CORRIENDO) {
-        p->textura_activa=P_CORRIENDO;
-    } else if (p->estado == P_ATACANDO && p->textura_activa != P_ATACANDO) {
-        p->textura_activa=P_ATACANDO;
-    }
+    if (p->estado == P_PARADO && p->textura_activa != P_PARADO) p->textura_activa=P_PARADO;
+    else if (p->estado == P_CORRIENDO && p->textura_activa != P_CORRIENDO) p->textura_activa=P_CORRIENDO;
+    else if (p->estado == P_ATACANDO && p->textura_activa != P_ATACANDO) p->textura_activa=P_ATACANDO;
 
-
+    // Actualizamos si ha habido un intento de moverse
     if (p->estado == P_CORRIENDO || p->estado == P_PARADO) {
-            p->fotograma.y=ALTO_FOTOGRAMA * orientacion; // Cambio de direccion en los fotogramas
+        p->fotograma.y=ALTO_FOTOGRAMA * orientacion; // Cambio de direccion en los fotogramas
 
         // Normalizamos
         p->direccion_desplazamiento=Vector2Normalize(p->direccion_desplazamiento);
@@ -70,6 +65,7 @@ void actualizar_personaje(Personaje *p) {
             return;
         }
 
+        // Actualizamos datos relativos a la posicion del personaje
         p->posicion=destino;
         p->hb_posicion=destino_hitbox;
         p->losa=conversion_coordenadas_losa(p->posicion);
@@ -81,13 +77,14 @@ void actualizar_personaje(Personaje *p) {
         p->direccion_desplazamiento.y=0;
     }
 
+    // Animacion
     actualizar_fotogramas_personaje(p);
 }
 
 void actualizar_fotogramas_personaje(Personaje *p) {
-    //printf("\nDelta: %.2f", p->tiempo);
     p->tiempo+=delta;
 
+    // Animación ataque
     if(p->estado == P_ATACANDO) {
         if (p->tiempo >= TIEMPO_FOTOGRAMA_ATAQUE) {
                 p->fotograma_actual++;
@@ -102,7 +99,7 @@ void actualizar_fotogramas_personaje(Personaje *p) {
         return;
     }
 
-
+    // Animacion general
     if (p->tiempo >= TIEMPO_FOTOGRAMA) {
         p->fotograma_actual++;
         p->fotograma_actual%=FOTOGRAMAS; // Si orientacion_p es 3 el personaje está mirando hacia arriba
@@ -202,9 +199,9 @@ void movimiento_personaje(Personaje *p, Vector2 desplazamiento, int orientacion_
 }
 
 void ataque_personaje(Personaje *p) {
-    if (p->estado != P_ATACANDO) {
+    if (p->estado != P_ATACANDO) { // Si ocurriese que hemos pulsado al ratón antes de que haya acabado una animación de ataque no hacemos nada.
         p->estado=P_ATACANDO;
-        p->fotograma_actual=0;
-        p->fotogramas_ataque_restantes=FOTOGRAMAS;
+        p->fotograma_actual=0; // Nos aseguramos que empezaremos por el primer fotograma
+        p->fotogramas_ataque_restantes=FOTOGRAMAS; // Esto es lo que durará la animación de ataque en fotogramas.
     }
 }
