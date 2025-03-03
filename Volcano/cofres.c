@@ -61,6 +61,7 @@ void almacenar_cofre(int indice_losa) { // Estoy pasando parametro el indice del
     cofres[total_cofres].tiempo=0;
     cofres[total_cofres].hitbox=(Rectangle){cofres[total_cofres].losa.x * ancho_losa, cofres[total_cofres].losa.y * alto_losa+AJUSTE_ORIGEN_Y, ANCHO_HB_COFRE, ALTO_HB_COFRE};
     cofres[total_cofres].item_recolectable=false;
+    cofres[total_cofres].monstruo=false;
     cofres[total_cofres].item.tiempo_animacion_item=0;
     cofres[total_cofres].item.transparencia_item=1.0f;
     cofres[total_cofres].indice_monstruo=-1;
@@ -79,8 +80,7 @@ bool cofre_pulsado(Vector2 posicion_raton) {
             animacion_cofre(&cofres[i]);
             printf("\nCofre abierto");
             return true;
-        }
-        else continue;
+        } else continue;
     }
 
     return false; // Devolvemos false solo si durante la iteración nunca se ha devuelto true. No se ha pulsado ningún cofre.

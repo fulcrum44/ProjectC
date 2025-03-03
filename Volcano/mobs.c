@@ -27,7 +27,8 @@ extern int ancho_losa;
 
 void inicializa_monstruos() {
     // Inicializamos la semilla de aleatoriedad
-    srand(time(NULL));
+    //srand(time(NULL));
+    monstruos=NULL;
 
     // Cargamos textura donde tenemos todos los monstruos
     sprite_monstruos=LoadTexture(TEXTURA_MONSTRUOS);
@@ -88,8 +89,8 @@ void inicializa_monstruos() {
         monstruos[i].hitbox_combate.height=monstruos[i].tipo.hitbox_combate.alto;
     }
 
-    for (int i=0; i<cantidad_monstruos; i++) {
-        printf("\n\nTipo monstruo: %d\n\n", monstruos[i].tipo.id);
+    for (int i=0; i<total_cofres; i++) {
+        printf("\nCofre con monstruo: %s - Indice del monstruo en el cofre: %d", (cofres[i].monstruo)? "Si" : "No", cofres[i].indice_monstruo);
     }
 }
 

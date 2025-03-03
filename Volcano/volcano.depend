@@ -62,7 +62,7 @@
 	"raylib.h"
 	"room.h"
 
-1740961836 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
+1741037327 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
 	"stdio.h"
 	"stdlib.h"
 	"string.h"
@@ -109,7 +109,7 @@
 1740602329 c:\users\joelc\documents\programacion\projectc\volcano\mouse.h
 	"raylib.h"
 
-1740953747 source:c:\users\joelc\documents\programacion\projectc\volcano\cofres.c
+1741037824 source:c:\users\joelc\documents\programacion\projectc\volcano\cofres.c
 	"stdio.h"
 	"stdlib.h"
 	"time.h"
