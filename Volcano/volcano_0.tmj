@@ -90,7 +90,7 @@
          "height":20,
          "id":6,
          "locked":true,
-         "name":"colision_rellleno2",
+         "name":"colision_rellleno_2",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
@@ -183,7 +183,7 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":8,
+ "nextlayerid":10,
  "nextobjectid":2,
  "orientation":"orthogonal",
  "renderorder":"right-down",

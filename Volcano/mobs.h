@@ -15,6 +15,9 @@
 // DATOS FOTOGRAMAS
 #define TIEMPO_FOTOGRAMA 0.15f
 
+// TEXTURA
+#define TEXTURA_MONSTRUOS "resources\\mobs.png"
+
 // ETIQUETAS EXTRACCIÓN DATOS MONSTRUOS
 #define ETIQ_OBJETOS_SALA "\"objects\":["
 #define ETIQ_TIPO_OBJETO "\"type\":\""
@@ -36,7 +39,8 @@ typedef struct {
     Rectangle textura; // Area de la textura en la imagen fuente.
     Dimensiones fotograma; // Almacenamos tamaño de un fotograma según el tipo
     Dimensiones cuadricula_fotogramas; // Almacenamos cuantas filas y columnas de fotogramas tiene el area de la textura del tipo de monstruo
-    Dimensiones hitbox_colision; // Tamaño del hitbox del monstruo según el tipo
+    Dimensiones hitbox_colision; // Tamaño del hitbox de colisiones con el entorno del monstruo según el tipo
+    Dimensiones hitbox_combate; // Area de golpe del monstruo para ser atacado.
     Vector2 origen_hb; // Punto de origen, segun el tipo de monstruo, para el "dibujado" del hitbox con respecto a la posicion del dibujo completo del monstruo
     int velocidad;
     int vida;
@@ -48,7 +52,15 @@ typedef enum {
     M_DEAMBULANDO,
     M_PERSIGUIENDO,
     M_ATACANDO,
+    M_ELIMNADO
 } EstadoMonstruo;
+
+typedef enum { // Definido en el orden que está en las filas de la textura del personaje.
+    ORIENTACION_MONSTRUO_ABAJO,
+    ORIENTACION_MONSTRUO_DER,
+    ORIENTACION_MONSTRUO_ARRIBA,
+    ORIENTACION_MONSTRUO_IZQ
+} EtiquetaOrientacionMonstruo;
 
 typedef struct {
     Tipo tipo;
@@ -61,17 +73,18 @@ typedef struct {
     int fotograma_actual;
     Rectangle fotograma;
     EstadoMonstruo estado;
-    EstadoMonstruo textura_activa;
-    Vector2 hb_posicion; // Este
-    Rectangle hitbox_ataque; // También podemos acceder a eso a traves del tipo
+    Vector2 hb_posicion;
+    Rectangle hitbox_combate;
     int vida;
     int ataque_hp;
 } Monstruo;
 
 void inicializa_monstruos();
 void actualizar_monstruos();
-void actualizar_monstruo(Monstruo*);
+//void actualizar_monstruo(Monstruo*);
+void actualizar_centinela(Monstruo*);
 void dibujar_monstruos();
 void actualizar_fotogramas_monstruo(Monstruo*);
 void libera_monstruos();
+void muerte_monstruo(Monstruo*);
 EtiquetaMonstruo conversion_char_enum(char*);

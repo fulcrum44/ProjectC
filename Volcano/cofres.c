@@ -6,6 +6,7 @@
 #include "cofres.h"
 #include "room.h"
 #include "character.h"
+#include "mobs.h"
 
 Texture2D items;
 Cofre *cofres;
@@ -18,6 +19,8 @@ extern int alto_sala;
 extern int ancho_sala;
 extern float delta;
 extern Personaje personaje;
+extern int cantidad_monstruos;
+extern Monstruo *monstruos;
 
 void inicializa_textura_items() {
     items=LoadTexture(TEXTURA_ITEMS);
@@ -60,6 +63,7 @@ void almacenar_cofre(int indice_losa) { // Estoy pasando parametro el indice del
     cofres[total_cofres].item_recolectable=false;
     cofres[total_cofres].item.tiempo_animacion_item=0;
     cofres[total_cofres].item.transparencia_item=1.0f;
+    cofres[total_cofres].indice_monstruo=-1;
 
     total_cofres++; // Aumentamos después de inicializar las variables para que haya concordancia con los índices y sobretodo no saltarnos cofres[0].
 }
@@ -126,26 +130,40 @@ void asignar_cofre_objeto_recolectable() {
 
     cofres[indice_aleatorio].item_recolectable=true;
 
+    /*for (int i=0; i<total_cofres; i++) {
+        if(!cofres[i].item_recolectable) cofres[i].monstruo=true;
+    }*/
+
     for (int i=0; i<total_cofres; i++) {
         printf("\nCofre con objeto: %s", (cofres[i].item_recolectable)? "Si" : "No");
     }
+
     puts("\n");
 }
 
 void dibujar_recolectable() {
     for (int i=0; i<total_cofres; i++) {
-        if (cofres[i].item_recolectable && cofres[i].abierto) { // El dibujado del item recolectado solo se hará si en ese cofre hay un item y si ha sido pulsado para abrir.
-            cofres[i].item.tiempo_animacion_item+=delta;
-            float desplazamiento = -cofres[i].item.tiempo_animacion_item * VELOCIDAD_ITEM; // Ajustamos la velocidad del desplazamiento de la textura.
 
-            cofres[i].item.transparencia_item-=delta; // Delta regularmente es 0.0167f, cantidad razonable para ir disminuyendo la opacidad de la textura que empieza en 1.0f;
+        if (cofres[i].abierto) { // El dibujado del item recolectado solo se hará si en ese cofre hay un item y si ha sido pulsado para abrir.
+            if (cofres[i].item_recolectable) {
+                cofres[i].item.tiempo_animacion_item+=delta;
+                float desplazamiento = -cofres[i].item.tiempo_animacion_item * VELOCIDAD_ITEM; // Ajustamos la velocidad del desplazamiento de la textura.
 
-            DrawTextureRec(items,
-             (Rectangle){TEXTURA_X_ITEM, TEXTURA_Y_ITEM, ANCHO_ITEM, ALTO_ITEM},
-             (Vector2){(cofres[i].losa.x * ancho_losa), ((cofres[i].losa.y * alto_losa) - alto_losa + desplazamiento)}, // Empezará a dibujarse en la losa superior donde está el cofre e irá subiendo progresivamente hasta desaparecer
-             (ColorAlpha)(WHITE, cofres[i].item.transparencia_item)); // Con ColorAlpha podemos manipular la transparencia (alpha) de la textura a nuestra conveniencia
+                cofres[i].item.transparencia_item-=delta; // Delta regularmente es 0.0167f, cantidad razonable para ir disminuyendo la opacidad de la textura que empieza en 1.0f;
 
-            if (cofres[i].item.transparencia_item <= 0) cofres[i].item_recolectable=false; // Desactivamos el objeto recolectable una vez el dibujado sea totalmente transparente asi no hay que dibujarlo más.
+                DrawTextureRec(items,
+                 (Rectangle){TEXTURA_X_ITEM, TEXTURA_Y_ITEM, ANCHO_ITEM, ALTO_ITEM},
+                 (Vector2){(cofres[i].losa.x * ancho_losa), ((cofres[i].losa.y * alto_losa) - alto_losa + desplazamiento)}, // Empezará a dibujarse en la losa superior donde está el cofre e irá subiendo progresivamente hasta desaparecer
+                 (ColorAlpha)(WHITE, cofres[i].item.transparencia_item)); // Con ColorAlpha podemos manipular la transparencia (alpha) de la textura a nuestra conveniencia
+
+                if (cofres[i].item.transparencia_item <= 0) cofres[i].item_recolectable=false; // Desactivamos el objeto recolectable una vez el dibujado sea totalmente transparente asi no hay que dibujarlo más.
+            }
+
+            if (cofres[i].monstruo) {
+                monstruos[cofres[i].indice_monstruo].activo=true; // Activamos el monstruo del cofre.
+                monstruos[cofres[i].indice_monstruo].estado=M_PERSIGUIENDO; // Inicialmente el monstruo está parado. Empieza a perseguir al personaje inmediatamente después de activarse
+                cofres[i].monstruo=false; // Desactivamos la variable que indica si hay un monstruo en el cofre. Si no desactivamos se seguirá cumpliendo la condición en todos los frames y da lugar a errores inesperados.
+            }
         }
     }
 }

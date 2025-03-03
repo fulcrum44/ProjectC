@@ -5,32 +5,34 @@
 #define PERSONAJE 0
 #define MONSTRUO 1
 
-// DATOS FOTOGRAMAS
-#define ALTO_FOTOGRAMA 64
-#define ANCHO_FOTOGRAMA 64
-#define FOTOGRAMAS 12
-#define TIEMPO_FOTOGRAMA 0.15f
-#define TIEMPO_FOTOGRAMA_ATAQUE 0.10f
-
-// DIMENSIONES Y POSICION HITBOX RELATIVAS PERSONAJE
-#define HB_X_ORIGEN -6
-#define HB_Y_ORIGEN -6
-#define HB_LONG_VERTICAL 7
-#define HB_LONG_HORIZONTAL 13
+#define CANTIDAD_HITBOXES 5
 
 // POSICIONES INCIALES NIVEL
 #define ETIQ_NOMBRE_PERSONAJE "\"name\":\"personaje\","
 #define ETIQ_X_OBJETO "\"x\":"
 #define ETIQ_Y_OBJETO "\"y\":"
 
-// ORIENTACIONES PERSONAJE
-#define ORIENTACION_ABAJO 0
-#define ORIENTACION_IZQ 1
-#define ORIENTACION_DER 2
-#define ORIENTACION_ARRIBA 3
-
 // TEXTURAS
 #define CANTIDAD_TEXTURAS_PERSONAJE 3
+
+// DATOS FOTOGRAMAS
+#define ALTO_FOTOGRAMA 64
+#define ANCHO_FOTOGRAMA 64
+#define FOTOGRAMAS 12
+#define TIEMPO_FOTOGRAMA 0.15f
+#define TIEMPO_FOTOGRAMA_ATAQUE 0.08f
+
+// DIMENSIONES Y POSICION HITBOX MOVIMIENTO RELATIVAS PERSONAJE
+#define HB_X_ORIGEN -6
+#define HB_Y_ORIGEN -6
+#define HB_LONG_VERTICAL 7
+#define HB_LONG_HORIZONTAL 13
+
+// ORIENTACIONES PERSONAJE
+/*#define ORIENTACION_ABAJO 0
+#define ORIENTACION_IZQ 1
+#define ORIENTACION_DER 2
+#define ORIENTACION_ARRIBA 3*/
 
 // TIPOS DE SUELO
 #define SUELO_NO_TRANSITABLE 0
@@ -40,12 +42,34 @@
 #define REJA_ABIERTA 854
 #define REJA_CERRADA 827
 
+// DIMENSIONES Y POSICIONES HITBOX MUÑECO Y HITBOX ATAQUE
+
+
+// COMBATE
+#define VIDA_PERSONAJE 200
+#define DANYO_ATAQUE_PERSONAJE 60
+
 
 typedef enum {
     P_PARADO,
     P_CORRIENDO,
     P_ATACANDO,
 } EstadoPersonaje;
+
+typedef enum { // Definido en el orden que está en las filas de la textura del personaje.
+    ORIENTACION_ABAJO,
+    ORIENTACION_IZQ,
+    ORIENTACION_DER,
+    ORIENTACION_ARRIBA
+} EtiquetaOrientacion;
+
+typedef enum { // LOS INDICES LOS ATAQUE COINCIDEN CON LOS INDICES DE ORIENTACION
+    ATAQUE_INFERIOR,
+    ATAQUE_IZQUIERDA,
+    ATAQUE_DERECHA,
+    ATAQUE_SUPERIOR,
+    TORSO,
+} EtiquetaHitbox;
 
 typedef struct {
     Vector2 posicion;
@@ -60,7 +84,9 @@ typedef struct {
     EstadoPersonaje textura_activa;
     Vector2 losa;
     Vector2 hb_posicion;
-    Rectangle hitbox_ataque; // Este será el hitbox para el combate
+    Rectangle hitboxes[CANTIDAD_HITBOXES];
+    int vida;
+    int danyo;
 } Personaje;
 
 void crear_personaje(Personaje*);

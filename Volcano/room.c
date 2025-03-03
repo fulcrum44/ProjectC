@@ -20,7 +20,7 @@ int ancho_losa;
 int alto_losa;
 int losa_x_reja;
 int losa_y_reja;
-int total_botones=0;
+int total_botones;
 
 Texture2D volcan;
 Texture2D objetos;
@@ -40,9 +40,6 @@ int preparar_juego() {
 
     if (cantidad_niveles == 0) return(-1);
 
-    // Empezamos el juego en la sala de preparación
-    //inicializa_nivel(NIVEL_INICIAL);
-
     return 0;
 }
 
@@ -55,6 +52,9 @@ void inicializa_nivel(int nivel) {
     char *cursor=NULL;
     char nombre_tileset[20];
     nivel_actual=nivel;
+
+    total_botones=0; // Inicializamos la cantidad de botones en el nivel. Reiniciamos en caso de que hayamos vuelto al menu principal y empezado de nuevo la partida
+
     // Construimos nombre del archivo a leer
     sprintf(nombre_archivo, "%s%d%s", NOMBRE_BASE_ARCHIVO, nivel_actual, EXTENSION_ARCHIVO);
 
@@ -98,8 +98,6 @@ void inicializa_nivel(int nivel) {
     printf("\n%d", ancho_losa);
     printf("\n%d\n", alto_losa);
     //printf("%s", nombre_tileset);
-
-    //datos_archivo=LoadFileText(nombre_archivo);
 
     // Leemos y guardamos los datos propios de la configuración de aspecto de la sala.
     terreno=malloc(sizeof(int)*CANTIDAD_CAPAS_SALA*ancho_sala*alto_sala);

@@ -5,6 +5,7 @@
 #include "character.h"
 #include "room.h"
 #include "teclado.h"
+#include "mobs.h"
 
 Texture2D sprite[CANTIDAD_TEXTURAS_PERSONAJE];
 int orientacion;
@@ -14,6 +15,22 @@ const char *TEXTURAS_PERSONAJE[]= { // ANIMACIONES
     "resources\\character\\PNG\\Unarmed_Run\\Unarmed_Run_full.png", // P_CORRIENDO
     "resources\\character\\PNG\\Sword_attack\\Sword_attack_full.png" // P_ATANCANDO
 };
+
+const Rectangle HITBOX_PERSONAJE[]= {
+    (Rectangle){-8, 1, 17, 9}, // ATAQUE INFERIOR = 0
+    (Rectangle){-22, -21, 17, 22}, // ATAQUE IZQUIERDO = 1
+    (Rectangle){7, -21, 17, 22}, // ATAQUE DERECHO = 2
+    (Rectangle){-8, -30, 17, 9}, // ATAQUE ARRIBA = 3
+    (Rectangle){-6, -9, 13, 6} // TORSO = 4
+};
+
+/*const Rectangle HITBOX_PERSONAJE[]= {
+    (Rectangle){25, 44, 13, 9}, // ATAQUE INFERIOR = 0
+    (Rectangle){9, 22, 13, 22}, // ATAQUE IZQUIERDO = 1
+    (Rectangle){50, 22, 13, 22}, // ATAQUE DERECHO = 2
+    (Rectangle){25, 13, 13, 9}, // ATAQUE ARRIBA = 3
+    (Rectangle){25, 34, 13, 6} // TORSO = 4
+};*/
 
 extern float delta;
 extern int *terreno;
@@ -25,6 +42,8 @@ extern char *datos_archivo;
 extern int losa_x_reja;
 extern int losa_y_reja;
 extern int total_botones;
+extern Monstruo *monstruos;
+extern int cantidad_monstruos;
 
 void inicializa_textura_personaje() { // Ahora mismo va a parecer un poco innecesario pero luego le podemos dar uso de verdad si tenemos varios personajes.
     for (int i=0; i<CANTIDAD_TEXTURAS_PERSONAJE; i++) {
@@ -41,6 +60,15 @@ void crear_personaje(Personaje *p) {
     p->fotograma_actual=0;
     p->fotogramas_ataque_restantes=0;
     p->fotograma=(Rectangle){0,0, ANCHO_FOTOGRAMA, ALTO_FOTOGRAMA};
+    p->vida=VIDA_PERSONAJE;
+    p->danyo=DANYO_ATAQUE_PERSONAJE;
+
+    for (int i=0; i<CANTIDAD_HITBOXES; i++) {
+        p->hitboxes[i].x=p->posicion.x + HITBOX_PERSONAJE[i].x;
+        p->hitboxes[i].y=p->posicion.y + HITBOX_PERSONAJE[i].y;
+        p->hitboxes[i].width=HITBOX_PERSONAJE[i].width;
+        p->hitboxes[i].height=HITBOX_PERSONAJE[i].height;
+    }
 }
 
 void actualizar_personaje(Personaje *p) {
@@ -52,7 +80,7 @@ void actualizar_personaje(Personaje *p) {
     else if (p->estado == P_ATACANDO && p->textura_activa != P_ATACANDO) p->textura_activa=P_ATACANDO;
 
     // Actualizamos si ha habido un intento de moverse
-    if (p->estado == P_CORRIENDO || p->estado == P_PARADO) {
+    if (p->estado == P_CORRIENDO) {
         p->fotograma.y=ALTO_FOTOGRAMA * orientacion; // Cambio de direccion en los fotogramas
 
         // Normalizamos
@@ -65,9 +93,20 @@ void actualizar_personaje(Personaje *p) {
             return;
         }
 
-        // Actualizamos datos relativos a la posicion del personaje
+        // Actualizamos datos dependientes de la posicion del personaje
         p->posicion=destino;
         p->hb_posicion=destino_hitbox;
+
+        for (int i=0; i<CANTIDAD_HITBOXES; i++) {
+            p->hitboxes[i].x=p->posicion.x + HITBOX_PERSONAJE[i].x;
+            p->hitboxes[i].y=p->posicion.y + HITBOX_PERSONAJE[i].y;
+        }
+
+        /*for (int i=0; i<CANTIDAD_HITBOXES; i++) {
+            if (i == CANTIDAD_HITBOXES-1) break;
+            printf("\n\nHitbox ataque -> x: %f | y: %f", p->hitboxes[i].x=p->posicion.x + HITBOX_PERSONAJE[i].x, p->hitboxes[i].y=p->posicion.y + HITBOX_PERSONAJE[i].y);
+        }*/
+
         p->losa=conversion_coordenadas_losa(p->posicion);
 
         // Importante reiniciar estas variables para el proximo frame. Reiniciamos después de haber validado el movimiento y no antes porque la entrada por teclado se gestiona antes de entrar en actualizar_personaje()
@@ -89,8 +128,8 @@ void actualizar_fotogramas_personaje(Personaje *p) {
         if (p->tiempo >= TIEMPO_FOTOGRAMA_ATAQUE) {
                 p->fotograma_actual++;
                 p->fotogramas_ataque_restantes--;
-                p->fotograma.x=p->fotograma_actual * ANCHO_FOTOGRAMA;
-                p->tiempo=0;
+                p->fotograma.x=p->fotograma_actual * ANCHO_FOTOGRAMA; // Avanzamos al siguiente fotograma en la textura
+                p->tiempo=0; // Reiniciamos la variable
 
                 if (p->fotogramas_ataque_restantes <= 0) {
                     p->estado=P_PARADO;
@@ -102,9 +141,9 @@ void actualizar_fotogramas_personaje(Personaje *p) {
     // Animacion general
     if (p->tiempo >= TIEMPO_FOTOGRAMA) {
         p->fotograma_actual++;
-        p->fotograma_actual%=FOTOGRAMAS; // Si orientacion_p es 3 el personaje está mirando hacia arriba
-        p->tiempo=0;
-        p->fotograma.x=p->fotograma_actual * ANCHO_FOTOGRAMA;
+        p->fotograma_actual%=FOTOGRAMAS; // Ajustamos el fotograma actual al rango de fotogramas por fila en textura.
+        p->tiempo=0; // Reiniciamos la variable
+        p->fotograma.x=p->fotograma_actual * ANCHO_FOTOGRAMA; // Avanzamos al siguiente fotograma en la textura
     }
 }
 
@@ -113,16 +152,22 @@ void dibujar_personaje(Personaje *p) {
     //DrawTextureRec(sprite, p->fotograma, p->posicion, WHITE);
     DrawTexturePro(sprite[p->textura_activa], p->fotograma, (Rectangle){p->posicion.x, p->posicion.y, ANCHO_FOTOGRAMA, ALTO_FOTOGRAMA}, (Vector2){31, 43}, 0.0f, WHITE);
 
+    /*for (int i=0; i<CANTIDAD_HITBOXES; i++) {
+        if (i == CANTIDAD_HITBOXES - 1) break;
+        DrawRectangle(p->hitboxes[i].x, p->hitboxes[i].y, p->hitboxes[i].width, p->hitboxes[i].height, BLUE);
+    }*/
+
     //DrawRectangle(p->hb_posicion.x,p->hb_posicion.y,HB_LONG_HORIZONTAL,HB_LONG_VERTICAL,WHITE);
 }
 
-bool suelo_transitable(Vector2 destino, int sujeto) { // Antes le pasabamos el puntero a Vector2 losa. Puede que más adelante lo use.
+bool suelo_transitable(Vector2 destino, int sujeto) {
+    // Comprobamos que las esquinas del hitbox del personaje no estén colisionando con suelo no transitable
     if (!hb_esquina((Vector2){destino.x, destino.y}, sujeto)) return false;
     if (!hb_esquina((Vector2){destino.x+HB_LONG_HORIZONTAL, destino.y}, sujeto)) return false;
     if (!hb_esquina((Vector2){destino.x+HB_LONG_HORIZONTAL, destino.y+HB_LONG_VERTICAL}, sujeto)) return false;
     if (!hb_esquina((Vector2){destino.x+HB_LONG_HORIZONTAL, destino.y+HB_LONG_VERTICAL}, sujeto)) return false;
 
-    return true;
+    return true; // Devolvemos true si el suelo donde pretendemos movernos es transitable
 }
 
 bool hb_esquina(Vector2 esquina, int sujeto) {
@@ -134,8 +179,10 @@ bool hb_esquina(Vector2 esquina, int sujeto) {
 
     if (losa_esquina == SUELO_NO_TRANSITABLE) return false;
 
-    if (sujeto == MONSTRUO) return true;
+    if (sujeto == MONSTRUO) return true; // El resto de la función corresponde a mecánica del personaje.
 
+
+    // Comprobamos a partir de aqui si el personaje ha pisado algun elemento interactivo del mapa.
     if (losa_esquina == PUERTA_SIGUIENTE_NIVEL) siguiente_nivel();
 
     if (losa_esquina == BOTON) {
@@ -163,12 +210,12 @@ Vector2 conversion_coordenadas_losa(Vector2 coordenada) {
 void posicion_inicial_nivel(Personaje *p) {
     char *cursor;
 
+    // Buscamos la información del punto de aparición del personaje en el archivo del mapa del nivel actual
     cursor=strstr(datos_archivo, ETIQ_NOMBRE_PERSONAJE)+strlen(ETIQ_NOMBRE_PERSONAJE);
     sscanf(strstr(cursor, ETIQ_X_OBJETO)+strlen(ETIQ_X_OBJETO), "%f", &p->posicion.x);
     sscanf(strstr(cursor, ETIQ_Y_OBJETO)+strlen(ETIQ_Y_OBJETO), "%f", &p->posicion.y);
 
-    printf("\nx: %f - y: %f", p->posicion.x, p->posicion.y);
-
+    // Colocamos el hitbox en posicion
     p->hb_posicion.x=p->posicion.x+HB_X_ORIGEN;
     p->hb_posicion.y=p->posicion.y+HB_Y_ORIGEN;
 }
@@ -203,5 +250,19 @@ void ataque_personaje(Personaje *p) {
         p->estado=P_ATACANDO;
         p->fotograma_actual=0; // Nos aseguramos que empezaremos por el primer fotograma
         p->fotogramas_ataque_restantes=FOTOGRAMAS; // Esto es lo que durará la animación de ataque en fotogramas.
+
+        for (int i=0; i<cantidad_monstruos; i++) {
+            if (!monstruos[i].activo) continue; // No comprobamos colisiones de ataque con monstruos inactivos
+
+            if (CheckCollisionRecs(p->hitboxes[orientacion], monstruos[i].hitbox_combate)) {
+                monstruos[i].vida-=p->danyo;
+
+                muerte_monstruo(&monstruos[i]);
+
+                printf("\nVida monstruo %d: %d", i, monstruos[i].vida);
+                //printf("\n\nPersonaje ataca a monstruo\n\n");
+            }
+        }
     }
+
 }

@@ -2,8 +2,8 @@
 #include "dimensiones_struct.h"
 
 const int CANTIDAD_MOBS_NIVEL[]={
-    0,
-    12
+    1,
+    2
 };
 
 const Rectangle TEXTURAS[]={
@@ -24,7 +24,7 @@ const Dimensiones FOTOGRAMA[]={
     (Dimensiones){16, 16} // CABEZON
 };
 
-const Dimensiones CUADRICULA_FOTOGRAMAS[]={
+const Dimensiones CUADRICULA_FOTOGRAMAS[]={ // Importante: La ultima fila de todas las cuadriculas corresponde con el monstruo muriendo.
     (Dimensiones){5, 7}, // DUENDE_MAGMA
     (Dimensiones){5, 7}, // CHISPA_MAGMA
     (Dimensiones){6, 4}, // SLIME
@@ -42,7 +42,16 @@ const Dimensiones HITBOX_COLISIONES[]={
     (Dimensiones){3, 16} // CABEZON
 };
 
-const Vector2 ORIGEN_HB[]={ // Los vectores que tienen el valor {0,0} no se usarán. El origen del hitbox es el mismo que el de la textura.
+const Dimensiones HITBOX_COMBATE[]={ // Incompleto
+    (Dimensiones){0, 0}, // DUENDE_MAGMA
+    (Dimensiones){0, 0}, // CHISPA_MAGMA
+    (Dimensiones){0, 0}, // SLIME
+    (Dimensiones){16, 16}, // CENTINELA
+    (Dimensiones){0, 0}, // SETA_MAGMA
+    (Dimensiones){0, 0} // CABEZON
+};
+
+const Vector2 ORIGEN_HB_COLISIONES[]={ // Los vectores que tienen el valor {0,0} no se usarán. El origen del hitbox es el mismo que el de la textura.
     (Vector2){0, 0}, // DUENDE_MAGMA
     (Vector2){0, 0}, // CHISPA_MAGMA
     (Vector2){0, 3}, // SLIME

@@ -37,7 +37,9 @@ typedef struct {
     Vector2 losa;
     Rectangle hitbox;
     bool item_recolectable;
+    bool monstruo;
     Item item;
+    int indice_monstruo;
 } Cofre;
 
 void inicializa_textura_items();
