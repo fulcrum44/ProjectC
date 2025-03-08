@@ -26,8 +26,9 @@ void actualizar_raton() {
 
     if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
         // Al entrar en las funciones, con que una devuelva true ya no se comprobará más
-        if (boton_menu_principal_pulsado(posicion_raton)) return;
-        if (boton_menu_pausa_pulsado(posicion_raton)) return;
+        if (pantalla == PANTALLA_MENU && boton_menu_principal_pulsado(posicion_raton)) return;
+        if (pantalla == PANTALLA_JUEGO && boton_menu_pausa_pulsado(posicion_raton)) return;
+
     }
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) ataque_personaje(&personaje);

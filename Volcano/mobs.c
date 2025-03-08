@@ -64,6 +64,8 @@ void inicializa_monstruos() {
         monstruos[i].fotograma=(Rectangle){monstruos[i].tipo.textura.x, monstruos[i].tipo.textura.y, monstruos[i].tipo.fotograma.ancho, monstruos[i].tipo.fotograma.alto};
         monstruos[i].estado=M_PARADO;
         monstruos[i].vida=monstruos[i].tipo.vida;
+        monstruos[i].danyo=monstruos[i].tipo.dmg;
+        monstruos[i].duracion_ataque=DELAY_ATAQUE;
 
         // Inicializamos posicion centinela
         printf("\nTOTAL COFRES: %d", total_cofres);
@@ -195,7 +197,7 @@ void actualizar_monstruos() {
 
 void actualizar_centinela(Monstruo *m) {
     // Calculamos la distancia del monstruo con respecto al personaje. Lo guardamos primero en una variable aparte.
-    Vector2 diferencia=Vector2Subtract(personaje.posicion, m->posicion);
+    Vector2 diferencia=Vector2Subtract((Vector2){personaje.hitboxes[TORSO].x, personaje.hitboxes[TORSO].y}, m->posicion);
 
     // Cambiamos la orientación que está mirando el monstruo según cómo se esté moviendo.
     if (diferencia.y < 0 && fabs(diferencia.y) > fabs(diferencia.x)) orientacion_monstruo=ORIENTACION_MONSTRUO_ARRIBA;
@@ -217,8 +219,12 @@ void actualizar_centinela(Monstruo *m) {
     m->hitbox_combate.x=destino.x;
     m->hitbox_combate.y=destino.y;
 
+    // Comprobamos si el hitbox del combate del monstruo está colisionando con del personaje
+    ataque_centinela(m);
+
     // Animacion
     actualizar_fotogramas_monstruo(m);
+
 }
 
 void actualizar_fotogramas_monstruo(Monstruo *m) {
@@ -270,7 +276,34 @@ void muerte_monstruo(Monstruo *m) {
     else return;
 }
 
-EtiquetaMonstruo conversion_char_enum(char* tipo) {
+void ataque_centinela(Monstruo *m) {
+    if (m->estado == M_ATACANDO) {
+        m->duracion_ataque--;
+
+        if (m->duracion_ataque <= 0) {
+            m->estado=M_PERSIGUIENDO;
+            m->duracion_ataque=DELAY_ATAQUE;
+        }
+
+        return;
+    }
+
+    if (m->estado != M_ATACANDO) {
+        if (CheckCollisionRecs(m->hitbox_combate, personaje.hitboxes[TORSO])) {
+            m->estado=M_ATACANDO;
+            m->duracion_ataque--;
+            personaje.vida-=m->danyo;
+
+            muerte_personaje(&personaje);
+
+            printf("\nDaño hecho por el monstruo: %d", m->danyo);
+
+            printf("\nVida personaje: %d", personaje.vida);
+        }
+    }
+}
+
+/*EtiquetaMonstruo conversion_char_enum(char* tipo) { // EN DESUSO EN ESTA VERSION
     if (strcmp(tipo, "DUENDE_MAGMA") == 0) return DUENDE_MAGMA;
     else if (strcmp(tipo, "CHISPA_MAGMA") == 0) return CHISPA_MAGMA;
     else if (strcmp(tipo, "SLIME") == 0) return SLIME;
@@ -280,4 +313,4 @@ EtiquetaMonstruo conversion_char_enum(char* tipo) {
 
     // Llegados aquí es que algo ha ido muy mal
     exit(-1);
-}
+}*/

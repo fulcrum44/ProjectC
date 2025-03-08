@@ -1,3 +1,4 @@
+#include "stdio.h"
 #include "stdlib.h"
 #include "raylib.h"
 #include "raymath.h"
@@ -13,6 +14,7 @@ void inicializar();
 void actualizar();
 void dibujar();
 
+// Resolución de pantalla solo usada para InitWindow. Luego se redimensiona ajustandose a la pantalla donde se esté ejecutando
 const int screenWidth = 1440;
 const int screenHeight = 1080;
 
@@ -53,6 +55,21 @@ void inicializar() {
     // Init window
 
     InitWindow(screenWidth, screenHeight, "Volcano");
+
+    /*int monitor=GetCurrentMonitor();
+    int ancho_pantalla=GetMonitorWidth(monitor);
+    int alto_pantalla=GetMonitorHeight(monitor);
+
+    printf("\nAncho monitor: %d", ancho_pantalla);
+    printf("\nAlto monitor: %d", alto_pantalla);
+
+    SetWindowSize(ancho_pantalla, alto_pantalla);
+
+    printf("\nAncho ventana: %d", GetScreenWidth());
+    printf("\nAlto ventana: %d", GetScreenHeight()); // Da 9 menos que el del monitor por barra del borde superior
+
+    SetWindowPosition(0,0);*/
+
     //ToggleFullscreen();
     SetTargetFPS(60);
 

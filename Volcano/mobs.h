@@ -7,10 +7,7 @@
 
 #define TIPOS_MONSTRUO 6
 
-// DATOS ESTADO MONSTRUOS
-#define PROB_CAMBIO_DIRECCION 2
-#define RANGO_VISION 150
-#define RANGO_ATAQUE 20
+#define DELAY_ATAQUE 60
 
 // DATOS FOTOGRAMAS
 #define TIEMPO_FOTOGRAMA 0.15f
@@ -76,7 +73,8 @@ typedef struct {
     Vector2 hb_posicion;
     Rectangle hitbox_combate;
     int vida;
-    int ataque_hp;
+    int danyo;
+    int duracion_ataque; // Esto es como un delay para que el monstruo no pueda atacar en todos los FPS. En monstruos con ataque de contacto es importante ponerlo si no queremos que se la situación de choque durante varios FPS seguidos y el personaje muera en cuestión de segundos.
 } Monstruo;
 
 void inicializa_monstruos();
@@ -87,4 +85,5 @@ void dibujar_monstruos();
 void actualizar_fotogramas_monstruo(Monstruo*);
 void libera_monstruos();
 void muerte_monstruo(Monstruo*);
+void ataque_centinela(Monstruo*);
 EtiquetaMonstruo conversion_char_enum(char*);

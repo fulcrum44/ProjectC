@@ -13,7 +13,7 @@
 #define ETIQ_Y_OBJETO "\"y\":"
 
 // TEXTURAS
-#define CANTIDAD_TEXTURAS_PERSONAJE 3
+#define CANTIDAD_TEXTURAS_PERSONAJE 4
 
 // DATOS FOTOGRAMAS
 #define ALTO_FOTOGRAMA 64
@@ -54,6 +54,7 @@ typedef enum {
     P_PARADO,
     P_CORRIENDO,
     P_ATACANDO,
+    P_ELIMINADO
 } EstadoPersonaje;
 
 typedef enum { // Definido en el orden que está en las filas de la textura del personaje.
@@ -99,6 +100,7 @@ void actualizar_fotogramas_personaje(Personaje*);
 bool suelo_transitable(Vector2, int);
 bool hb_esquina(Vector2, int);
 void posicion_inicial_nivel(Personaje*);
+void muerte_personaje(Personaje*);
 Vector2 conversion_coordenadas_losa(Vector2);
 
 

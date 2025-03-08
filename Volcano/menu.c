@@ -74,6 +74,11 @@ void inicializar_menu_pausa() {
 }
 
 void dibujar_menu_principal() {
+    // He configurado las dimensiones y coordenadas de los elementos del menú usando una resolucion de pantalla de 1440x1080 como referencia.
+    // El tamaño de la pantalla se ajusta al tamaño del monitor desde el que se ejecuta. Si la resolución máxima de un equipo es menor que la de referencia, los elementos del menú empiezan a comprimirse y solaparse.
+    // Cuando las dimensiones del monitor sean menores que la resolución de referencia, escalaremos los elementos del menú para que su tamaño se adapte al espacio disponible de pantalla.
+
+
     // Ajustamos las coordenadas para que la imagen de fondo se dibuje en el centro de la pantalla
     float fondo_x=x_centro_pantalla - (fondo.width * ESCALADO_IMAGEN)/2;
     float fondo_y=y_centro_pantalla - (fondo.height * ESCALADO_IMAGEN)/2;
@@ -102,8 +107,7 @@ bool boton_menu_principal_pulsado(Vector2 posicion_raton) {
     for (int i=0; i<CANTIDAD_BOTONES_MENU_PRINCIPAL; i++) {
         if (CheckCollisionPointRec(posicion_raton, botones[i].hitbox)) {
             pantalla=botones[i].tipo;
-            if (botones[i].tipo=EMPEZAR_PARTIDA) iniciar_partida();
-
+            if (botones[i].tipo==EMPEZAR_PARTIDA) iniciar_partida();
             return true;
         }
     }

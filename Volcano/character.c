@@ -13,7 +13,8 @@ int orientacion;
 const char *TEXTURAS_PERSONAJE[]= { // ANIMACIONES
     "resources\\character\\PNG\\Unarmed_Idle\\Unarmed_Idle_full.png", // P_PARADO
     "resources\\character\\PNG\\Unarmed_Run\\Unarmed_Run_full.png", // P_CORRIENDO
-    "resources\\character\\PNG\\Sword_attack\\Sword_attack_full.png" // P_ATANCANDO
+    "resources\\character\\PNG\\Sword_attack\\Sword_attack_full.png", // P_ATANCANDO
+    "resources\\character\\PNG\\Unarmed_Death\\Unarmed_Death_full.png" // P_ELIMINADO
 };
 
 const Rectangle HITBOX_PERSONAJE[]= {
@@ -21,7 +22,7 @@ const Rectangle HITBOX_PERSONAJE[]= {
     (Rectangle){-22, -21, 17, 22}, // ATAQUE IZQUIERDO = 1
     (Rectangle){7, -21, 17, 22}, // ATAQUE DERECHO = 2
     (Rectangle){-8, -30, 17, 9}, // ATAQUE ARRIBA = 3
-    (Rectangle){-6, -9, 13, 6} // TORSO = 4
+    (Rectangle){-6, -12, 13, 9} // TORSO = 4
 };
 
 /*const Rectangle HITBOX_PERSONAJE[]= {
@@ -78,6 +79,7 @@ void actualizar_personaje(Personaje *p) {
     if (p->estado == P_PARADO && p->textura_activa != P_PARADO) p->textura_activa=P_PARADO;
     else if (p->estado == P_CORRIENDO && p->textura_activa != P_CORRIENDO) p->textura_activa=P_CORRIENDO;
     else if (p->estado == P_ATACANDO && p->textura_activa != P_ATACANDO) p->textura_activa=P_ATACANDO;
+    else if (p->estado == P_ELIMINADO && p->textura_activa != P_ELIMINADO) p->textura_activa=P_ELIMINADO;
 
     // Actualizamos si ha habido un intento de moverse
     if (p->estado == P_CORRIENDO) {
@@ -151,6 +153,7 @@ void dibujar_personaje(Personaje *p) {
 
     //DrawTextureRec(sprite, p->fotograma, p->posicion, WHITE);
     DrawTexturePro(sprite[p->textura_activa], p->fotograma, (Rectangle){p->posicion.x, p->posicion.y, ANCHO_FOTOGRAMA, ALTO_FOTOGRAMA}, (Vector2){31, 43}, 0.0f, WHITE);
+   // DrawRectangle(p->hitboxes[TORSO].x, p->hitboxes[TORSO].y, p->hitboxes[TORSO].width, p->hitboxes[TORSO].height, BLUE);
 
     /*for (int i=0; i<CANTIDAD_HITBOXES; i++) {
         if (i == CANTIDAD_HITBOXES - 1) break;
@@ -264,5 +267,11 @@ void ataque_personaje(Personaje *p) {
             }
         }
     }
+}
 
+void muerte_personaje(Personaje *p) {
+    if (p->vida <= 0) {
+        p->estado=P_ELIMINADO;
+        p->fotograma_actual=0;
+    }
 }
