@@ -132,7 +132,15 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="cofres.h" />
+		<Unit filename="crono.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="crono.h" />
 		<Unit filename="dimensiones_struct.h" />
+		<Unit filename="gui.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="gui.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

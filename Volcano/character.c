@@ -53,7 +53,7 @@ void inicializa_textura_personaje() { // Ahora mismo va a parecer un poco innece
 }
 
 void crear_personaje(Personaje *p) {
-    posicion_inicial_nivel(p); // ESTO DEBE VARIAR SEGÚN EL NIVEL EN EL QUE ENTREMOS
+    posicion_inicial_nivel(p); // En esta función gestionamos lo relativo a la posición del personaje como su propia posición como la de sus hitboxes. // ESTO DEBE VARIAR SEGÚN EL NIVEL EN EL QUE ENTREMOS
     p->direccion_desplazamiento=(Vector2){0,0};
     p->velocidad=110;
     p->textura_activa=P_PARADO;
@@ -63,13 +63,8 @@ void crear_personaje(Personaje *p) {
     p->fotograma=(Rectangle){0,0, ANCHO_FOTOGRAMA, ALTO_FOTOGRAMA};
     p->vida=VIDA_PERSONAJE;
     p->danyo=DANYO_ATAQUE_PERSONAJE;
+    p->total_muertes=0;
 
-    for (int i=0; i<CANTIDAD_HITBOXES; i++) {
-        p->hitboxes[i].x=p->posicion.x + HITBOX_PERSONAJE[i].x;
-        p->hitboxes[i].y=p->posicion.y + HITBOX_PERSONAJE[i].y;
-        p->hitboxes[i].width=HITBOX_PERSONAJE[i].width;
-        p->hitboxes[i].height=HITBOX_PERSONAJE[i].height;
-    }
 }
 
 void actualizar_personaje(Personaje *p) {
@@ -138,6 +133,21 @@ void actualizar_fotogramas_personaje(Personaje *p) {
                 }
         }
         return;
+    }
+
+    // Animacion muerte
+    if (p->estado == P_ELIMINADO) {
+        if (p->tiempo >= TIEMPO_FOTOGRAMA) {
+            // Si en el frame anterior ya se ha llegado al último fotograma de la textura no avanzamos más y reiniciamos el personaje
+            if (p->fotograma_actual == FOTOGRAMAS_MUERTE) { // Cuando el personaje muerte solo queremos que la animación de su muerte se reproduzca un único ciclo completo antes de reaparecer.
+                reinicio_personaje(p);
+                return;
+            }
+
+            p->fotograma_actual++;
+            p->fotograma.x=p->fotograma_actual * ANCHO_FOTOGRAMA; // Avanzamos al siguiente fotograma en la textura
+            p->tiempo=0; // Reiniciamos la variable
+        }
     }
 
     // Animacion general
@@ -213,14 +223,22 @@ Vector2 conversion_coordenadas_losa(Vector2 coordenada) {
 void posicion_inicial_nivel(Personaje *p) {
     char *cursor;
 
-    // Buscamos la información del punto de aparición del personaje en el archivo del mapa del nivel actual
+    // Buscamos la información del punto de aparición del personaje en el archivo del mapa del nivel actual para determinar su posición inicial
     cursor=strstr(datos_archivo, ETIQ_NOMBRE_PERSONAJE)+strlen(ETIQ_NOMBRE_PERSONAJE);
     sscanf(strstr(cursor, ETIQ_X_OBJETO)+strlen(ETIQ_X_OBJETO), "%f", &p->posicion.x);
     sscanf(strstr(cursor, ETIQ_Y_OBJETO)+strlen(ETIQ_Y_OBJETO), "%f", &p->posicion.y);
 
-    // Colocamos el hitbox en posicion
+    // Colocamos el hitbox de movimiento en posicion
     p->hb_posicion.x=p->posicion.x+HB_X_ORIGEN;
     p->hb_posicion.y=p->posicion.y+HB_Y_ORIGEN;
+
+    // Colocamos el resto de hitboxes del personaje
+    for (int i=0; i<CANTIDAD_HITBOXES; i++) {
+        p->hitboxes[i].x=p->posicion.x + HITBOX_PERSONAJE[i].x;
+        p->hitboxes[i].y=p->posicion.y + HITBOX_PERSONAJE[i].y;
+        p->hitboxes[i].width=HITBOX_PERSONAJE[i].width;
+        p->hitboxes[i].height=HITBOX_PERSONAJE[i].height;
+    }
 }
 
 void movimiento_personaje(Personaje *p, Vector2 desplazamiento, int orientacion_final) {
@@ -270,8 +288,18 @@ void ataque_personaje(Personaje *p) {
 }
 
 void muerte_personaje(Personaje *p) {
-    if (p->vida <= 0) {
-        p->estado=P_ELIMINADO;
-        p->fotograma_actual=0;
+    if (p->estado != P_ELIMINADO) { // Procuramos que se ejecute solamente una vez por muerte.
+        if (p->vida <= 0) {
+            p->estado=P_ELIMINADO;
+            p->fotograma_actual=0;
+            p->total_muertes++;
+        }
     }
+}
+
+void reinicio_personaje(Personaje *p) {
+    p->estado=P_PARADO;
+    p->vida=VIDA_PERSONAJE; // Restablecemos vida.
+
+    posicion_inicial_nivel(p); // Reinciamos el posicionamiento del personaje y recolocamos sus hitboxes.
 }

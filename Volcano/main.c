@@ -9,6 +9,8 @@
 #include "cofres.h"
 #include "menu.h"
 #include "teclado.h"
+#include "crono.h"
+#include "gui.h"
 
 void inicializar();
 void actualizar();
@@ -68,9 +70,9 @@ void inicializar() {
     printf("\nAncho ventana: %d", GetScreenWidth());
     printf("\nAlto ventana: %d", GetScreenHeight()); // Da 9 menos que el del monitor por barra del borde superior
 
-    SetWindowPosition(0,0);*/
+    SetWindowPosition(0,0);
 
-    //ToggleFullscreen();
+    ToggleFullscreen();*/
     SetTargetFPS(60);
 
     // Definimos la primera pantalla a mostrar y mantenemos desactivado el menu de pausa.
@@ -98,12 +100,18 @@ void inicializar() {
     // Menu
     inicializar_menu();
 
+    // Texturas GUI
+    inicializar_texturas_gui();
+
     // El resto de inicializaciones se pueden encontrar en menu.c
 }
 
 void actualizar() {
     tecla_pulsada();
     actualizar_raton();
+
+    // Reloj
+    formato_hora();
 
     if (pantalla == PANTALLA_JUEGO && !pausa) {
         actualizar_personaje(&personaje);
@@ -126,14 +134,13 @@ void dibujar() {
             dibuja_nivel();
             dibujar_monstruos();
             dibujar_personaje(&personaje);
-            actualizar_raton();
             dibujar_recolectable();
             if (pausa) dibujar_menu_pausa();
-            //dibujar_hitbox();
-            //DrawText(TextFormat("Posicion: %.2f, %.2f", personaje.posicion.x, personaje.posicion.y), 250, 350, 12, GREEN);
             EndMode2D();
+
+            interfaz_grafica_juego(personaje);
             break;
     }
 
-    DrawFPS(100, 0);
+    //DrawFPS(100, 0);
 }

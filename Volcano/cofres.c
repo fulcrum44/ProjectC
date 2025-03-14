@@ -11,6 +11,8 @@
 Texture2D items;
 Cofre *cofres;
 int total_cofres;
+int items_recogidos;
+int total_items;
 
 extern int *terreno;
 extern int alto_losa;
@@ -28,7 +30,11 @@ void inicializa_textura_items() {
 
 void almacenar_cofre(int indice_losa) { // Estoy pasando parametro el indice del array terreno al ser conceptualmente las losas del mapa
     if (cofres == NULL) {
+        // Estas dos siguientes variable se inicializan o reinician solo cuando se está almacenando el primer cofre de un nivel.
         total_cofres=0;
+        items_recogidos=0;
+        total_items=0;
+
         cofres=malloc(sizeof(Cofre) * CANTIDAD_INICIAL_COFRES);
         if (cofres == NULL) {
             printf("\nERROR al reservar memoria para cofres");
@@ -78,7 +84,7 @@ bool cofre_pulsado(Vector2 posicion_raton) {
 
         if (CheckCollisionPointRec(posicion_raton, cofres[i].hitbox)) { // Pondré un cronometro. Cuando llegue a 0 la variable objeto_recogido será true y ya no se dibujará más
             animacion_cofre(&cofres[i]);
-            printf("\nCofre abierto");
+            if (cofres[i].item_recolectable) items_recogidos++;
             return true;
         } else continue;
     }
@@ -129,16 +135,7 @@ void asignar_cofre_objeto_recolectable() {
     int indice_aleatorio=rand()%total_cofres;
 
     cofres[indice_aleatorio].item_recolectable=true;
-
-    /*for (int i=0; i<total_cofres; i++) {
-        if(!cofres[i].item_recolectable) cofres[i].monstruo=true;
-    }*/
-
-    for (int i=0; i<total_cofres; i++) {
-        printf("\nCofre con objeto: %s", (cofres[i].item_recolectable)? "Si" : "No");
-    }
-
-    puts("\n");
+    total_items++;
 }
 
 void dibujar_recolectable() {

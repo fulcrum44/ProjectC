@@ -15,6 +15,7 @@ Tipo tipos[TIPOS_MONSTRUO];
 int cantidad_monstruos;
 Texture2D sprite_monstruos;
 int orientacion_monstruo;
+int monstruos_eliminados;
 
 extern int nivel_actual;
 extern char* datos_archivo; // En room.c nunca descargamos el archivo del nivel que cargamos al principio. Podemos acceder a él desde aqui.
@@ -26,9 +27,8 @@ extern int alto_losa;
 extern int ancho_losa;
 
 void inicializa_monstruos() {
-    // Inicializamos la semilla de aleatoriedad
-    //srand(time(NULL));
     monstruos=NULL;
+    monstruos_eliminados=0;
 
     // Cargamos textura donde tenemos todos los monstruos
     sprite_monstruos=LoadTexture(TEXTURA_MONSTRUOS);
@@ -267,13 +267,16 @@ void libera_monstruos() {
 }
 
 void muerte_monstruo(Monstruo *m) {
-    if (m->vida <= 0) {
-        m->estado=M_ELIMNADO; // Cambiamos el estado del monstruo para que sea detectado en la animación.
-        m->fotograma_actual=0;
-        m->fotograma.y=m->tipo.textura.y + (m->tipo.fotograma.alto * m->tipo.cuadricula_fotogramas.alto); // Antes de desactivar al monstruo por eliminación animaremos su muerte. Asignamos la fila correspondiente de fotogramas.
+    if (m->estado != M_ELIMNADO) {
+        if (m->vida <= 0) {
+            m->estado=M_ELIMNADO; // Cambiamos el estado del monstruo para que sea detectado en la animación.
+            m->fotograma_actual=0;
+            m->fotograma.y=m->tipo.textura.y + (m->tipo.fotograma.alto * m->tipo.cuadricula_fotogramas.alto); // Antes de desactivar al monstruo por eliminación animaremos su muerte. Asignamos la fila correspondiente de fotogramas.
+            monstruos_eliminados++;
         return;
+        }
+        else return;
     }
-    else return;
 }
 
 void ataque_centinela(Monstruo *m) {

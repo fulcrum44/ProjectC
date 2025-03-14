@@ -19,6 +19,7 @@
 #define ALTO_FOTOGRAMA 64
 #define ANCHO_FOTOGRAMA 64
 #define FOTOGRAMAS 12
+#define FOTOGRAMAS_MUERTE 7
 #define TIEMPO_FOTOGRAMA 0.15f
 #define TIEMPO_FOTOGRAMA_ATAQUE 0.08f
 
@@ -88,6 +89,7 @@ typedef struct {
     Rectangle hitboxes[CANTIDAD_HITBOXES];
     int vida;
     int danyo;
+    int total_muertes;
 } Personaje;
 
 void crear_personaje(Personaje*);
@@ -101,6 +103,7 @@ bool suelo_transitable(Vector2, int);
 bool hb_esquina(Vector2, int);
 void posicion_inicial_nivel(Personaje*);
 void muerte_personaje(Personaje*);
+void reinicio_personaje(Personaje*);
 Vector2 conversion_coordenadas_losa(Vector2);
 
 

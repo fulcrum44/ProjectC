@@ -6,6 +6,7 @@
 #include "character.h"
 #include "mobs.h"
 #include "cofres.h"
+#include "crono.h"
 
 const int BOTONES_MENU_PRINCIPAL[]= {
     EMPEZAR_PARTIDA, // PANTALLA JUEGO

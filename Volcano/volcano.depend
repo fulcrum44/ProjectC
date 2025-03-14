@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1741099450 source:c:\users\joelc\documents\programacion\projectc\volcano\main.c
+1741977380 source:c:\users\joelc\documents\programacion\projectc\volcano\main.c
 	"stdio.h"
 	"stdlib.h"
 	"raylib.h"
@@ -11,6 +11,8 @@
 	"cofres.h"
 	"menu.h"
 	"teclado.h"
+	"crono.h"
+	"gui.h"
 
 1741044695 c:\users\joelc\documents\programacion\projectc\volcano\room.h
 
@@ -24,7 +26,7 @@
 	"mobs.h"
 	"cofres.h"
 
-1741105120 source:c:\users\joelc\documents\programacion\projectc\volcano\character.c
+1741438610 source:c:\users\joelc\documents\programacion\projectc\volcano\character.c
 	"stdio.h"
 	"string.h"
 	"raylib.h"
@@ -34,7 +36,7 @@
 	"teclado.h"
 	"mobs.h"
 
-1741104986 c:\users\joelc\documents\programacion\projectc\volcano\character.h
+1741438364 c:\users\joelc\documents\programacion\projectc\volcano\character.h
 	"raylib.h"
 
 1740052344 source:c:\users\joelc\desktop\programacion\projectc\volcano\character.c
@@ -63,7 +65,7 @@
 	"raylib.h"
 	"room.h"
 
-1741105171 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
+1741519014 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
 	"stdio.h"
 	"stdlib.h"
 	"string.h"
@@ -97,7 +99,7 @@
 	"raylib.h"
 	"dimensiones_struct.h"
 
-1741047034 source:c:\users\joelc\documents\programacion\projectc\volcano\mouse.c
+1741435703 source:c:\users\joelc\documents\programacion\projectc\volcano\mouse.c
 	"stdio.h"
 	"raylib.h"
 	"math.h"
@@ -110,7 +112,7 @@
 1741044695 c:\users\joelc\documents\programacion\projectc\volcano\mouse.h
 	"raylib.h"
 
-1741044695 source:c:\users\joelc\documents\programacion\projectc\volcano\cofres.c
+1741518763 source:c:\users\joelc\documents\programacion\projectc\volcano\cofres.c
 	"stdio.h"
 	"stdlib.h"
 	"time.h"
@@ -124,10 +126,10 @@
 1741044695 c:\users\joelc\documents\programacion\projectc\volcano\cofres.h
 	"raylib.h"
 
-1741044695 c:\users\joelc\documents\programacion\projectc\volcano\menu.h
+1741976265 c:\users\joelc\documents\programacion\projectc\volcano\menu.h
 	"raylib.h"
 
-1741098426 source:c:\users\joelc\documents\programacion\projectc\volcano\menu.c
+1741540919 source:c:\users\joelc\documents\programacion\projectc\volcano\menu.c
 	"stdio.h"
 	"stdlib.h"
 	"raylib.h"
@@ -136,6 +138,7 @@
 	"character.h"
 	"mobs.h"
 	"cofres.h"
+	"crono.h"
 
 1741044695 c:\users\joelc\documents\programacion\projectc\volcano\teclado.h
 	"raylib.h"
@@ -145,5 +148,26 @@
 	"raymath.h"
 	"teclado.h"
 	"menu.h"
+	"character.h"
+
+1741541252 source:c:\users\joelc\documents\programacion\projectc\volcano\crono.c
+	"stdio.h"
+	"raylib.h"
+	"raymath.h"
+	"crono.h"
+	"menu.h"
+
+1741528394 c:\users\joelc\documents\programacion\projectc\volcano\crono.h
+	"raylib.h"
+
+1741977341 source:c:\users\joelc\documents\programacion\projectc\volcano\gui.c
+	"stdio.h"
+	"raylib.h"
+	"gui.h"
+	"mobs.h"
+	"character.h"
+	"cofres.h"
+
+1741972079 c:\users\joelc\documents\programacion\projectc\volcano\gui.h
 	"character.h"
 
