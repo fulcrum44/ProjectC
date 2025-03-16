@@ -14,7 +14,7 @@
 	"crono.h"
 	"gui.h"
 
-1741044695 c:\users\joelc\documents\programacion\projectc\volcano\room.h
+1742133112 c:\users\joelc\documents\programacion\projectc\volcano\room.h
 
 1741044695 source:c:\users\joelc\documents\programacion\projectc\volcano\room.c
 	"stdio.h"
@@ -26,7 +26,7 @@
 	"mobs.h"
 	"cofres.h"
 
-1742122971 source:c:\users\joelc\documents\programacion\projectc\volcano\character.c
+1742123367 source:c:\users\joelc\documents\programacion\projectc\volcano\character.c
 	"stdio.h"
 	"string.h"
 	"raylib.h"
@@ -36,7 +36,7 @@
 	"teclado.h"
 	"mobs.h"
 
-1742123162 c:\users\joelc\documents\programacion\projectc\volcano\character.h
+1742133308 c:\users\joelc\documents\programacion\projectc\volcano\character.h
 	"raylib.h"
 
 1740052344 source:c:\users\joelc\desktop\programacion\projectc\volcano\character.c
@@ -65,7 +65,7 @@
 	"raylib.h"
 	"room.h"
 
-1742059689 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
+1742123369 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
 	"stdio.h"
 	"stdlib.h"
 	"string.h"
