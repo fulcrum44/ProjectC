@@ -196,31 +196,33 @@ void actualizar_monstruos() {
 }
 
 void actualizar_centinela(Monstruo *m) {
-    // Calculamos la distancia del monstruo con respecto al personaje. Lo guardamos primero en una variable aparte.
-    Vector2 diferencia=Vector2Subtract((Vector2){personaje.hitboxes[TORSO].x, personaje.hitboxes[TORSO].y}, m->posicion);
+    if (m->estado != M_ELIMINADO) { // Solo controlaremos las acciones del monstruo como el movimiento y el ataque si el monstruo no está eliminado aparte de estar también activo.
+        // Calculamos la distancia del monstruo con respecto al personaje. Lo guardamos primero en una variable aparte.
+        Vector2 diferencia=Vector2Subtract((Vector2){personaje.hitboxes[TORSO].x, personaje.hitboxes[TORSO].y}, m->posicion);
 
-    // Cambiamos la orientación que está mirando el monstruo según cómo se esté moviendo.
-    if (diferencia.y < 0 && fabs(diferencia.y) > fabs(diferencia.x)) orientacion_monstruo=ORIENTACION_MONSTRUO_ARRIBA;
-    if (diferencia.y > 0 && fabs(diferencia.y) > fabs(diferencia.x)) orientacion_monstruo=ORIENTACION_MONSTRUO_ABAJO;
-    if (diferencia.x < 0 && fabs(diferencia.y) < fabs(diferencia.x)) orientacion_monstruo=ORIENTACION_MONSTRUO_IZQ;
-    if (diferencia.x > 0 && fabs(diferencia.y) < fabs(diferencia.x)) orientacion_monstruo=ORIENTACION_MONSTRUO_DER;
+        // Cambiamos la orientación que está mirando el monstruo según cómo se esté moviendo.
+        if (diferencia.y < 0 && fabs(diferencia.y) > fabs(diferencia.x)) orientacion_monstruo=ORIENTACION_MONSTRUO_ARRIBA;
+        if (diferencia.y > 0 && fabs(diferencia.y) > fabs(diferencia.x)) orientacion_monstruo=ORIENTACION_MONSTRUO_ABAJO;
+        if (diferencia.x < 0 && fabs(diferencia.y) < fabs(diferencia.x)) orientacion_monstruo=ORIENTACION_MONSTRUO_IZQ;
+        if (diferencia.x > 0 && fabs(diferencia.y) < fabs(diferencia.x)) orientacion_monstruo=ORIENTACION_MONSTRUO_DER;
 
-    // Sabida la orientación en la que está mirando el monstruo ajustamos la fila de fotogramas a dibujar.
-    m->fotograma.y=m->tipo.textura.y + (m->tipo.fotograma.alto * orientacion_monstruo);
+        // Sabida la orientación en la que está mirando el monstruo ajustamos la fila de fotogramas a dibujar.
+        m->fotograma.y=m->tipo.textura.y + (m->tipo.fotograma.alto * orientacion_monstruo);
 
-    m->direccion_desplazamiento=Vector2Normalize(diferencia);
-    // Desplazamiento
-    Vector2 destino = Vector2Add(m->posicion, Vector2Scale(m->direccion_desplazamiento, m->velocidad * delta));
-    Vector2 destino_hitbox = Vector2Add(m->hb_posicion, Vector2Scale(m->direccion_desplazamiento, m->velocidad * delta));
+        m->direccion_desplazamiento=Vector2Normalize(diferencia);
+        // Desplazamiento
+        Vector2 destino = Vector2Add(m->posicion, Vector2Scale(m->direccion_desplazamiento, m->velocidad * delta));
+        Vector2 destino_hitbox = Vector2Add(m->hb_posicion, Vector2Scale(m->direccion_desplazamiento, m->velocidad * delta));
 
-    // Actualizamos datos dependientes de la posicion del monstruo
-    m->posicion=destino;
-    m->hb_posicion=destino_hitbox;
-    m->hitbox_combate.x=destino.x;
-    m->hitbox_combate.y=destino.y;
+        // Actualizamos datos dependientes de la posicion del monstruo
+        m->posicion=destino;
+        m->hb_posicion=destino_hitbox;
+        m->hitbox_combate.x=destino.x;
+        m->hitbox_combate.y=destino.y;
 
-    // Comprobamos si el hitbox del combate del monstruo está colisionando con del personaje
-    ataque_centinela(m);
+        // Comprobamos si el hitbox del combate del monstruo está colisionando con del personaje
+        ataque_centinela(m);
+    }
 
     // Animacion
     actualizar_fotogramas_monstruo(m);
@@ -230,27 +232,28 @@ void actualizar_centinela(Monstruo *m) {
 void actualizar_fotogramas_monstruo(Monstruo *m) {
     m->tiempo+=delta;
 
-
     // No se anima correctamente no sé por qué
-    if (m->estado == M_ELIMNADO) {
-        if (m->tiempo >= TIEMPO_FOTOGRAMA) {
+    if (m->estado == M_ELIMINADO) {
+        if (m->tiempo >= 0.5f) { // Hace falta ajustarlo mejor quizás
             if (m->fotograma_actual == m->tipo.cuadricula_fotogramas.ancho-1) {
                 m->activo=false;
             }
             m->fotograma_actual++;
+            printf("\nFotograma actual monstruo: %d", m->fotograma_actual);
             m->tiempo=0;
+            m->fotograma.x=m->fotograma_actual * m->tipo.fotograma.ancho; // Avanzamos al siguiente fotograma en la textura
+        }
+    } else {
+        // Animacion general
+        if (m->tiempo >= TIEMPO_FOTOGRAMA) {
+            m->fotograma_actual++;
+
+            m->fotograma_actual%=m->tipo.cuadricula_fotogramas.ancho; // Ajustamos el fotograma actual al rango de fotogramas por fila en textura.
+            m->tiempo=0; // Reiniciamos la variable
             m->fotograma.x=m->fotograma_actual * m->tipo.fotograma.ancho; // Avanzamos al siguiente fotograma en la textura
         }
     }
 
-    // Animacion general
-    if (m->tiempo >= TIEMPO_FOTOGRAMA) {
-        m->fotograma_actual++;
-
-        m->fotograma_actual%=m->tipo.cuadricula_fotogramas.ancho; // Ajustamos el fotograma actual al rango de fotogramas por fila en textura.
-        m->tiempo=0; // Reiniciamos la variable
-        m->fotograma.x=m->fotograma_actual * m->tipo.fotograma.ancho; // Avanzamos al siguiente fotograma en la textura
-    }
 }
 
 void dibujar_monstruos() {
@@ -267,10 +270,11 @@ void libera_monstruos() {
 }
 
 void muerte_monstruo(Monstruo *m) {
-    if (m->estado != M_ELIMNADO) {
+    if (m->estado != M_ELIMINADO) {
         if (m->vida <= 0) {
-            m->estado=M_ELIMNADO; // Cambiamos el estado del monstruo para que sea detectado en la animación.
-            m->fotograma_actual=0;
+            m->estado=M_ELIMINADO; // Cambiamos el estado del monstruo para que sea detectado en la animación.
+            m->fotograma_actual=0; // Nos aseguramos que empezaremos por el primer fotograma de la animación
+            m->fotograma.x=0; // Con fotograma_actual=0 no sería necesario reiniciar esta variable. Lo hacemos igualmente para evitar inconsistencias.
             m->fotograma.y=m->tipo.textura.y + (m->tipo.fotograma.alto * m->tipo.cuadricula_fotogramas.alto); // Antes de desactivar al monstruo por eliminación animaremos su muerte. Asignamos la fila correspondiente de fotogramas.
             monstruos_eliminados++;
         return;

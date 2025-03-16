@@ -49,7 +49,7 @@ typedef enum {
     M_DEAMBULANDO,
     M_PERSIGUIENDO,
     M_ATACANDO,
-    M_ELIMNADO
+    M_ELIMINADO
 } EstadoMonstruo;
 
 typedef enum { // Definido en el orden que está en las filas de la textura del personaje.

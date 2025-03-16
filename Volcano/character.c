@@ -242,7 +242,9 @@ void posicion_inicial_nivel(Personaje *p) {
 }
 
 void movimiento_personaje(Personaje *p, Vector2 desplazamiento, int orientacion_final) {
-    if (p->estado == P_ATACANDO) return; // Por poder podemos estar apretando una tecla de movimiento mientras estamos atacando, pero no empezará a moverse hasta el movimiento del ataque termine
+    // Por poder podemos estar apretando una tecla de movimiento mientras estamos atacando, pero no volverá a moverse hasta el movimiento del ataque termine.
+    // Por otra parte, no tiene sentido comprobar intentos de moverse si el personaje ha sido recientemente eliminado.
+    if (p->estado == P_ATACANDO || p->estado == P_ELIMINADO) return;
 
     // Primero vamos a proceder como si el destino al que queremos movernos fuese transitable y normalizamos el desplazamiento para evitar imprecisiones.
     desplazamiento=Vector2Normalize(desplazamiento);
@@ -269,7 +271,8 @@ void movimiento_personaje(Personaje *p, Vector2 desplazamiento, int orientacion_
 void ataque_personaje(Personaje *p) {
     if (p->estado != P_ATACANDO) { // Si ocurriese que hemos pulsado al ratón antes de que haya acabado una animación de ataque no hacemos nada.
         p->estado=P_ATACANDO;
-        p->fotograma_actual=0; // Nos aseguramos que empezaremos por el primer fotograma
+        p->fotograma_actual=0; // Nos aseguramos que empezaremos por el primer fotograma de la animación
+        p->fotograma.x=0; // Con fotograma_actual=0 no sería necesario reiniciar esta variable. Lo hacemos igualmente para evitar inconsistencias.
         p->fotogramas_ataque_restantes=FOTOGRAMAS; // Esto es lo que durará la animación de ataque en fotogramas.
 
         for (int i=0; i<cantidad_monstruos; i++) {

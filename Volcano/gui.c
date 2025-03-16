@@ -35,7 +35,6 @@ extern int segundos;
 
 extern int screenWidth;
 
-
 void inicializar_texturas_gui() {
     barra_inferior=LoadTexture(TEXTURA_BARRA_INFERIOR);
     cuadro_nivel=LoadTexture(TEXTURA_CUADRO_NIVEL);
