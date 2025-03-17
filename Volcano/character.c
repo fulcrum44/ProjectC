@@ -137,7 +137,7 @@ void actualizar_fotogramas_personaje(Personaje *p) {
 
     // Animacion muerte
     if (p->estado == P_ELIMINADO) {
-        if (p->tiempo >= 0.15f) {
+        if (p->tiempo >= TIEMPO_FOTOGRAMA) { // SI USO TIEMPO_FOTOGRAMA_MUERTE POR ALGUNA RAZÓN LA ANIMACIÓN ENTRA EN UN BUCLE INFINITO
             // Si en el frame anterior ya se ha llegado al último fotograma de la textura no avanzamos más y reiniciamos el personaje
             if (p->fotograma_actual == FOTOGRAMAS_MUERTE) { // Cuando el personaje muerte solo queremos que la animación de su muerte se reproduzca un único ciclo completo antes de reaparecer.
                 reinicio_personaje(p);
