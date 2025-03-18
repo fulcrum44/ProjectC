@@ -20,7 +20,7 @@ const Dimensiones FOTOGRAMA[]={
     (Dimensiones){16, 16}, // CHISPA_MAGMA
     (Dimensiones){16, 16}, // SLIME
     (Dimensiones){16, 16}, // CENTINELA
-    (Dimensiones){16, 22}, // SETA_MAGMA
+    (Dimensiones){22, 16}, // SETA_MAGMA
     (Dimensiones){16, 16} // CABEZON
 };
 
@@ -47,7 +47,7 @@ const Dimensiones HITBOX_COMBATE[]={ // Incompleto
     (Dimensiones){0, 0}, // CHISPA_MAGMA
     (Dimensiones){0, 0}, // SLIME
     (Dimensiones){16, 16}, // CENTINELA
-    (Dimensiones){0, 0}, // SETA_MAGMA
+    (Dimensiones){17, 14}, // SETA_MAGMA
     (Dimensiones){0, 0} // CABEZON
 };
 
@@ -60,12 +60,21 @@ const Vector2 ORIGEN_HB_COLISIONES[]={ // Los vectores que tienen el valor {0,0}
     (Vector2){0, 13} // CABEZON
 };
 
+const Vector2 ORIGEN_HB_COMBATE[]={ // Los vectores que tienen el valor {0,0} no se usarán. El origen del hitbox es el mismo que el de la textura.
+    (Vector2){0, 0}, // DUENDE_MAGMA
+    (Vector2){0, 0}, // CHISPA_MAGMA
+    (Vector2){0, 0}, // SLIME
+    (Vector2){0, 0}, // CENTINELA
+    (Vector2){5, 1}, // SETA_MAGMA
+    (Vector2){0, 0} // CABEZON
+};
+
 const int VELOCIDADES[]={
     10,
     10,
     10,
     10,
-    10,
+    30, // SETA_MAGMA
     10,
 };
 
@@ -73,8 +82,8 @@ const int MONSTRUO_VIDA[]={
     220,
     310,
     415,
-    300,
-    290,
+    300, // CENTINELA
+    290, // SETA_MAGMA
     215
 };
 
@@ -82,8 +91,8 @@ const int DMG[]={ // Daño ataque
     15,
     15,
     23,
-    18,
-    15,
+    18, // CENTINELA
+    15, // SETA_MAGMA
     18
 };
 

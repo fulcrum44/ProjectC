@@ -193,6 +193,29 @@
         }, 
         {
          "draworder":"topdown",
+         "id":11,
+         "name":"mobs",
+         "objects":[
+                {
+                 "height":0,
+                 "id":2,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"SETA_MAGMA",
+                 "visible":true,
+                 "width":0,
+                 "x":96.9801553062986,
+                 "y":171.182053494392
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
          "id":7,
          "name":"personaje",
          "objects":[
@@ -214,8 +237,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":11,
- "nextobjectid":2,
+ "nextlayerid":13,
+ "nextobjectid":3,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

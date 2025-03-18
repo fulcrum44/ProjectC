@@ -16,7 +16,7 @@
 #define TEXTURA_MONSTRUOS "resources\\mobs.png"
 
 // ETIQUETAS EXTRACCIÓN DATOS MONSTRUOS
-#define ETIQ_OBJETOS_SALA "\"objects\":["
+#define ETIQ_NAME_MOBS_SALA "\"name\":\"mobs\","
 #define ETIQ_TIPO_OBJETO "\"type\":\""
 #define ETIQ_X_OBJETO "\"x\":"
 #define ETIQ_Y_OBJETO "\"y\":"
@@ -38,7 +38,8 @@ typedef struct {
     Dimensiones cuadricula_fotogramas; // Almacenamos cuantas filas y columnas de fotogramas tiene el area de la textura del tipo de monstruo
     Dimensiones hitbox_colision; // Tamaño del hitbox de colisiones con el entorno del monstruo según el tipo
     Dimensiones hitbox_combate; // Area de golpe del monstruo para ser atacado.
-    Vector2 origen_hb; // Punto de origen, segun el tipo de monstruo, para el "dibujado" del hitbox con respecto a la posicion del dibujo completo del monstruo
+    Vector2 origen_hb_colision; // Punto de origen, segun el tipo de monstruo, para el "dibujado" del hitbox de colisiones con respecto a la posicion del dibujo completo del monstruo
+    Vector2 origen_hb_combate; // Punto de origen, segun el tipo de monstruo, para el "dibujado" del hitbox del combate con respecto a la posicion del dibujo completo del monstruo
     int velocidad;
     int vida;
     int dmg; // Daño ataque
@@ -81,9 +82,12 @@ void inicializa_monstruos();
 void actualizar_monstruos();
 //void actualizar_monstruo(Monstruo*);
 void actualizar_centinela(Monstruo*);
+void actualizar_seta_magma(Monstruo*);
 void dibujar_monstruos();
 void actualizar_fotogramas_monstruo(Monstruo*);
 void libera_monstruos();
 void muerte_monstruo(Monstruo*);
 void ataque_centinela(Monstruo*);
+void ataque_seta_magma(Monstruo*);
+void desplazamiento_en_cruz(Monstruo*, Vector2);
 EtiquetaMonstruo conversion_char_enum(char*);

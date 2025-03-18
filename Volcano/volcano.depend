@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1741977380 source:c:\users\joelc\documents\programacion\projectc\volcano\main.c
+1742318027 source:c:\users\joelc\documents\programacion\projectc\volcano\main.c
 	"stdio.h"
 	"stdlib.h"
 	"raylib.h"
@@ -65,7 +65,7 @@
 	"raylib.h"
 	"room.h"
 
-1742123369 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
+1742318540 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
 	"stdio.h"
 	"stdlib.h"
 	"string.h"
@@ -76,7 +76,7 @@
 	"character.h"
 	"cofres.h"
 
-1741983751 c:\users\joelc\documents\programacion\projectc\volcano\mobs.h
+1742249007 c:\users\joelc\documents\programacion\projectc\volcano\mobs.h
 	"raylib.h"
 	"mobsTypesData.h"
 
@@ -91,11 +91,11 @@
 
 1741044695 c:\users\joelc\documents\programacion\projectc\volcano\dimensiones_struct.h
 
-1741044695 c:\users\joelc\documents\programacion\projectc\volcano\mobstypesdata.h
+1742229758 c:\users\joelc\documents\programacion\projectc\volcano\mobstypesdata.h
 	"raylib.h"
 	"dimensiones_struct.h"
 
-1741044695 source:c:\users\joelc\documents\programacion\projectc\volcano\mobstypesdata.c
+1742322769 source:c:\users\joelc\documents\programacion\projectc\volcano\mobstypesdata.c
 	"raylib.h"
 	"dimensiones_struct.h"
 
