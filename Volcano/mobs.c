@@ -230,13 +230,18 @@ void actualizar_centinela(Monstruo *m) {
 }
 
 void actualizar_seta_magma(Monstruo *m) {
+    // Calculamos la distancia del monstruo con respecto al personaje. Lo guardamos primero en una variable aparte.
+    Vector2 diferencia=Vector2Subtract((Vector2){personaje.hitboxes[TORSO].x, personaje.hitboxes[TORSO].y}, m->posicion); // UN BUSCADOR DE CAMINOS SERÍA BENEFICIOSO PARA PERFECCIONAR.
+
+    if (fabs(diferencia.x) < RANGO_PERSECUCION && fabs(diferencia.y) < RANGO_PERSECUCION) {
+        if (m->estado != M_ATACANDO) m->estado=M_PERSIGUIENDO;
+    }
+    else m->estado=M_PARADO;
+
     float margen=5.5f;
     if (fabs(m->posicion.x - personaje.posicion.x) < margen || fabs(m->posicion.y - personaje.posicion.y) < margen) m->direccion_desplazamiento=(Vector2){0, 0};
 
-    if (m->estado != M_ELIMINADO) { // Solo controlaremos las acciones del monstruo como el movimiento y el ataque si el monstruo no está eliminado aparte de estar también activo.
-        // Calculamos la distancia del monstruo con respecto al personaje. Lo guardamos primero en una variable aparte.
-        Vector2 diferencia=Vector2Subtract((Vector2){personaje.hitboxes[TORSO].x, personaje.hitboxes[TORSO].y}, m->posicion); // UN BUSCADOR DE CAMINOS SERÍA MEJOR.
-
+    if (m->estado != M_ELIMINADO && m->estado != M_PARADO) { // Solo controlaremos las acciones del monstruo como el movimiento y el ataque si el monstruo no está eliminado aparte de estar también activo.
         // Cambiamos la orientación que está mirando el monstruo según cómo se esté moviendo.
         if (diferencia.y < 0 && fabs(diferencia.y) > fabs(diferencia.x)) orientacion_monstruo=ORIENTACION_MONSTRUO_DER;
         if (diferencia.y > 0 && fabs(diferencia.y) > fabs(diferencia.x)) orientacion_monstruo=ORIENTACION_MONSTRUO_DER;
@@ -246,8 +251,8 @@ void actualizar_seta_magma(Monstruo *m) {
         // Sabida la orientación en la que está mirando el monstruo ajustamos la fila de fotogramas a dibujar.
         m->fotograma.y=m->tipo.textura.y + (m->tipo.fotograma.alto * orientacion_monstruo);
 
-        //m->direccion_desplazamiento=Vector2Normalize(diferencia);
 
+        //m->direccion_desplazamiento=Vector2Normalize(diferencia);
         if (m->direccion_desplazamiento.x == 0 && m->direccion_desplazamiento.y == 0) {
             desplazamiento_en_cruz(m, diferencia);
         }
@@ -268,12 +273,18 @@ void actualizar_seta_magma(Monstruo *m) {
         m->hitbox_combate.x=destino.x;
         m->hitbox_combate.y=destino.y;
 
-        // Comprobamos si el hitbox del combate del monstruo está colisionando con del personaje
-        ataque_seta_magma(m);
     }
 
-    // Animacion
-    actualizar_fotogramas_monstruo(m);
+    if (m->estado == M_PARADO) { // Este monstruo al estar parado no tiene animación. Solo se dibuja su fotograma de estar parado que es el primero en su rectangulo de fotogramas en la textura.
+        m->fotograma.x=m->tipo.textura.x;
+        m->fotograma.y=m->tipo.textura.y;
+    } else {
+        // Comprobamos si el hitbox del combate del monstruo está colisionando con del personaje
+        ataque_seta_magma(m);
+
+        // Animacion
+        actualizar_fotogramas_monstruo(m);
+    }
 
 }
 

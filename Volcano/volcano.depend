@@ -26,7 +26,7 @@
 	"mobs.h"
 	"cofres.h"
 
-1742133641 source:c:\users\joelc\documents\programacion\projectc\volcano\character.c
+1742403169 source:c:\users\joelc\documents\programacion\projectc\volcano\character.c
 	"stdio.h"
 	"string.h"
 	"raylib.h"
@@ -65,7 +65,7 @@
 	"raylib.h"
 	"room.h"
 
-1742318540 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
+1742402487 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
 	"stdio.h"
 	"stdlib.h"
 	"string.h"
@@ -76,7 +76,7 @@
 	"character.h"
 	"cofres.h"
 
-1742249007 c:\users\joelc\documents\programacion\projectc\volcano\mobs.h
+1742399243 c:\users\joelc\documents\programacion\projectc\volcano\mobs.h
 	"raylib.h"
 	"mobsTypesData.h"
 

@@ -160,17 +160,7 @@ void actualizar_fotogramas_personaje(Personaje *p) {
 }
 
 void dibujar_personaje(Personaje *p) {
-
-    //DrawTextureRec(sprite, p->fotograma, p->posicion, WHITE);
     DrawTexturePro(sprite[p->textura_activa], p->fotograma, (Rectangle){p->posicion.x, p->posicion.y, ANCHO_FOTOGRAMA, ALTO_FOTOGRAMA}, (Vector2){31, 43}, 0.0f, WHITE);
-   // DrawRectangle(p->hitboxes[TORSO].x, p->hitboxes[TORSO].y, p->hitboxes[TORSO].width, p->hitboxes[TORSO].height, BLUE);
-
-    /*for (int i=0; i<CANTIDAD_HITBOXES; i++) {
-        if (i == CANTIDAD_HITBOXES - 1) break;
-        DrawRectangle(p->hitboxes[i].x, p->hitboxes[i].y, p->hitboxes[i].width, p->hitboxes[i].height, BLUE);
-    }*/
-
-    //DrawRectangle(p->hb_posicion.x,p->hb_posicion.y,HB_LONG_HORIZONTAL,HB_LONG_VERTICAL,WHITE);
 }
 
 bool suelo_transitable(Vector2 destino, int sujeto) {
@@ -280,6 +270,22 @@ void ataque_personaje(Personaje *p) {
 
             if (CheckCollisionRecs(p->hitboxes[orientacion], monstruos[i].hitbox_combate)) {
                 monstruos[i].vida-=p->danyo;
+
+                if (monstruos[i].tipo.id == SETA_MAGMA) {
+                    if (orientacion == ORIENTACION_ABAJO) {
+                        monstruos[i].posicion.y+=20;
+                    }
+                    if (orientacion == ORIENTACION_ARRIBA) {
+                        monstruos[i].posicion.y-=20;
+                    }
+                    if (orientacion == ORIENTACION_DER) {
+                        monstruos[i].posicion.x+=20;
+                    }
+                    if (orientacion == ORIENTACION_IZQ) {
+                        monstruos[i].posicion.x-=20;
+                    }
+
+                }
 
                 muerte_monstruo(&monstruos[i]);
 
