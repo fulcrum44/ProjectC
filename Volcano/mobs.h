@@ -81,7 +81,6 @@ typedef struct {
 
 void inicializa_monstruos();
 void actualizar_monstruos();
-//void actualizar_monstruo(Monstruo*);
 void actualizar_centinela(Monstruo*);
 void actualizar_seta_magma(Monstruo*);
 void dibujar_monstruos();

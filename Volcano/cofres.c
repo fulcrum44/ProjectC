@@ -7,6 +7,7 @@
 #include "room.h"
 #include "character.h"
 #include "mobs.h"
+#include "audio.h"
 
 Texture2D items;
 Cofre *cofres;
@@ -23,6 +24,7 @@ extern float delta;
 extern Personaje personaje;
 extern int cantidad_monstruos;
 extern Monstruo *monstruos;
+extern Sound *lista_sonidos;
 
 void inicializa_textura_items() {
     items=LoadTexture(TEXTURA_ITEMS);
@@ -83,6 +85,7 @@ bool cofre_pulsado(Vector2 posicion_raton) {
         if (fabs(cofres[i].losa.x - personaje.losa.x) > 1 || fabs(cofres[i].losa.y - personaje.losa.y) > 1) continue; // fabs convierte un valor float o un cálculo con float en valor absoluto.
 
         if (CheckCollisionPointRec(posicion_raton, cofres[i].hitbox)) { // Pondré un cronometro. Cuando llegue a 0 la variable objeto_recogido será true y ya no se dibujará más
+            PlaySound(lista_sonidos[ABRIR_COFRE]);
             animacion_cofre(&cofres[i]);
             if (cofres[i].item_recolectable) items_recogidos++;
             return true;
@@ -112,7 +115,7 @@ void animacion_cofre(Cofre *c) {
     printf("\nTerreno cofre inicial: %d", terreno[(c->indice_losa) + (alto_sala*ancho_sala)]);
 
     if (c->tiempo >= TIEMPO_FOTOGRAMA_COFRE) {
-        for (int i=0; i<(FOTOGRAMAS_COFRE-1)*2; i++) { // ESTA PARTE PODRÍA HACER CON DRAW TEXTURE. AL HACER EL DRAW TEXTURE DEL MAPA PODRIA HACER EXCEPCION CON ESTA TEXTURA PARA QUE NO LO DIBUJE Y LLAME A UNA FUNCION APARTE QUE LO DIBUJE INDIVIDUALMENTE
+        for (int i=0; i<(FOTOGRAMAS_COFRE-1)*2; i++) {
             /*if (i >= (FOTOGRAMAS_COFRE-1)) {
                 terreno[(c->indice_losa) + (alto_sala*ancho_sala)]--;
                 terreno[(c->indice_losa) + (alto_sala*ancho_sala)-ancho_sala]--;
@@ -123,7 +126,6 @@ void animacion_cofre(Cofre *c) {
                 c->abierto=true;
             }
 
-            printf("\nTerreno cofre: %d", terreno[(c->indice_losa) + (alto_sala*ancho_sala)]);
             c->tiempo=0;
         }
     }

@@ -24,14 +24,14 @@ void actualizar_raton() {
 
     //printf("\nRaton x: %f - y: %f", posicion_raton.x, posicion_raton.y);
 
-    if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) {
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
         // Al entrar en las funciones, con que una devuelva true ya no se comprobará más
         if (pantalla == PANTALLA_MENU && boton_menu_principal_pulsado(posicion_raton)) return;
-        if (pantalla == PANTALLA_JUEGO && boton_menu_pausa_pulsado(posicion_raton)) return;
-
+        if (pantalla == PANTALLA_JUEGO) {
+            if (boton_menu_pausa_pulsado(posicion_raton)) return;
+            ataque_personaje(&personaje);
+        }
     }
-
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) ataque_personaje(&personaje);
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
         if (cofre_pulsado(posicion_raton)) return;

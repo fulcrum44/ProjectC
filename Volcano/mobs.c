@@ -8,6 +8,7 @@
 #include "mobs.h"
 #include "character.h"
 #include "cofres.h"
+#include "audio.h"
 
 
 Monstruo *monstruos;
@@ -27,6 +28,7 @@ extern int alto_losa;
 extern int ancho_losa;
 
 extern int total_items;
+extern Sound *lista_sonidos;
 
 void inicializa_monstruos() {
     monstruos=NULL; // Para reinicializaciones en niveles avanzados, por seguridad, iniciamos primero con NULL el punteros.
@@ -356,6 +358,7 @@ void ataque_centinela(Monstruo *m) {
 
     if (m->estado != M_ATACANDO) {
         if (CheckCollisionRecs(m->hitbox_combate, personaje.hitboxes[TORSO])) {
+            PlaySound(lista_sonidos[DANYO_RECIBIDO]); // Sonido de personaje ha recibido daño
             m->estado=M_ATACANDO;
             m->duracion_ataque--;
             personaje.vida-=m->danyo;
@@ -383,6 +386,7 @@ void ataque_seta_magma(Monstruo *m) {
 
     if (m->estado != M_ATACANDO) {
         if (CheckCollisionRecs(m->hitbox_combate, personaje.hitboxes[TORSO])) {
+            PlaySound(lista_sonidos[DANYO_RECIBIDO]); // Sonido de personaje ha recibido daño
             m->estado=M_ATACANDO;
             m->duracion_ataque--;
             personaje.vida-=m->danyo;

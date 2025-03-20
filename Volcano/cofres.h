@@ -49,5 +49,3 @@ void animacion_cofre(Cofre*);
 void asignar_cofre_objeto_recolectable();
 void dibujar_recolectable();
 void liberar_cofres();
-
-void dibujar_hitbox(); // TEMPORAL

@@ -6,6 +6,7 @@
 #include "room.h"
 #include "teclado.h"
 #include "mobs.h"
+#include "audio.h"
 
 Texture2D sprite[CANTIDAD_TEXTURAS_PERSONAJE];
 int orientacion;
@@ -25,14 +26,6 @@ const Rectangle HITBOX_PERSONAJE[]= {
     (Rectangle){-6, -12, 13, 9} // TORSO = 4
 };
 
-/*const Rectangle HITBOX_PERSONAJE[]= {
-    (Rectangle){25, 44, 13, 9}, // ATAQUE INFERIOR = 0
-    (Rectangle){9, 22, 13, 22}, // ATAQUE IZQUIERDO = 1
-    (Rectangle){50, 22, 13, 22}, // ATAQUE DERECHO = 2
-    (Rectangle){25, 13, 13, 9}, // ATAQUE ARRIBA = 3
-    (Rectangle){25, 34, 13, 6} // TORSO = 4
-};*/
-
 extern float delta;
 extern int *terreno;
 extern int alto_sala;
@@ -45,6 +38,7 @@ extern int losa_y_reja;
 extern int total_botones;
 extern Monstruo *monstruos;
 extern int cantidad_monstruos;
+extern Sound *lista_sonidos;
 
 void inicializa_textura_personaje() { // Ahora mismo va a parecer un poco innecesario pero luego le podemos dar uso de verdad si tenemos varios personajes.
     for (int i=0; i<CANTIDAD_TEXTURAS_PERSONAJE; i++) {
@@ -64,6 +58,11 @@ void crear_personaje(Personaje *p) {
     p->vida=VIDA_PERSONAJE;
     p->danyo=DANYO_ATAQUE_PERSONAJE;
     p->total_muertes=0;
+
+    // Configuramos velocidades y volúmenes de reproduccion de los sonidos que sean propios del personaje.
+    SetSoundVolume(lista_sonidos[PASOS], 0.25f);
+    SetSoundPitch(lista_sonidos[PASOS], 0.65f);
+    SetSoundPitch(lista_sonidos[ESPADA], 0.75f);
 
 }
 
@@ -90,6 +89,7 @@ void actualizar_personaje(Personaje *p) {
             return;
         }
 
+        if (!IsSoundPlaying(lista_sonidos[PASOS])) PlaySound(lista_sonidos[PASOS]);
         // Actualizamos datos dependientes de la posicion del personaje
         p->posicion=destino;
         p->hb_posicion=destino_hitbox;
@@ -98,11 +98,6 @@ void actualizar_personaje(Personaje *p) {
             p->hitboxes[i].x=p->posicion.x + HITBOX_PERSONAJE[i].x;
             p->hitboxes[i].y=p->posicion.y + HITBOX_PERSONAJE[i].y;
         }
-
-        /*for (int i=0; i<CANTIDAD_HITBOXES; i++) {
-            if (i == CANTIDAD_HITBOXES-1) break;
-            printf("\n\nHitbox ataque -> x: %f | y: %f", p->hitboxes[i].x=p->posicion.x + HITBOX_PERSONAJE[i].x, p->hitboxes[i].y=p->posicion.y + HITBOX_PERSONAJE[i].y);
-        }*/
 
         p->losa=conversion_coordenadas_losa(p->posicion);
 
@@ -189,6 +184,7 @@ bool hb_esquina(Vector2 esquina, int sujeto) {
     if (losa_esquina == PUERTA_SIGUIENTE_NIVEL) siguiente_nivel();
 
     if (losa_esquina == BOTON) {
+        PlaySound(lista_sonidos[BOTON_PISADO]);
         *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + ((int)losa.y * ancho_sala) + (int)losa.x)=BOTON_PULSADO;
         total_botones--;
 
@@ -259,6 +255,9 @@ void movimiento_personaje(Personaje *p, Vector2 desplazamiento, int orientacion_
 }
 
 void ataque_personaje(Personaje *p) {
+    // Reproducimos el sonido de la espada independientemente si su hitbox está colisionando con un enemigo
+    PlaySound(lista_sonidos[ESPADA]);
+
     if (p->estado != P_ATACANDO) { // Si ocurriese que hemos pulsado al ratón antes de que haya acabado una animación de ataque no hacemos nada.
         p->estado=P_ATACANDO;
         p->fotograma_actual=0; // Nos aseguramos que empezaremos por el primer fotograma de la animación
@@ -271,7 +270,10 @@ void ataque_personaje(Personaje *p) {
             if (CheckCollisionRecs(p->hitboxes[orientacion], monstruos[i].hitbox_combate)) {
                 monstruos[i].vida-=p->danyo;
 
+                if (monstruos[i].tipo.id == CENTINELA) PlaySound(lista_sonidos[ARMADURA_ENEMIGO]);
+
                 if (monstruos[i].tipo.id == SETA_MAGMA) {
+                    PlaySound(lista_sonidos[ENEMIGO_ATACADO]);
                     if (orientacion == ORIENTACION_ABAJO) {
                         monstruos[i].posicion.y+=20;
                     }

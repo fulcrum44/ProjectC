@@ -30,12 +30,6 @@
 #define HB_LONG_VERTICAL 7
 #define HB_LONG_HORIZONTAL 13
 
-// ORIENTACIONES PERSONAJE
-/*#define ORIENTACION_ABAJO 0
-#define ORIENTACION_IZQ 1
-#define ORIENTACION_DER 2
-#define ORIENTACION_ARRIBA 3*/
-
 // TIPOS DE SUELO
 #define SUELO_NO_TRANSITABLE 0
 #define PUERTA_SIGUIENTE_NIVEL 463
@@ -78,7 +72,6 @@ typedef struct {
     Vector2 posicion;
     Vector2 direccion_desplazamiento;
     int velocidad;
-    // Vector2 losa; // No lo estamos usando ahora mismo
     float tiempo;
     int fotograma_actual;
     int fotogramas_ataque_restantes;

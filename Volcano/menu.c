@@ -7,6 +7,7 @@
 #include "mobs.h"
 #include "cofres.h"
 #include "crono.h"
+#include "audio.h"
 
 const int BOTONES_MENU_PRINCIPAL[]= {
     EMPEZAR_PARTIDA, // PANTALLA JUEGO
@@ -108,11 +109,15 @@ bool boton_menu_principal_pulsado(Vector2 posicion_raton) {
     for (int i=0; i<CANTIDAD_BOTONES_MENU_PRINCIPAL; i++) {
         if (CheckCollisionPointRec(posicion_raton, botones[i].hitbox)) {
             pantalla=botones[i].tipo;
-            if (botones[i].tipo==EMPEZAR_PARTIDA) iniciar_partida();
-            return true;
+            if (botones[i].tipo==EMPEZAR_PARTIDA) {
+                iniciar_partida();
+                iniciar_musica(0.25f);
+            }
+
+            return true; // Devolvemos true para que en mouse.c no se compruebe más a qué se ha pulsado con el ratón
         }
     }
-    return false;
+    return false; // Devolvemos false para que se siga comprobando en mouse.c que se ha pulsado con el ratón
 }
 
 void dibujar_menu_pausa() {
@@ -149,6 +154,7 @@ bool boton_menu_pausa_pulsado(Vector2 posicion_raton) {
                 case 1: // MENU PRINCIPAL
                     pantalla=botones_pausa[i].tipo; // Pantalla = 0
                     pausa=botones_pausa[i].tipo; // Pausa = 0 = false
+                    detener_musica();
                     liberar_menu_pausa();
                     finaliza_nivel();
                     break;

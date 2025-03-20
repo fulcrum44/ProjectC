@@ -11,6 +11,7 @@
 #include "teclado.h"
 #include "crono.h"
 #include "gui.h"
+#include "audio.h"
 
 void inicializar();
 void actualizar();
@@ -33,6 +34,8 @@ int rango_vertical;
 Personaje personaje;
 
 Camera2D camara;
+Music musica;
+Sound sound;
 
 int main() {
 
@@ -40,6 +43,7 @@ int main() {
 
     // Main game loop
     while (!WindowShouldClose() && pantalla >= 0) {
+        actualizar_musica(musica);
         delta=GetFrameTime();
         actualizar();
         BeginDrawing();
@@ -47,7 +51,9 @@ int main() {
         EndDrawing();
     }
     CloseWindow();        // Close window and OpenGL context
+    CloseAudioDevice();
 
+    liberar_sonidos();
     liberar_menu();
 
     return 0;
@@ -74,6 +80,12 @@ void inicializar() {
 
     ToggleFullscreen();*/
     SetTargetFPS(60);
+
+    // Inicializamos dipositivo de audio
+    InitAudioDevice();
+
+    // Cargamos sonidos
+    cargar_sonidos();
 
     // Definimos la primera pantalla a mostrar y mantenemos desactivado el menu de pausa.
     pantalla=PANTALLA_MENU;
