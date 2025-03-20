@@ -67,7 +67,7 @@
 	"raylib.h"
 	"room.h"
 
-1742488832 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
+1742490870 source:c:\users\joelc\documents\programacion\projectc\volcano\mobs.c
 	"stdio.h"
 	"stdlib.h"
 	"string.h"
@@ -98,11 +98,11 @@
 	"raylib.h"
 	"dimensiones_struct.h"
 
-1742482764 source:c:\users\joelc\documents\programacion\projectc\volcano\mobstypesdata.c
+1742491183 source:c:\users\joelc\documents\programacion\projectc\volcano\mobstypesdata.c
 	"raylib.h"
 	"dimensiones_struct.h"
 
-1742434673 source:c:\users\joelc\documents\programacion\projectc\volcano\mouse.c
+1742491269 source:c:\users\joelc\documents\programacion\projectc\volcano\mouse.c
 	"stdio.h"
 	"raylib.h"
 	"math.h"

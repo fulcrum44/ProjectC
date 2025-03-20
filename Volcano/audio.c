@@ -87,7 +87,6 @@ int musica_aleatoria() {
 void cargar_sonidos() {
     while (SONIDOS[cantidad_sonidos] != NULL) {
         // Comprobamos si hay alguna ruta de sonido almacenada o si hay más.
-        //if (SONIDOS[cantidad_sonidos] == NULL) break;
 
         // Vamos asignando memoria a nuestro array de lista_sonidos según vayamos leyendo sonidos que almacenar.
         if (lista_sonidos == NULL) {
@@ -109,8 +108,6 @@ void cargar_sonidos() {
 
         // Aumentamos cantidad de sonidos almacenados
         cantidad_sonidos++;
-
-        printf("\nCANTIDAD SONIDOS %d", cantidad_sonidos);
     }
 }
 

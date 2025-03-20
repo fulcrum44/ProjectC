@@ -1,11 +1,6 @@
 #include "raylib.h"
 #include "dimensiones_struct.h"
 
-const int CANTIDAD_MOBS_NIVEL[]={
-    1,
-    2
-};
-
 const Rectangle TEXTURAS_MONSTRUOS[]={
     (Rectangle){296, 804, 112, 80}, // DUENDE_MAGMA
     (Rectangle){418, 804, 112, 80}, // CHISPA_MAGMA

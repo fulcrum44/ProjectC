@@ -79,7 +79,7 @@ void dibujar_menu_principal() {
     // He configurado las dimensiones y coordenadas de los elementos del menú usando una resolucion de pantalla de 1440x1080 como referencia.
     // El tamaño de la pantalla se ajusta al tamaño del monitor desde el que se ejecuta. Si la resolución máxima de un equipo es menor que la de referencia, los elementos del menú empiezan a comprimirse y solaparse.
     // Cuando las dimensiones del monitor sean menores que la resolución de referencia, escalaremos los elementos del menú para que su tamaño se adapte al espacio disponible de pantalla.
-
+    // toDO
 
     // Ajustamos las coordenadas para que la imagen de fondo se dibuje en el centro de la pantalla
     float fondo_x=x_centro_pantalla - (fondo.width * ESCALADO_IMAGEN)/2;
@@ -181,6 +181,8 @@ void liberar_menu_pausa() {
 }
 
 void iniciar_partida() {
+    // Inicializamos lo necesario para empezar la partida. Lo hacemos ordenadamente.
+
     inicializa_nivel(NIVEL_INICIAL);
     // Personaje
     crear_personaje(&personaje);

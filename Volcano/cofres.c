@@ -50,18 +50,12 @@ void almacenar_cofre(int indice_losa) { // Estoy pasando parametro el indice del
         }
     }
 
-    printf("\nIndice_losa: %d", indice_losa);
-
-
     // Los datos de terrenos siguen una configuración tridimensional, pero están almacenados en un único plano fila a fila.
     // x corresponde a la posición de un dato en una fila determinada. Ajustamos el rango de indice_losa a la cantidad de ancho_sala
     cofres[total_cofres].losa.x=indice_losa%ancho_sala;
     // La y sería la fila de una de las capas (ancho*alto). Limitamos el rango de indice_losa a la cantidad de indices que hay en una capa. Luedo dividimos por el ancho_sala que corresponde con el tamaño de una fila
     // El valor entero del resultado es lo que nos interesa para decirnos la y de ese indice (losa).
     cofres[total_cofres].losa.y=(indice_losa%(alto_sala*ancho_sala))/ancho_sala;
-
-    printf("\nIndice cofre: %d", total_cofres);
-    printf("\nCOFRE: %.f - %.f\n\n", cofres[total_cofres].losa.x, cofres[total_cofres].losa.y);
 
     cofres[total_cofres].id=total_cofres;
     cofres[total_cofres].indice_losa=indice_losa;
@@ -81,7 +75,6 @@ bool cofre_pulsado(Vector2 posicion_raton) {
     for (int i=0; i<total_cofres; i++) {
         if (cofres[i].abierto) continue;
 
-        //printf("\nLosas distancia %.f - %.f", fabs(cofres[i].losa.x - personaje.losa.x), fabs(cofres[i].losa.y - personaje.losa.y));
         if (fabs(cofres[i].losa.x - personaje.losa.x) > 1 || fabs(cofres[i].losa.y - personaje.losa.y) > 1) continue; // fabs convierte un valor float o un cálculo con float en valor absoluto.
 
         if (CheckCollisionPointRec(posicion_raton, cofres[i].hitbox)) { // Pondré un cronometro. Cuando llegue a 0 la variable objeto_recogido será true y ya no se dibujará más
@@ -108,14 +101,8 @@ void liberar_cofres() {
 
 void animacion_cofre(Cofre *c) {
     c->tiempo+=(delta);
-
-    printf("\nDelta: %.2f", delta);
-    printf("\n%.2f", c->tiempo);
-    printf("\nIndice apertura cofre: %d", (c->indice_losa) + (alto_sala*ancho_sala));
-    printf("\nTerreno cofre inicial: %d", terreno[(c->indice_losa) + (alto_sala*ancho_sala)]);
-
     if (c->tiempo >= TIEMPO_FOTOGRAMA_COFRE) {
-        for (int i=0; i<(FOTOGRAMAS_COFRE-1)*2; i++) {
+        for (int i=0; i<(FOTOGRAMAS_COFRE-1)*2; i++) { // El cofre se abre, pero no cierra de momento
             /*if (i >= (FOTOGRAMAS_COFRE-1)) {
                 terreno[(c->indice_losa) + (alto_sala*ancho_sala)]--;
                 terreno[(c->indice_losa) + (alto_sala*ancho_sala)-ancho_sala]--;

@@ -15,7 +15,7 @@ int tiempo_ejecucion;
 extern bool pausa;
 extern int pantalla;
 
-void formato_hora() {
+void formato_hora() { // Es un cronometro.
     tiempo_ejecucion=(int)GetTime();
 
     if (pantalla == PANTALLA_JUEGO && !pausa) { // Calculamos el tiempo de juego real
