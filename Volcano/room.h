@@ -8,6 +8,7 @@
 #define NIVEL_INICIAL 0
 #define ALTO_LOSA 16
 #define ANCHO_LOSA 16
+#define LOSA_COFRE 1348
 
 // ETIQUETAS EXTRACCIÓN DATOS ESCENARIO
 #define ETIQ_ANCHO_SALA "\"width\":"

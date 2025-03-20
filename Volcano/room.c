@@ -26,9 +26,7 @@ int losa_x_reja;
 int losa_y_reja;
 int total_botones;
 
-Texture2D volcan;
-Texture2D objetos;
-Texture2D plantas;
+Texture2D *texturas_escenario;
 Rectangle **tiles;
 
 extern Personaje personaje;
@@ -75,6 +73,12 @@ void inicializa_nivel(int nivel) {
     sscanf(strstr(datos_archivo, ETIQ_ALTO_SALA)+strlen(ETIQ_ALTO_SALA), "%d", &alto_sala);
     cursor=strstr(datos_archivo, ETIQ_COL_TILESET); // Nos colocomas antes de la primera ocurrencia de la etiqueta. Tenemos dos tilesets, debemos recoger los datos de cada uno.
 
+    texturas_escenario=malloc(sizeof(Texture2D));
+    if (texturas_escenario == NULL) {
+        printf("\nERROR al asignar memoria para las texturas del nivel actual");
+        exit(-1);
+    }
+
     col_tileset=malloc(sizeof(int) /* * CANTIDAD_TILESETS*/);
     if (col_tileset == NULL) {
         printf("\nERROR al reservar memoria para col_tileset");
@@ -105,16 +109,6 @@ void inicializa_nivel(int nivel) {
         exit(-1);
     }
 
-    /*for (int i=0; i<CANTIDAD_TILESETS; i++) {
-        sscanf(strstr(cursor, ETIQ_COL_TILESET)+strlen(ETIQ_COL_TILESET), "%d", &col_tileset[i]);
-        cursor=strstr(cursor, ETIQ_LOSAS_TILESET); // Avanzamos al siguiente "tilecount:"
-        sscanf(strstr(cursor, ETIQ_LOSAS_TILESET)+strlen(ETIQ_LOSAS_TILESET), "%d", &losas_tileset[i]);
-        cursor=strstr(cursor, ETIQ_COL_TILESET); // Avanzamos al siguiente "columns:"
-    }*/
-    //sscanf(strstr(datos_archivo, ETIQ_ANCHO_LOSA)+strlen(ETIQ_ANCHO_LOSA), "%d", &ancho_losa);
-    //sscanf(strstr(cursor, ETIQ_ALTO_LOSA)+strlen(ETIQ_ALTO_LOSA), "%d", &alto_losa);
-    //sscanf(strstr(datos_archivo, ETIQ_NOMBRE_TILESET)+strlen(ETIQ_NOMBRE_TILESET), "%[^\"]", nombre_tileset); // No lo estoy usando?
-
     while (true) {
         sscanf(strstr(cursor, ETIQ_COL_TILESET)+strlen(ETIQ_COL_TILESET), "%d", &col_tileset[cantidad_tilesets]);
         cursor=strstr(cursor, ETIQ_NOMBRE_TILESET);
@@ -134,6 +128,12 @@ void inicializa_nivel(int nivel) {
             cursor=strstr(cursor, ETIQ_ANCHO_LOSA);
             sscanf(strstr(cursor, ETIQ_ANCHO_LOSA)+strlen(ETIQ_ANCHO_LOSA), "%d", &ancho_losa);
             break;
+        }
+
+        texturas_escenario=realloc(texturas_escenario, sizeof(Texture2D) * (cantidad_tilesets+1));
+        if (texturas_escenario == NULL) {
+            printf("\nERROR al asignar memoria para las texturas del nivel actual");
+            exit(-1);
         }
 
         col_tileset=realloc(col_tileset, sizeof(int) * (cantidad_tilesets+1));
@@ -168,28 +168,12 @@ void inicializa_nivel(int nivel) {
 
     }
 
-    printf("\nCANTIDAD TILESETS: %d\n", cantidad_tilesets);
-
-    // DEBUG
-    printf("\n%d", ancho_sala);
-    printf("\n%d", alto_sala);
-    for (int i=0; i<cantidad_tilesets; i++) {
-        printf("\nColumnas tileset %d: %d", i+1, col_tileset[i]);
-        printf("\nNombre del tileset %d: %s", i+1, nombre_tileset[i]);
-        printf("\nTotal losas tileset %d: %d", i+1, losas_tileset[i]);
-        printf("\nAlto tile tileset %d: %d", i+1, alto_tile[i]);
-        printf("\nAncho tile tileset %d: %d", i+1, ancho_tile[i]);
-    }
-    printf("\n%d", ancho_losa);
-    printf("\n%d\n", alto_losa);
-
     // Leemos y guardamos los datos propios de la configuración de aspecto de la sala.
     terreno=malloc(sizeof(int)*CANTIDAD_CAPAS_SALA*ancho_sala*alto_sala);
     if (terreno == NULL) {
         printf("\nERROR al reservar memoria para el terreno %d", nivel_actual);
         exit(-1);
     }
-
 
     cursor=strstr(datos_archivo, ETIQ_DATOS_SALA)+strlen(ETIQ_DATOS_SALA); // Nos colocamos justo después de la etiqueta usada. Los valores de las capas empiezan a partir de ahí.
     for (int i=0; i<CANTIDAD_CAPAS_SALA; i++){
@@ -198,8 +182,6 @@ void inicializa_nivel(int nivel) {
                 //int indice=(terreno + (i * ancho_sala * alto_sala) + (j * ancho_sala) + k);
                 int indice=(i * ancho_sala * alto_sala) + (j * ancho_sala) + k;
                 sscanf(cursor, "%d", &terreno[indice]);
-
-                //sscanf(cursor, "%d", (terreno + (i * ancho_sala * alto_sala) + (j * ancho_sala) + k));
 
                 // Almacenamos en una variable aparte los botones presentes en el terreno del nivel actual.
                 if (terreno[indice] == BOTON) total_botones++;
@@ -210,9 +192,9 @@ void inicializa_nivel(int nivel) {
                     losa_y_reja=j;
                 }
 
-                if (terreno[indice] == 1348) almacenar_cofre(indice);
+                if (terreno[indice] == LOSA_COFRE) almacenar_cofre(indice);
 
-                if (j == alto_sala - 1 && k == ancho_sala - 1) continue; // No queremos cambiar aún el cursor cuando llegemos al último dato leído de la capa actual.
+                if (j == alto_sala - 1 && k == ancho_sala - 1) continue; // No queremos cambiar el cursor buscando una coma cuando llegemos al último dato leído de la capa actual. Cuando llege al último elemento de data el cursor se actualizará con el que hay al final del primer for.
                 cursor=strstr(cursor, ",")+2; // Avanzamos el cursor a nuestra conveniencia.
             }
         }
@@ -222,21 +204,10 @@ void inicializa_nivel(int nivel) {
     // Elegimos aleatoriamente el cofre que tendrá el objeto recolectable
     asignar_cofre_objeto_recolectable();
 
-    //Debug
-    /*for (int i=0; i<CANTIDAD_CAPAS_SALA; i++) {
-        printf("\n\n Capa: %d", i);
-        for (int j=0; j<alto_sala; j++) {
-            printf("\n");
-            for (int k=0; k<ancho_sala; k++) {
-                printf("%d ", *(terreno + (i * ancho_sala * alto_sala) + (j * ancho_sala) + k));
-            }
-        }
-    } */
-
     // Cargamos texturas
-    if (cantidad_tilesets >= 1) volcan=LoadTexture(nombre_tileset[0]);
-    if (cantidad_tilesets >= 2) objetos=LoadTexture(nombre_tileset[1]);
-    if (cantidad_tilesets >= 3) plantas=LoadTexture(nombre_tileset[2]);
+    for (int i=0; i<cantidad_tilesets; i++) {
+        texturas_escenario[i]=LoadTexture(nombre_tileset[i]);
+    }
 
     // Array con las texturas de la sala
     int filas_tileset[cantidad_tilesets];
@@ -260,15 +231,14 @@ void inicializa_nivel(int nivel) {
 
     for (int i=0; i<cantidad_tilesets; i++) tiles[i][0]=(Rectangle){0,0,0,0}; // Los indices de un tileset empiezan en 1. Inutilizamos la primera posicion del array.
 
-
+    // Almacenamos los rectángulos de cada losa o tile de las texturas que se hayan cargado.
     for (int i=0; i<cantidad_tilesets; i++) {
         for (int j=0; j<filas_tileset[i]; j++) {
             for (int k=0; k<col_tileset[i]; k++) {
-                tiles[i][1 + (j * col_tileset[i] + k)]=(Rectangle){k*ancho_tile[i], j*alto_tile[i], ancho_tile[i], alto_tile[i]}; // AQUI ES DONDE HABRIA QUE PONER LOS ALTO Y ANCHO RESPECTIVOS DE CADA TILESET
+                tiles[i][1 + (j * col_tileset[i] + k)]=(Rectangle){k*ancho_tile[i], j*alto_tile[i], ancho_tile[i], alto_tile[i]};
             }
         }
     }
-
 }
 
 void dibuja_nivel() {
@@ -278,21 +248,16 @@ void dibuja_nivel() {
                 int id_losa=terreno[(i * ancho_sala * alto_sala) + (j * ancho_sala) + k];
                 int indice_tileset=0;
 
-                if (id_losa == 0) continue;
+                if (id_losa == 0) continue; // No nos molestamos en dibujar una losa cuyo valor es 0. No hay nada que dibujar.
 
-                //printf("\n%d", losas_tileset[0]);
-                //printf("\n%d", id_losa);
-
-                //printf("\nID_LOSA: %d", id_losa);
-                while (id_losa > losas_tileset[indice_tileset]) {
+                // En el arreglo terreno los valores de las losas a dibujar son acumulativos entre texturas usadas. Al contrario, en el arreglo tiles que es donde guardamos los rectangulos de las losas, cada textura tiene su propio contador del indice empezando en 1.
+                while (id_losa > losas_tileset[indice_tileset]) { // Convertimos el id_losa al valor real que tiene esa losa en su propia textura.
                     id_losa-=losas_tileset[indice_tileset];
                     indice_tileset++;
                 }
-                /*printf("\nID_LOSA CONVERTIDO: %d", id_losa);
-                printf("\nINDICE TILESET: %d", indice_tileset);*/
 
-                Vector2 posicion={k*ancho_losa, j*alto_losa}; // AQUI PUEDE QUE TAMBIEN HABRIA QUE PONER LOS ALTO Y ANCHO RESPECTIVOS DE CADA TILESET
-                DrawTextureRec((indice_tileset == 0)? volcan : (indice_tileset == 1)? objetos : plantas , tiles[indice_tileset][id_losa], posicion, WHITE);
+                Vector2 posicion={k*ancho_losa, j*alto_losa};
+                DrawTextureRec(texturas_escenario[indice_tileset], tiles[indice_tileset][id_losa], posicion, WHITE);
             }
         }
     }
@@ -300,10 +265,14 @@ void dibuja_nivel() {
 
 void finaliza_nivel() {
     UnloadFileText(datos_archivo);
+    for (int i=0; i<cantidad_tilesets; i++) { // Puede que no sea lo más eficiente cargar y liberar las texturas para luego volver a cargar todas o casi todas en el próximo nivel. Voy a lo seguro.
+       UnloadTexture(texturas_escenario[i]);
+    }
     free(terreno);
     for (int i=0; i<CANTIDAD_TILESETS; i++) {
         free(tiles[i]);
     }
+    free(texturas_escenario);
     free(tiles);
     free(col_tileset);
     free(losas_tileset);
@@ -312,9 +281,6 @@ void finaliza_nivel() {
     free(nombre_tileset);
     libera_monstruos();
     liberar_cofres();
-    UnloadTexture(volcan); // Realmente no haría falta ya que en todos los niveles uso las mismas texturas
-    UnloadTexture(objetos);
-    UnloadTexture(plantas);
 }
 
 void siguiente_nivel() {
