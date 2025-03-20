@@ -19,7 +19,7 @@ int orientacion_monstruo;
 int monstruos_eliminados;
 
 extern int nivel_actual;
-extern char* datos_archivo; // En room.c nunca descargamos el archivo del nivel que cargamos al principio. Podemos acceder a él desde aqui.
+extern char* datos_archivo; // En room.c nunca descargamos el archivo del nivel que cargamos al principio mientras se está ejecutando un nivel. Podemos acceder a él desde aqui.
 extern Personaje personaje;
 extern float delta;
 extern int total_cofres;
@@ -140,7 +140,7 @@ void inicializa_monstruos() {
         // Inicializamos el resto de las variables.
         monstruos[cantidad_monstruos].direccion_desplazamiento=(Vector2){0,0};
         monstruos[cantidad_monstruos].velocidad=monstruos[cantidad_monstruos].tipo.velocidad;
-        monstruos[cantidad_monstruos].activo=true; // ESTO DEPENDERÁ. LOS CENTINELAS COMIENZAN DESACTIVADOS
+        monstruos[cantidad_monstruos].activo=true;
         if (monstruos[cantidad_monstruos].tipo.id == SETA_MAGMA) {
             monstruos[cantidad_monstruos].estado=M_PARADO;
         } else { // EN DESUSO. ESTÁ PENSADO PARA MONSTRUOS NO IMPLEMENTADOS.
@@ -178,12 +178,6 @@ void inicializa_monstruos() {
         }
 
         cantidad_monstruos++;
-    }
-
-    printf("\nCANTIDAD MONSTRUOS: %d", cantidad_monstruos);
-
-    for (int i=0; i<total_cofres; i++) {
-        printf("\nCofre con monstruo: %s - Indice del monstruo en el cofre: %d", (cofres[i].monstruo)? "Si" : "No", cofres[i].indice_monstruo);
     }
 }
 
@@ -228,17 +222,18 @@ void actualizar_centinela(Monstruo *m) {
 
     // Animacion
     actualizar_fotogramas_monstruo(m);
-
 }
 
 void actualizar_seta_magma(Monstruo *m) {
     // Calculamos la distancia del monstruo con respecto al personaje. Lo guardamos primero en una variable aparte.
     Vector2 diferencia=Vector2Subtract((Vector2){personaje.hitboxes[TORSO].x, personaje.hitboxes[TORSO].y}, m->posicion); // UN BUSCADOR DE CAMINOS SERÍA BENEFICIOSO PARA PERFECCIONAR.
 
-    if (fabs(diferencia.x) < RANGO_PERSECUCION && fabs(diferencia.y) < RANGO_PERSECUCION) {
-        if (m->estado != M_ATACANDO) m->estado=M_PERSIGUIENDO;
+    if (m->estado != M_ELIMINADO) {
+        if (fabs(diferencia.x) < RANGO_PERSECUCION && fabs(diferencia.y) < RANGO_PERSECUCION) {
+            if (m->estado != M_ATACANDO) m->estado=M_PERSIGUIENDO;
+        }
+        else m->estado=M_PARADO;
     }
-    else m->estado=M_PARADO;
 
     float margen=5.5f;
     if (fabs(m->posicion.x - personaje.posicion.x) < margen || fabs(m->posicion.y - personaje.posicion.y) < margen) m->direccion_desplazamiento=(Vector2){0, 0};
@@ -252,7 +247,6 @@ void actualizar_seta_magma(Monstruo *m) {
 
         // Sabida la orientación en la que está mirando el monstruo ajustamos la fila de fotogramas a dibujar.
         m->fotograma.y=m->tipo.textura.y + (m->tipo.fotograma.alto * orientacion_monstruo);
-
 
         //m->direccion_desplazamiento=Vector2Normalize(diferencia);
         if (m->direccion_desplazamiento.x == 0 && m->direccion_desplazamiento.y == 0) {
@@ -288,6 +282,7 @@ void actualizar_seta_magma(Monstruo *m) {
         actualizar_fotogramas_monstruo(m);
     }
 
+    // Nota mental: un bug saluda de ven cuando.
 }
 
 void actualizar_fotogramas_monstruo(Monstruo *m) {
@@ -295,7 +290,7 @@ void actualizar_fotogramas_monstruo(Monstruo *m) {
 
     // No se anima correctamente no sé por qué
     if (m->estado == M_ELIMINADO) {
-        if (m->tiempo >= 0.5f) { // Hace falta ajustarlo mejor quizás
+        if (m->tiempo >= 0.3f) { // Hace falta ajustarlo mejor quizás
             if (m->fotograma_actual == m->tipo.cuadricula_fotogramas.ancho-1) {
                 m->activo=false;
             }
@@ -314,15 +309,12 @@ void actualizar_fotogramas_monstruo(Monstruo *m) {
             m->fotograma.x=m->fotograma_actual * m->tipo.fotograma.ancho + m->tipo.textura.x; // Avanzamos al siguiente fotograma en la textura
         }
     }
-
 }
 
 void dibujar_monstruos() {
     for (int i=0; i<cantidad_monstruos; i++) {
         if (!monstruos[i].activo) continue;
         DrawTextureRec(sprite_monstruos, monstruos[i].fotograma, monstruos[i].posicion, WHITE);
-        //DrawRectangle(monstruos[i].hitbox_combate.x, monstruos[i].hitbox_combate.y, monstruos[i].hitbox_combate.width, monstruos[i].hitbox_combate.height, YELLOW);
-        //DrawRectangle(monstruos[i].hb_posicion.x,monstruos[i].hb_posicion.y,monstruos[i].tipo.hitbox_colision.ancho,monstruos[i].tipo.hitbox_colision.alto,WHITE);
     }
 }
 
@@ -335,8 +327,8 @@ void muerte_monstruo(Monstruo *m) {
         if (m->vida <= 0) {
             m->estado=M_ELIMINADO; // Cambiamos el estado del monstruo para que sea detectado en la animación.
             m->fotograma_actual=0; // Nos aseguramos que empezaremos por el primer fotograma de la animación
-            m->fotograma.x=0; // Con fotograma_actual=0 no sería necesario reiniciar esta variable. Lo hacemos igualmente para evitar inconsistencias.
-            m->fotograma.y=m->tipo.textura.y + (m->tipo.fotograma.alto * m->tipo.cuadricula_fotogramas.alto); // Antes de desactivar al monstruo por eliminación animaremos su muerte. Asignamos la fila correspondiente de fotogramas.
+            m->fotograma.x=m->tipo.textura.x; // Con fotograma_actual=0 no sería necesario reiniciar esta variable. Lo hacemos igualmente para evitar inconsistencias.
+            m->fotograma.y=m->tipo.textura.y + (m->tipo.fotograma.alto * (m->tipo.cuadricula_fotogramas.alto-1)); // Antes de desactivar al monstruo por eliminación animaremos su muerte. Asignamos la fila correspondiente de fotogramas.
             monstruos_eliminados++;
         return;
         }
@@ -354,9 +346,7 @@ void ataque_centinela(Monstruo *m) {
         }
 
         return;
-    }
-
-    if (m->estado != M_ATACANDO) {
+    } else {
         if (CheckCollisionRecs(m->hitbox_combate, personaje.hitboxes[TORSO])) {
             PlaySound(lista_sonidos[DANYO_RECIBIDO]); // Sonido de personaje ha recibido daño
             m->estado=M_ATACANDO;
@@ -364,10 +354,6 @@ void ataque_centinela(Monstruo *m) {
             personaje.vida-=m->danyo;
 
             muerte_personaje(&personaje);
-
-            printf("\nDaño hecho por el monstruo: %d", m->danyo);
-
-            printf("\nVida personaje: %d", personaje.vida);
         }
     }
 }
@@ -382,9 +368,7 @@ void ataque_seta_magma(Monstruo *m) {
         }
 
         return;
-    }
-
-    if (m->estado != M_ATACANDO) {
+    } else {
         if (CheckCollisionRecs(m->hitbox_combate, personaje.hitboxes[TORSO])) {
             PlaySound(lista_sonidos[DANYO_RECIBIDO]); // Sonido de personaje ha recibido daño
             m->estado=M_ATACANDO;
@@ -392,10 +376,6 @@ void ataque_seta_magma(Monstruo *m) {
             personaje.vida-=m->danyo;
 
             muerte_personaje(&personaje);
-
-            printf("\nDaño hecho por el monstruo: %d", m->danyo);
-
-            printf("\nVida personaje: %d", personaje.vida);
         }
     }
 }
@@ -416,6 +396,21 @@ void desplazamiento_en_cruz(Monstruo *m, Vector2 diferencia) {
     if (diferencia.x > 0 && fabs(diferencia.y) < fabs(diferencia.x)) {
         m->direccion_desplazamiento.x=1;
         return;
+    }
+}
+
+void retroceso_monstruo(Monstruo *m, int orientacion_personaje) {
+    if (orientacion_personaje == ORIENTACION_ABAJO) {
+        m->posicion.y+=RETROCESO;
+    }
+    if (orientacion_personaje == ORIENTACION_ARRIBA) {
+        m->posicion.y-=RETROCESO;
+    }
+    if (orientacion_personaje == ORIENTACION_DER) {
+        m->posicion.x+=RETROCESO;
+    }
+    if (orientacion_personaje == ORIENTACION_IZQ) {
+        m->posicion.x-=RETROCESO;
     }
 }
 

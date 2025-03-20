@@ -9,6 +9,7 @@
 
 #define DELAY_ATAQUE 60
 #define RANGO_PERSECUCION 100
+#define RETROCESO 25
 
 // DATOS FOTOGRAMAS
 #define TIEMPO_FOTOGRAMA 0.15f
@@ -90,4 +91,5 @@ void muerte_monstruo(Monstruo*);
 void ataque_centinela(Monstruo*);
 void ataque_seta_magma(Monstruo*);
 void desplazamiento_en_cruz(Monstruo*, Vector2);
+void retroceso_monstruo(Monstruo*, int);
 EtiquetaMonstruo conversion_char_enum(char*);

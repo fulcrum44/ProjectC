@@ -274,25 +274,10 @@ void ataque_personaje(Personaje *p) {
 
                 if (monstruos[i].tipo.id == SETA_MAGMA) {
                     PlaySound(lista_sonidos[ENEMIGO_ATACADO]);
-                    if (orientacion == ORIENTACION_ABAJO) {
-                        monstruos[i].posicion.y+=20;
-                    }
-                    if (orientacion == ORIENTACION_ARRIBA) {
-                        monstruos[i].posicion.y-=20;
-                    }
-                    if (orientacion == ORIENTACION_DER) {
-                        monstruos[i].posicion.x+=20;
-                    }
-                    if (orientacion == ORIENTACION_IZQ) {
-                        monstruos[i].posicion.x-=20;
-                    }
-
+                    retroceso_monstruo(&monstruos[i], orientacion);
                 }
 
                 muerte_monstruo(&monstruos[i]);
-
-                printf("\nVida monstruo %d: %d", i, monstruos[i].vida);
-                //printf("\n\nPersonaje ataca a monstruo\n\n");
             }
         }
     }
