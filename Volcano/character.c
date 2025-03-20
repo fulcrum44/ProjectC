@@ -89,7 +89,7 @@ void actualizar_personaje(Personaje *p) {
             return;
         }
 
-        if (!IsSoundPlaying(lista_sonidos[PASOS])) PlaySound(lista_sonidos[PASOS]);
+        if (!IsSoundPlaying(lista_sonidos[PASOS])) PlaySound(lista_sonidos[PASOS]); // Cuando una reproducción termina, la siguiente empieza si se da el caso de querer reproducirse.
         // Actualizamos datos dependientes de la posicion del personaje
         p->posicion=destino;
         p->hb_posicion=destino_hitbox;
@@ -255,8 +255,8 @@ void movimiento_personaje(Personaje *p, Vector2 desplazamiento, int orientacion_
 }
 
 void ataque_personaje(Personaje *p) {
-    // Reproducimos el sonido de la espada independientemente si su hitbox está colisionando con un enemigo
-    PlaySound(lista_sonidos[ESPADA]);
+    // Reproducimos el sonido de la espada independientemente si su hitbox está colisionando con un enemigo.
+    if (!IsSoundPlaying(lista_sonidos[ESPADA])) PlaySound(lista_sonidos[ESPADA]); // Si estamos pulsando el ratón seguidamente el sonido no se interrumpirá para empezar otra vez. Suena cuando acabé la reproducciçon anterior.
 
     if (p->estado != P_ATACANDO) { // Si ocurriese que hemos pulsado al ratón antes de que haya acabado una animación de ataque no hacemos nada.
         p->estado=P_ATACANDO;
