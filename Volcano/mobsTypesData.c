@@ -6,7 +6,7 @@ const int CANTIDAD_MOBS_NIVEL[]={
     2
 };
 
-const Rectangle TEXTURAS[]={
+const Rectangle TEXTURAS_MONSTRUOS[]={
     (Rectangle){296, 804, 112, 80}, // DUENDE_MAGMA
     (Rectangle){418, 804, 112, 80}, // CHISPA_MAGMA
     (Rectangle){148, 0, 64, 96}, // SLIME

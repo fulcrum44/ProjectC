@@ -40,7 +40,7 @@ void inicializa_monstruos() {
     // ANTES que nada lo más importante es inicializar los tipos de monstruos que tenemos en el juego
     for (int i=0; i<TIPOS_MONSTRUO; i++) {
         tipos[i].id=i; // Empezamos con id=0 para que coincidan con los indices del enum EtiquetasMonstruo;
-        tipos[i].textura=TEXTURAS[i];
+        tipos[i].textura=TEXTURAS_MONSTRUOS[i];
         tipos[i].fotograma=FOTOGRAMA[i];
         tipos[i].cuadricula_fotogramas=CUADRICULA_FOTOGRAMAS[i];
         tipos[i].hitbox_colision=HITBOX_COLISIONES[i];

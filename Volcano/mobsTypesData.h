@@ -4,7 +4,7 @@
 #include "dimensiones_struct.h"
 
 extern const int CANTIDAD_MOBS_NIVEL[];
-extern const Rectangle TEXTURAS[];
+extern const Rectangle TEXTURAS_MONSTRUOS[];
 extern const Dimensiones FOTOGRAMA[];
 extern const Dimensiones CUADRICULA_FOTOGRAMAS[];
 extern const Dimensiones HITBOX_COLISIONES[];
