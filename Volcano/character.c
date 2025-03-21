@@ -7,6 +7,7 @@
 #include "teclado.h"
 #include "mobs.h"
 #include "audio.h"
+#include "menu.h"
 
 Texture2D sprite[CANTIDAD_TEXTURAS_PERSONAJE];
 int orientacion;
@@ -39,8 +40,10 @@ extern int total_botones;
 extern Monstruo *monstruos;
 extern int cantidad_monstruos;
 extern Sound *lista_sonidos;
+extern bool pausa;
+extern bool fin_partida;
 
-void inicializa_textura_personaje() { // Ahora mismo va a parecer un poco innecesario pero luego le podemos dar uso de verdad si tenemos varios personajes.
+void inicializa_textura_personaje() {
     for (int i=0; i<CANTIDAD_TEXTURAS_PERSONAJE; i++) {
         sprite[i]=LoadTexture(TEXTURAS_PERSONAJE[i]);
     }
@@ -182,6 +185,7 @@ bool hb_esquina(Vector2 esquina, int sujeto) {
 
 
     // Comprobamos a partir de aqui si el personaje ha pisado algun elemento interactivo del mapa.
+    // Me parece innecesario factorizar estas comprobaciones en funciones independientes. Esta misma función ya es en si ya está pensada para hacer distintas comprobaciones sobre lo que se está pisando.
     if (losa_esquina == PUERTA_SIGUIENTE_NIVEL) siguiente_nivel();
 
     if (losa_esquina == BOTON) {
@@ -193,6 +197,11 @@ bool hb_esquina(Vector2 esquina, int sujeto) {
             *(terreno + (CAPA_COLISION * ancho_sala * alto_sala) + (losa_y_reja * ancho_sala) + losa_x_reja)=0;
             *(terreno + (CAPA_SUELO * ancho_sala * alto_sala) + (losa_y_reja * ancho_sala) + losa_x_reja)=REJA_ABIERTA;
         }
+    }
+
+    if (losa_esquina >= MIN_LOSA_FIN_PARTIDA && losa_esquina <= MAX_LOSA_FIN_PARTIDA) {
+        pausa=true;
+        fin_partida=true;
     }
 
     return true;

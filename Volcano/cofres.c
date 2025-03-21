@@ -11,9 +11,12 @@
 
 Texture2D items;
 Cofre *cofres;
-int total_cofres;
+// Ya estoy inicializando esta variable y total_items al almacenar el primer cofre encontrado en un nivel, pero cuando no hay cofres en uno realmente nunca se inicializan.
+// En mobs.c cuando asigno memoria para los monstruos primero se asigna teniendo en cuenta los cofres sin item, restando total_cofres-total_items. Si no hay cofres no se inicializa nunca realmente.
+// En el estado actual del juego esos dos valores no cogen basura si no son inicializados pero, como medida de seguridad, inicializo aquí también preventivamente.
+int total_cofres=0;
 int items_recogidos;
-int total_items;
+int total_items=0;
 
 extern int *terreno;
 extern int alto_losa;
@@ -32,7 +35,7 @@ void inicializa_textura_items() {
 
 void almacenar_cofre(int indice_losa) { // Estoy pasando parametro el indice del array terreno al ser conceptualmente las losas del mapa
     if (cofres == NULL) {
-        // Estas dos siguientes variable se inicializan o reinician solo cuando se está almacenando el primer cofre de un nivel.
+        // Estas variables se inicializan o reinician solo cuando se está almacenando el primer cofre de un nivel.
         total_cofres=0;
         items_recogidos=0;
         total_items=0;
@@ -88,15 +91,9 @@ bool cofre_pulsado(Vector2 posicion_raton) {
     return false; // Devolvemos false solo si durante la iteración nunca se ha devuelto true. No se ha pulsado ningún cofre.
 }
 
-void dibujar_hitbox() {
-    for (int i=0; i<total_cofres; i++) {
-        DrawRectangle(cofres[i].hitbox.x, cofres[i].hitbox.y, cofres[i].hitbox.width, cofres[i].hitbox.height, YELLOW);
-    }
-}
-
 void liberar_cofres() {
     free(cofres);
-    cofres=NULL;
+    cofres=NULL; // Me gusta asegurarme que un puntero liberado se le asigne NULL por precacucion. Normalmente lo hago en funciones de inicializar pero aquí en cofres.c no hay una función como tal. Lo hago aquí pues.
 }
 
 void animacion_cofre(Cofre *c) {
@@ -120,6 +117,8 @@ void animacion_cofre(Cofre *c) {
 
 void asignar_cofre_objeto_recolectable() {
     srand(time(NULL));
+
+    if (total_cofres == 0) return; // Si no hay cofres no asignamos nada.
 
     int indice_aleatorio=rand()%total_cofres;
 

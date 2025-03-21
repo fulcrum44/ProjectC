@@ -155,6 +155,10 @@ void dibujar_menu_pausa() {
     float menu_pausa_x=x_centro_pantalla - (menu_pausa.width * ESCALADO_MENU_PAUSA)/2;
     float menu_pausa_y=y_centro_pantalla - (menu_pausa.height * ESCALADO_MENU_PAUSA)/2;
 
+    // Alineamos texto que dibujemos. Ahora solo hay un texto y está hecho pensando solo en ese texto
+    float posicion_x_texto=menu_pausa_x+AJUSTE_X_TEXTO_AJUSTES;
+    float posicion_y_texto=menu_pausa_y+AJUSTE_Y_TEXTO_AJUSTES;
+
     // Ajustamos posicion de los botones de la pantalla principal
     for (int i=0; i<CANTIDAD_BOTONES_MENU_PAUSA; i++) {
         botones_pausa[i].posicion.x=x_centro_pantalla -(botones_menu_pausa.width/2);
@@ -168,7 +172,7 @@ void dibujar_menu_pausa() {
     for (int i=0; i<CANTIDAD_BOTONES_AJUSTES; i++) {
         // Está bien pero no me convence. Podría guardar las posiciones en un array de Vector2 en esta misma funcion.
         if (i == OFF) {
-            botones_ajustes[i].posicion.x=x_centro_pantalla -(botones_menu_pausa.width) + AJUSTE_X_BOTON_AJUSTES + ESPACIO_ENTRE_BOTONES_AJUSTES_X;
+            botones_ajustes[i].posicion.x=x_centro_pantalla - (botones_menu_pausa.width) + AJUSTE_X_BOTON_AJUSTES + ESPACIO_ENTRE_BOTONES_AJUSTES_X;
             botones_ajustes[i].posicion.y=botones_ajustes[ON].posicion.y;
         }
         else {
@@ -188,11 +192,29 @@ void dibujar_menu_pausa() {
         }
     } else if (pantalla_menu_pausa == PANTALLA_AJUSTES) {
         DrawTextureEx(menu_pausa, (Vector2){menu_pausa_x, menu_pausa_y}, 0.0f, ESCALADO_MENU_PAUSA, WHITE);
-        DrawTextEx(texto, "Musica", (Vector2){1025, 575}, TAMANIO_FUENTE_AJUSTES, 0, BLACK);
+        DrawTextEx(texto, "Musica", (Vector2){posicion_x_texto, posicion_y_texto} , TAMANIO_FUENTE_AJUSTES, 0, BLACK);
         for (int i=0; i<CANTIDAD_BOTONES_AJUSTES; i++) {
             DrawTextureRec(ajustes, botones_ajustes[i].area, botones_ajustes[i].posicion, WHITE);
         }
     }
+}
+
+void dibujar_menu_fin_partida() {
+    // ESTO ES AUN UNA VERSION DE PRUEBA. LA IDEA ES HACER UN RECOPILATORIO DE CIERTAS ESTADÍSTICAS ADEMÁS DE MOSTRAR LOS BOTONES YA IMPLEMENTADOS.
+
+
+    // Ajustamos el fondo del menu de pausa al centro de la pantalla.
+    float menu_pausa_x=x_centro_pantalla - (menu_pausa.width * ESCALADO_MENU_PAUSA)/2;
+    float menu_pausa_y=y_centro_pantalla - (menu_pausa.height * ESCALADO_MENU_PAUSA)/2;
+
+    // Alineamos texto que dibujemos. Ahora solo hay un texto y está hecho pensando solo en ese texto
+    float posicion_x_texto=menu_pausa_x+AJUSTE_X_TEXTO_AJUSTES;
+    float posicion_y_texto=menu_pausa_y+AJUSTE_Y_TEXTO_AJUSTES;
+
+    DrawTextureEx(menu_pausa, (Vector2){menu_pausa_x, menu_pausa_y}, 0.0f, ESCALADO_MENU_PAUSA, WHITE);
+    DrawTextEx(texto, "FIN PARTIDA", (Vector2){posicion_x_texto+25, posicion_y_texto} , 80, 0, BLACK);
+    DrawTextureRec(botones_menu_pausa, botones_pausa[1].area, botones_pausa[1].posicion, WHITE);
+    DrawTextureRec(botones_menu_pausa, botones_pausa[3].area, botones_pausa[3].posicion, WHITE);
 }
 
 bool boton_menu_pausa_pulsado(Vector2 posicion_raton) {

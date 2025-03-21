@@ -54,7 +54,7 @@ void inicializa_monstruos() {
 
     // Dimensionamos el array con la cantidad de monstruos generados en el nivel actual
     cantidad_monstruos=total_cofres-total_items;
-    monstruos=malloc(sizeof(Monstruo)*cantidad_monstruos); // ESTO DEBO RETOCARLO POR SI HAGO QUE HAYA MAS DE UN COFRE CON ESTRELLA
+    monstruos=malloc(sizeof(Monstruo)*cantidad_monstruos);
     if (monstruos == NULL) {
         printf("\nERROR al reservar memoria para los monstruos");
         exit(-1);
@@ -65,7 +65,7 @@ void inicializa_monstruos() {
         monstruos[i].tipo=tipos[CENTINELA];
         monstruos[i].direccion_desplazamiento=(Vector2){0,0};
         monstruos[i].velocidad=monstruos[i].tipo.velocidad;
-        monstruos[i].activo=false; // ESTO DEPENDERÁ. LOS CENTINELAS COMIENZAN DESACTIVADOS
+        monstruos[i].activo=false;
         monstruos[i].tiempo=0;
         monstruos[i].fotograma_actual=0;
         monstruos[i].fotograma=(Rectangle){monstruos[i].tipo.textura.x, monstruos[i].tipo.textura.y, monstruos[i].tipo.fotograma.ancho, monstruos[i].tipo.fotograma.alto};
@@ -75,7 +75,6 @@ void inicializa_monstruos() {
         monstruos[i].duracion_ataque=DELAY_ATAQUE;
 
         // Inicializamos posicion centinela
-        printf("\nTOTAL COFRES: %d", total_cofres);
         for (int j=0; j<total_cofres; j++) {
             if (!cofres[j].item_recolectable && !cofres[j].monstruo) {
                 monstruos[i].posicion.x=cofres[j].losa.x * ancho_losa;

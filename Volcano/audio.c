@@ -122,7 +122,7 @@ void cargar_sonidos() {
     }
 }
 
-void liberar_sonidos() {
+void liberar_sonidos() { // Se llama en el main
     for (int i=0; i<cantidad_sonidos; i++) {
         UnloadSound(lista_sonidos[i]); // Descargamos los sonidos cargados al principio
     }

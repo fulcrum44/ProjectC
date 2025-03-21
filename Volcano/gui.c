@@ -33,6 +33,8 @@ extern int horas;
 extern int minutos;
 extern int segundos;
 
+extern Personaje personaje;
+
 extern int screenWidth;
 
 extern Font texto;
@@ -56,9 +58,9 @@ void interfaz_grafica_juego(Personaje p) {
         (Rectangle){0, alto_pantalla + AJUSTE_Y_BARRA_INFERIOR, AREA_TEXTURA_ICONOS[BORDE_IZQUIERDO_BARRA_INFERIOR].width, 75}, // BORDE_IZQUIERDO_BARRA_INFERIOR
         (Rectangle){ancho_pantalla - AREA_TEXTURA_ICONOS[BORDE_DERECHO_BARRA_INFERIOR].width, alto_pantalla + AJUSTE_Y_BARRA_INFERIOR, AREA_TEXTURA_ICONOS[BORDE_IZQUIERDO_BARRA_INFERIOR].width, 75}, // BORDE_DERECHO_BARRA_INFERIOR
         (Rectangle){18, 22, 42, 42}, // CUADRO_NIVEL
-        (Rectangle){200*ajuste_horizontal, alto_pantalla + AJUSTE_POSICION_Y, 32, 32}, // ICONO_ITEM
-        (Rectangle){500*ajuste_horizontal, alto_pantalla + AJUSTE_POSICION_Y, 32, 32}, // ICONO_MONSTRUOS_ELIMINADOS
-        (Rectangle){800*ajuste_horizontal, alto_pantalla + AJUSTE_POSICION_Y, 32, 32} // ICONO_MUERTES
+        (Rectangle){300*ajuste_horizontal, alto_pantalla + AJUSTE_POSICION_Y, 32, 32}, // ICONO_ITEM
+        (Rectangle){600*ajuste_horizontal, alto_pantalla + AJUSTE_POSICION_Y, 32, 32}, // ICONO_MONSTRUOS_ELIMINADOS
+        (Rectangle){900*ajuste_horizontal, alto_pantalla + AJUSTE_POSICION_Y, 32, 32} // ICONO_MUERTES
     };
 
     DrawTexturePro(barra_inferior, AREA_TEXTURA_ICONOS[FONDO_BARRA_INFERIOR], AREA_DIBUJADO_ICONOS[FONDO_BARRA_INFERIOR], (Vector2){0,0}, 0.0f, WHITE);
@@ -69,6 +71,7 @@ void interfaz_grafica_juego(Personaje p) {
     DrawTexturePro(sprite_monstruos, AREA_TEXTURA_ICONOS[ICONO_MONSTRUOS_ELIMINADOS], AREA_DIBUJADO_ICONOS[ICONO_MONSTRUOS_ELIMINADOS], (Vector2){0,0}, 0.0f, WHITE);
     DrawTexturePro(items, AREA_TEXTURA_ICONOS[ICONO_MUERTES], AREA_DIBUJADO_ICONOS[ICONO_MUERTES], (Vector2){0,0}, 0.0f, WHITE);
 
+    DrawTextEx(texto, TextFormat("HP: %d", personaje.vida), (Vector2){100*ajuste_horizontal, alto_pantalla + AJUSTE_POSICION_Y}, TAM_FUENTE_ESTANDAR, 0.0f, WHITE);
     DrawTextEx(texto, TextFormat("%d", nivel_actual), (Vector2){(nivel_actual<10)? POSICION_X_NIVEL_UN_DIGITO : POSICION_X_NIVEL_DOBLE_DIGITO, POSICION_Y_NIVEL}, TAM_FUENTE_NIVEL, 0.0f, WHITE);
     DrawTextEx(texto, TextFormat("%d/%d", items_recogidos, total_items), (Vector2){AREA_DIBUJADO_ICONOS[ICONO_ITEM].x + AJUSTE_X_TEXTO, alto_pantalla + AJUSTE_POSICION_Y}, TAM_FUENTE_ESTANDAR, 0.0f, WHITE);
     DrawTextEx(texto, TextFormat("%d/%d", monstruos_eliminados, cantidad_monstruos), (Vector2){AREA_DIBUJADO_ICONOS[ICONO_MONSTRUOS_ELIMINADOS].x + AJUSTE_X_TEXTO,  alto_pantalla + AJUSTE_POSICION_Y}, TAM_FUENTE_ESTANDAR, 0.0f, WHITE);

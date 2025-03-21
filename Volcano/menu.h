@@ -45,6 +45,8 @@
 #define ANCHO_BOTON_AJUSTE 148
 #define AJUSTE_X_BOTON_AJUSTES 80
 #define AJUSTE_Y_BOTON_AJUSTES 80
+#define AJUSTE_X_TEXTO_AJUSTES 65
+#define AJUSTE_Y_TEXTO_AJUSTES 40
 #define ESPACIO_ENTRE_BOTONES_AJUSTES_X 150
 #define ESPACIO_ENTRE_BOTONES_AJUSTES_Y 60
 #define TAMANIO_FUENTE_AJUSTES 34
@@ -71,11 +73,13 @@ typedef struct {
 
 void inicializar_menu();
 void inicializar_menu_pausa();
+void inicializar_menu_fin_partida(); // En desuso por ahora
 void iniciar_partida();
 void dibujar_menu_principal();
 bool boton_menu_principal_pulsado(Vector2);
 bool boton_menu_pausa_pulsado(Vector2);
 bool boton_ajustes_pulsado(Vector2);
 void dibujar_menu_pausa();
+void dibujar_menu_fin_partida();
 void liberar_menu();
 void liberar_menu_pausa();

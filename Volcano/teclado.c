@@ -10,6 +10,7 @@ int teclas_pulsadas;
 
 extern Personaje personaje;
 extern bool pausa;
+extern int pantalla;
 
 MovimientoPersonaje controles[]= {
     {KEY_W, (Vector2){0, -1}, ORIENTACION_ARRIBA},
@@ -19,6 +20,8 @@ MovimientoPersonaje controles[]= {
 };
 
 bool tecla_pulsada() {
+    if (pantalla == PANTALLA_MENU) return false; // Dejamos sin efecto si pulsamos una tecla si estamos en el menu principal del juego
+
     // Reiniciamos variables
     direccion.x=0;
     direccion.y=0;

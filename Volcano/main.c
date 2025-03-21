@@ -21,11 +21,9 @@ void dibujar();
 const int screenWidth = 1440;
 const int screenHeight = 1080;
 
-//const int screenWidth = 1080;
-//const int screenHeight = 720;
-
 int pantalla;
 bool pausa;
+bool fin_partida;
 
 float delta;
 int rango_horizontal;
@@ -36,6 +34,7 @@ Personaje personaje;
 Camera2D camara;
 Music musica;
 Sound sound;
+Image icono;
 Font texto;
 
 int main() {
@@ -70,10 +69,14 @@ void inicializar() {
     int alto_pantalla=GetMonitorHeight(monitor);
 
     SetWindowSize(ancho_pantalla, alto_pantalla);
-    SetWindowPosition(0,0);
+    SetWindowPosition(0,20);
 
-    ToggleFullscreen();
+    //ToggleFullscreen();
     SetTargetFPS(60);
+
+    // Cargamos y establecemos icono para la ventana
+    icono=LoadImage("resources\\icono.png");
+    SetWindowIcon(icono); // Para verlo desactiva pantalla completa manualmente desde el código.
 
     // Inicializamos dipositivo de audio
     InitAudioDevice();
@@ -82,11 +85,12 @@ void inicializar() {
     cargar_sonidos();
 
     // Inicializamos fuente de texto personalizada
-    texto=LoadFontEx(RUTA_FUENTE_PERSONALIZADA, 60, NULL, 0);
+    texto=LoadFontEx(RUTA_FUENTE_PERSONALIZADA, 100, NULL, 0);
 
-    // Definimos la primera pantalla a mostrar y mantenemos desactivado el menu de pausa.
+    // Definimos la primera pantalla a mostrar y mantenemos desactivado el menu de pausa y el estado de fin de partida.
     pantalla=PANTALLA_MENU;
     pausa=false;
+    fin_partida=false;
 
     // Inicializamos el raton
     inicializar_raton();
@@ -145,6 +149,7 @@ void dibujar() {
             dibujar_personaje(&personaje);
             dibujar_recolectable();
             if (pausa) dibujar_menu_pausa();
+            if (pausa && fin_partida) dibujar_menu_fin_partida();
             EndMode2D();
 
             interfaz_grafica_juego(personaje);
