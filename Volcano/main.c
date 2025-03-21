@@ -76,8 +76,8 @@ void inicializar() {
     // Dimensionamos la ventana
     SetWindowSize(ancho_pantalla_ajustado, alto_pantalla_ajustado);
 
-    // Posicionamos la ventana al centro
-    SetWindowPosition(ancho_pantalla_ajustado/5,alto_pantalla_ajustado/5);
+    // Posicionamos la ventana al centro más o menos
+    SetWindowPosition(ancho_pantalla_ajustado/6,alto_pantalla_ajustado/5); // Dividiendo entre 6 y 5 respectivamente es lo más cercano o preciso a centrar que se consigue.
 
     //ToggleFullscreen(); // Prueba. La intencion es crear un boton dentro del juego donde controlar esto.
     SetTargetFPS(60);
@@ -115,8 +115,8 @@ void inicializar() {
         2.5f
     };
 
-    rango_horizontal=((ancho_pantalla/ANCHO_LOSA+10)/2)/camara.zoom; // Le doy un margen de 10 para que vaya sobrado.
-    rango_vertical=((alto_pantalla/ALTO_LOSA+10)/2)/camara.zoom;
+    rango_horizontal=((ancho_pantalla_ajustado+1/ANCHO_LOSA+10)/2)/camara.zoom; // Le doy un margen de 10 para que vaya sobrado. A lo otro le doy 1 de margen para compensar fallos en redondeos.
+    rango_vertical=((alto_pantalla_ajustado+1/ALTO_LOSA+10)/2)/camara.zoom;
 
     // Menu
     inicializar_menu();
