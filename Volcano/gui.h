@@ -21,6 +21,9 @@
 #define POSICION_X_NIVEL_DOBLE_DIGITO 28
 #define POSICION_Y_NIVEL 30
 
+// FUENTE DE TEXTO
+#define RUTA_FUENTE_PERSONALIZADA "resources\\fonts\\font_default.ttf"
+
 typedef enum {
     FONDO_BARRA_INFERIOR,
     BORDE_IZQUIERDO_BARRA_INFERIOR,

@@ -17,24 +17,36 @@ const int BOTONES_MENU_PRINCIPAL[]= {
 const int BOTONES_MENU_PAUSA[]= {
     CONTINUAR, // MODIFICARÁ LA VARIABLE PAUSA -> 0 = FALSE
     MENU_PRINCIPAL, // MODIFICARÁ LA VARIABLE PANTALLA -> 0 = MENU PRINCIPAL
+    AJUSTES,
     SALIR // SALIDA
+};
+
+const int BOTONES_AJUSTES[]= {
+    ON, // ACTIVA EL VOLUMEN DE LA MUSICA
+    OFF, // SILENCIA EL VOLUMEN DE TODO EN EL JUEGO
+    VOLVER // VUELVE A LA PANTALLA PRINCIPAL DEL MENU PAUSA
 };
 
 int x_centro_pantalla;
 int y_centro_pantalla;
+int pantalla_menu_pausa;
 
 Texture2D fondo;
 Texture2D titulo;
 Texture2D botones_menu;
 Texture2D menu_pausa;
 Texture2D botones_menu_pausa;
+Texture2D ajustes;
+
 Boton *botones;
 Boton *botones_pausa;
+Boton *botones_ajustes;
 
 extern int pantalla;
 extern bool pausa;
 extern Personaje personaje;
 extern Camera2D camara;
+extern Font texto;
 
 void inicializar_menu() {
     // Calculamos el centro de la pantalla. Lo necesitaremos tanto para el menu principal como el menu de pausa
@@ -62,7 +74,9 @@ void inicializar_menu_pausa() {
     // Inicializamos menu de pausa
     menu_pausa=LoadTexture(TEXTURA_MENU_PAUSA);
     botones_menu_pausa=LoadTexture(TEXTURA_BOTONES_MENU_PAUSA);
+    ajustes=LoadTexture(TEXTURA_BOTONES_AJUSTES);
 
+    // Preparamos los botones de la pantalla principal del menu de pausa
     botones_pausa=malloc(sizeof(Boton) * CANTIDAD_BOTONES_MENU_PAUSA);
     if (botones_pausa == NULL) {
         printf("\nERROR al reservar memoria para los botones del menu de pausa");
@@ -73,6 +87,20 @@ void inicializar_menu_pausa() {
         botones_pausa[i].area=(Rectangle){0, i*ALTO_BOTON_PAUSA, ANCHO_BOTON_PAUSA, ALTO_BOTON_PAUSA};
         botones_pausa[i].tipo=BOTONES_MENU_PAUSA[i];
     }
+
+    // Preparamos los botones del apartado ajustes del menu pausa
+    botones_ajustes=malloc(sizeof(Boton) * CANTIDAD_BOTONES_AJUSTES);
+    if (botones_ajustes == NULL) {
+        printf("\nERROR al reservar memoria para los botones de los ajustes");
+        exit(-1);
+    }
+
+    for (int i=0; i<CANTIDAD_BOTONES_AJUSTES; i++) {
+        botones_ajustes[i].area=(Rectangle){0, i*ALTO_BOTON_AJUSTE, ANCHO_BOTON_AJUSTE, ALTO_BOTON_AJUSTE};
+        botones_ajustes[i].tipo=BOTONES_AJUSTES[i];
+    }
+
+    pantalla_menu_pausa=PRINCIPAL;
 }
 
 void dibujar_menu_principal() {
@@ -127,23 +155,49 @@ void dibujar_menu_pausa() {
     float menu_pausa_x=x_centro_pantalla - (menu_pausa.width * ESCALADO_MENU_PAUSA)/2;
     float menu_pausa_y=y_centro_pantalla - (menu_pausa.height * ESCALADO_MENU_PAUSA)/2;
 
-    // Ajustamos posicion de los botones
+    // Ajustamos posicion de los botones de la pantalla principal
     for (int i=0; i<CANTIDAD_BOTONES_MENU_PAUSA; i++) {
         botones_pausa[i].posicion.x=x_centro_pantalla -(botones_menu_pausa.width/2);
         botones_pausa[i].posicion.y=y_centro_pantalla - (menu_pausa.height * ESCALADO_MENU_PAUSA / 2) + AJUSTE_Y_BOTON_PAUSA + i * (ALTO_BOTON_PAUSA + ESPACIO_ENTRE_BOTONES_PAUSA);
 
-        // Establecemos el hitox de los botones sabida ya su posicion
+        // Establecemos el hitbox de los botones sabida ya su posicion
         botones_pausa[i].hitbox=(Rectangle){botones_pausa[i].posicion.x, botones_pausa[i].posicion.y, ANCHO_BOTON_PAUSA, ALTO_BOTON_PAUSA};
     }
 
+    // Ajustamos posicion de los botones dentro de los ajustes
+    for (int i=0; i<CANTIDAD_BOTONES_AJUSTES; i++) {
+        // Está bien pero no me convence. Podría guardar las posiciones en un array de Vector2 en esta misma funcion.
+        if (i == OFF) {
+            botones_ajustes[i].posicion.x=x_centro_pantalla -(botones_menu_pausa.width) + AJUSTE_X_BOTON_AJUSTES + ESPACIO_ENTRE_BOTONES_AJUSTES_X;
+            botones_ajustes[i].posicion.y=botones_ajustes[ON].posicion.y;
+        }
+        else {
+            botones_ajustes[i].posicion.x=x_centro_pantalla - (botones_menu_pausa.width) + AJUSTE_X_BOTON_AJUSTES;
+            botones_ajustes[i].posicion.y=y_centro_pantalla - (menu_pausa.height/2 * ESCALADO_MENU_PAUSA) + AJUSTE_Y_BOTON_AJUSTES + i * (ALTO_BOTON_AJUSTE + ESPACIO_ENTRE_BOTONES_AJUSTES_Y);
+        }
+
+        // Establecemos el hitbox de los botones de los ajustes
+        botones_ajustes[i].hitbox=(Rectangle){botones_ajustes[i].posicion.x, botones_ajustes[i].posicion.y, ANCHO_BOTON_AJUSTE, ALTO_BOTON_AJUSTE};
+    }
+
     // Dibujamos
-    DrawTextureEx(menu_pausa, (Vector2){menu_pausa_x, menu_pausa_y}, 0.0f, ESCALADO_MENU_PAUSA, WHITE);
-    for (int i=0; i<CANTIDAD_BOTONES_MENU_PAUSA; i++) {
-        DrawTextureRec(botones_menu_pausa, botones_pausa[i].area, botones_pausa[i].posicion, WHITE);
+    if (pantalla_menu_pausa == PRINCIPAL) {
+        DrawTextureEx(menu_pausa, (Vector2){menu_pausa_x, menu_pausa_y}, 0.0f, ESCALADO_MENU_PAUSA, WHITE);
+        for (int i=0; i<CANTIDAD_BOTONES_MENU_PAUSA; i++) {
+            DrawTextureRec(botones_menu_pausa, botones_pausa[i].area, botones_pausa[i].posicion, WHITE);
+        }
+    } else if (pantalla_menu_pausa == PANTALLA_AJUSTES) {
+        DrawTextureEx(menu_pausa, (Vector2){menu_pausa_x, menu_pausa_y}, 0.0f, ESCALADO_MENU_PAUSA, WHITE);
+        DrawTextEx(texto, "Musica", (Vector2){1025, 575}, TAMANIO_FUENTE_AJUSTES, 0, BLACK);
+        for (int i=0; i<CANTIDAD_BOTONES_AJUSTES; i++) {
+            DrawTextureRec(ajustes, botones_ajustes[i].area, botones_ajustes[i].posicion, WHITE);
+        }
     }
 }
 
 bool boton_menu_pausa_pulsado(Vector2 posicion_raton) {
+    if (pantalla_menu_pausa != PRINCIPAL) return false;
+
     for (int i=0; i<CANTIDAD_BOTONES_MENU_PAUSA; i++) {
         if (CheckCollisionPointRec(posicion_raton, botones_pausa[i].hitbox)) {
             switch(i) {
@@ -159,17 +213,47 @@ bool boton_menu_pausa_pulsado(Vector2 posicion_raton) {
                     finaliza_nivel();
                     break;
 
-                case 2: // SALIR
+                case 2: // AJUSTES
+                    pantalla_menu_pausa=PANTALLA_AJUSTES; // Con el cambio de pantalla del menu pausa deben aparecer otros botones
+                    break;
+
+                case 3: // SALIR
                     pantalla=botones_pausa[i].tipo; // Pantalla = -1
                     finaliza_nivel();
                     break;
             }
 
-            return true;
+            return true; // Un botón ha sido pulsado
         }
     }
 
-    return false;
+    return false; // No estamos pulsando ningún botón
+}
+
+bool boton_ajustes_pulsado(Vector2 posicion_raton) {
+    if (pantalla_menu_pausa != PANTALLA_AJUSTES) return false;
+
+    for (int i=0; i<CANTIDAD_BOTONES_AJUSTES; i++) {
+        if (CheckCollisionPointRec(posicion_raton, botones_ajustes[i].hitbox)) {
+            switch(i) {
+                case ON: // ACTIVAR VOLUMEN
+                    des_silenciar_musica();
+                    break;
+
+                case OFF: // SILENCIAR
+                    silenciar_musica();
+                    break;
+
+                case VOLVER: // VOLVER ATRÁS
+                    pantalla_menu_pausa=PRINCIPAL;
+                    break;
+            }
+
+            return true; // Un botón ha sido pulsado
+        }
+    }
+
+    return false; // No estamos pulsando ningún botón
 }
 
 void liberar_menu() {

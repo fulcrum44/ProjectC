@@ -99,6 +99,7 @@ void actualizar_personaje(Personaje *p) {
             p->hitboxes[i].y=p->posicion.y + HITBOX_PERSONAJE[i].y;
         }
 
+        // Almacenamos la losa donde se encuentra el personaje
         p->losa=conversion_coordenadas_losa(p->posicion);
 
         // Importante reiniciar estas variables para el proximo frame. Reiniciamos después de haber validado el movimiento y no antes porque la entrada por teclado se gestiona antes de entrar en actualizar_personaje()

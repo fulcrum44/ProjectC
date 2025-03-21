@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1742432469 source:c:\users\joelc\documents\programacion\projectc\volcano\main.c
+1742514512 source:c:\users\joelc\documents\programacion\projectc\volcano\main.c
 	"stdio.h"
 	"stdlib.h"
 	"raylib.h"
@@ -17,7 +17,7 @@
 
 1742483369 c:\users\joelc\documents\programacion\projectc\volcano\room.h
 
-1742485426 source:c:\users\joelc\documents\programacion\projectc\volcano\room.c
+1742494889 source:c:\users\joelc\documents\programacion\projectc\volcano\room.c
 	"stdio.h"
 	"stdlib.h"
 	"string.h"
@@ -27,7 +27,7 @@
 	"mobs.h"
 	"cofres.h"
 
-1742490468 source:c:\users\joelc\documents\programacion\projectc\volcano\character.c
+1742494648 source:c:\users\joelc\documents\programacion\projectc\volcano\character.c
 	"stdio.h"
 	"string.h"
 	"raylib.h"
@@ -102,7 +102,7 @@
 	"raylib.h"
 	"dimensiones_struct.h"
 
-1742491269 source:c:\users\joelc\documents\programacion\projectc\volcano\mouse.c
+1742514304 source:c:\users\joelc\documents\programacion\projectc\volcano\mouse.c
 	"stdio.h"
 	"raylib.h"
 	"math.h"
@@ -115,7 +115,7 @@
 1742437488 c:\users\joelc\documents\programacion\projectc\volcano\mouse.h
 	"raylib.h"
 
-1742437571 source:c:\users\joelc\documents\programacion\projectc\volcano\cofres.c
+1742491763 source:c:\users\joelc\documents\programacion\projectc\volcano\cofres.c
 	"stdio.h"
 	"stdlib.h"
 	"time.h"
@@ -130,10 +130,10 @@
 1742437502 c:\users\joelc\documents\programacion\projectc\volcano\cofres.h
 	"raylib.h"
 
-1741976265 c:\users\joelc\documents\programacion\projectc\volcano\menu.h
+1742514482 c:\users\joelc\documents\programacion\projectc\volcano\menu.h
 	"raylib.h"
 
-1742435999 source:c:\users\joelc\documents\programacion\projectc\volcano\menu.c
+1742514507 source:c:\users\joelc\documents\programacion\projectc\volcano\menu.c
 	"stdio.h"
 	"stdlib.h"
 	"raylib.h"
@@ -155,7 +155,7 @@
 	"menu.h"
 	"character.h"
 
-1741541252 source:c:\users\joelc\documents\programacion\projectc\volcano\crono.c
+1742492445 source:c:\users\joelc\documents\programacion\projectc\volcano\crono.c
 	"stdio.h"
 	"raylib.h"
 	"raymath.h"
@@ -165,7 +165,7 @@
 1741528394 c:\users\joelc\documents\programacion\projectc\volcano\crono.h
 	"raylib.h"
 
-1741980506 source:c:\users\joelc\documents\programacion\projectc\volcano\gui.c
+1742514824 source:c:\users\joelc\documents\programacion\projectc\volcano\gui.c
 	"stdio.h"
 	"raylib.h"
 	"gui.h"
@@ -173,13 +173,13 @@
 	"character.h"
 	"cofres.h"
 
-1741972079 c:\users\joelc\documents\programacion\projectc\volcano\gui.h
+1742514452 c:\users\joelc\documents\programacion\projectc\volcano\gui.h
 	"character.h"
 
-1742435962 c:\users\joelc\documents\programacion\projectc\volcano\audio.h
+1742513054 c:\users\joelc\documents\programacion\projectc\volcano\audio.h
 	"raylib.h"
 
-1742436450 source:c:\users\joelc\documents\programacion\projectc\volcano\audio.c
+1742513508 source:c:\users\joelc\documents\programacion\projectc\volcano\audio.c
 	"stdio.h"
 	"stdlib.h"
 	"time.h"

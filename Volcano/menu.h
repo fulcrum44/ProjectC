@@ -2,10 +2,14 @@
 
 #include "raylib.h"
 
-// PANTALLAS
+// PANTALLAS JUEGO
 #define PANTALLA_MENU 0
 #define PANTALLA_JUEGO 1
 #define PANTALLA_SALIDA -1
+
+// PANTALLAS MENU PAUSA
+#define PRINCIPAL 0
+#define PANTALLA_AJUSTES 1
 
 #define TEXTURA_MENU "resources\\menu\\menu.png"
 #define ESCALADO_IMAGEN 1.5f
@@ -24,7 +28,7 @@
 #define AJUSTE_Y_TITULO 100
 
 // DATOS MENU PAUSA
-#define CANTIDAD_BOTONES_MENU_PAUSA 3
+#define CANTIDAD_BOTONES_MENU_PAUSA 4
 #define TEXTURA_MENU_PAUSA "resources\\menu_pausa\\menu_pausa.png"
 #define TEXTURA_BOTONES_MENU_PAUSA "resources\\menu_pausa\\botones_menu_pausa.png"
 #define ALTO_BOTON_PAUSA 44
@@ -34,13 +38,28 @@
 #define ESPACIO_ENTRE_BOTONES_PAUSA 25
 #define ESCALADO_MENU_PAUSA 2.0f
 
+// DATOS AJUSTES
+#define CANTIDAD_BOTONES_AJUSTES 3
+#define TEXTURA_BOTONES_AJUSTES "resources\\menu_pausa\\ajustes.png"
+#define ALTO_BOTON_AJUSTE 44
+#define ANCHO_BOTON_AJUSTE 148
+#define AJUSTE_X_BOTON_AJUSTES 80
+#define AJUSTE_Y_BOTON_AJUSTES 80
+#define ESPACIO_ENTRE_BOTONES_AJUSTES_X 150
+#define ESPACIO_ENTRE_BOTONES_AJUSTES_Y 60
+#define TAMANIO_FUENTE_AJUSTES 34
+
 #define DESPEDIDA "\n\nCerrando juego...\n\n"
 
 typedef enum {
     EMPEZAR_PARTIDA = 1,
     CONTINUAR = 0,
     MENU_PRINCIPAL = 0,
-    SALIR = -1
+    SALIR = -1,
+    AJUSTES,
+    ON = 0,
+    OFF = 1,
+    VOLVER = 2
 } EtiquetaBotones;
 
 typedef struct {
@@ -56,6 +75,7 @@ void iniciar_partida();
 void dibujar_menu_principal();
 bool boton_menu_principal_pulsado(Vector2);
 bool boton_menu_pausa_pulsado(Vector2);
+bool boton_ajustes_pulsado(Vector2);
 void dibujar_menu_pausa();
 void liberar_menu();
 void liberar_menu_pausa();

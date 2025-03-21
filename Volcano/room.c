@@ -30,6 +30,8 @@ Texture2D *texturas_escenario;
 Rectangle **tiles;
 
 extern Personaje personaje;
+extern int rango_horizontal;
+extern int rango_vertical;
 
 int preparar_juego() {
     int indice=0;
@@ -242,9 +244,14 @@ void inicializa_nivel(int nivel) {
 }
 
 void dibuja_nivel() {
+    int col_min=(personaje.losa.x-rango_horizontal>0)? personaje.losa.x-rango_horizontal : 0;
+    int col_max=(personaje.losa.x+rango_horizontal<ancho_sala)? personaje.losa.x+rango_horizontal : ancho_sala;
+    int fila_min=(personaje.losa.y-rango_vertical>0)? personaje.losa.y-rango_vertical : 0;
+    int fila_max=(personaje.losa.y+rango_vertical<alto_sala)? personaje.losa.y+rango_vertical : alto_sala;
+
     for (int i=0; i<CANTIDAD_CAPAS_SALA; i++) {
-        for (int j=0; j<alto_sala; j++) {
-            for (int k=0; k<ancho_sala; k++) {
+        for (int j=fila_min; j<fila_max; j++) {
+            for (int k=col_min; k<col_max; k++) {
                 int id_losa=terreno[(i * ancho_sala * alto_sala) + (j * ancho_sala) + k];
                 int indice_tileset=0;
 

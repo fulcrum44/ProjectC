@@ -36,6 +36,7 @@ Personaje personaje;
 Camera2D camara;
 Music musica;
 Sound sound;
+Font texto;
 
 int main() {
 
@@ -64,21 +65,14 @@ void inicializar() {
 
     InitWindow(screenWidth, screenHeight, "Volcano");
 
-    /*int monitor=GetCurrentMonitor();
+    int monitor=GetCurrentMonitor();
     int ancho_pantalla=GetMonitorWidth(monitor);
     int alto_pantalla=GetMonitorHeight(monitor);
 
-    printf("\nAncho monitor: %d", ancho_pantalla);
-    printf("\nAlto monitor: %d", alto_pantalla);
-
     SetWindowSize(ancho_pantalla, alto_pantalla);
-
-    printf("\nAncho ventana: %d", GetScreenWidth());
-    printf("\nAlto ventana: %d", GetScreenHeight()); // Da 9 menos que el del monitor por barra del borde superior
-
     SetWindowPosition(0,0);
 
-    ToggleFullscreen();*/
+    ToggleFullscreen();
     SetTargetFPS(60);
 
     // Inicializamos dipositivo de audio
@@ -86,6 +80,9 @@ void inicializar() {
 
     // Cargamos sonidos
     cargar_sonidos();
+
+    // Inicializamos fuente de texto personalizada
+    texto=LoadFontEx(RUTA_FUENTE_PERSONALIZADA, 60, NULL, 0);
 
     // Definimos la primera pantalla a mostrar y mantenemos desactivado el menu de pausa.
     pantalla=PANTALLA_MENU;
@@ -100,14 +97,14 @@ void inicializar() {
 
     // Cámara
     camara=(Camera2D) {
-        (Vector2){screenWidth/2, screenHeight/2},
+        (Vector2){(IsWindowFullscreen())? ancho_pantalla/2 : screenWidth/2, (IsWindowFullscreen())? alto_pantalla/2 : screenHeight/2},
         Vector2Zero(),
         0.0f,
-        2.0f
+        2.5f
     };
 
-    // rango_horizontal=((screenWidth/54+5)/2)/camara.zoom; // Añadimos uno porque es muy fácil estar en un rango que incluya media celda en los lados, por lo que la añadimos directamente en caso de ser así y prevenimos fallos.
-    // rango_vertical=((screenHeight/alto_losa+5)/2)/camara.zoom;
+    rango_horizontal=((ancho_pantalla/ANCHO_LOSA+10)/2)/camara.zoom; // Le doy un margen de 10 para que vaya sobrado.
+    rango_vertical=((alto_pantalla/ALTO_LOSA+10)/2)/camara.zoom;
 
     // Menu
     inicializar_menu();
@@ -153,6 +150,4 @@ void dibujar() {
             interfaz_grafica_juego(personaje);
             break;
     }
-
-    //DrawFPS(100, 0);
 }

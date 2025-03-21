@@ -25,6 +25,8 @@ typedef enum {
 void iniciar_musica(float);
 void actualizar_musica();
 void detener_musica();
+void des_silenciar_musica();
+void silenciar_musica();
 int musica_aleatoria();
 void cargar_sonidos();
 void liberar_sonidos();

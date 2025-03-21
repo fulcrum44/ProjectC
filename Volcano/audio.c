@@ -28,6 +28,7 @@ int reproducciones=0;
 
 Sound *lista_sonidos;
 int cantidad_sonidos=0; // Inicializamos a 0 el contador de sonidos
+float volumen_musica_ultimo; // Guardamos el volumen actual de la musica como ultimo volumen configurado para poder usarlo cuando dejemos de silenciar la musica
 
 extern Music musica;
 extern int pantalla;
@@ -44,6 +45,8 @@ void iniciar_musica(float volumen) {
     }
 
     if (nivel_actual != cantidad_niveles) musica_actual=musica_aleatoria();
+
+    volumen_musica_ultimo=volumen;
 
     musica=LoadMusicStream(PLAYLIST[musica_actual]); // El Load pone por defecto como true el loopind del Music cuando se usan ciertos formatos a de audio. Decidimos manualmente después cuando será true y cuando false
     SetMusicVolume(musica, volumen);
@@ -73,6 +76,14 @@ void actualizar_musica() {
 void detener_musica() {
     StopMusicStream(musica);
     //UnloadMusicStream(musica); // Esta función es un poco peculiar. Usarla resulta más contraproducente que no usarla.
+}
+
+void des_silenciar_musica() {
+    SetMusicVolume(musica, volumen_musica_ultimo);
+}
+
+void silenciar_musica() {
+    SetMusicVolume(musica, 0);
 }
 
 int musica_aleatoria() {
@@ -118,3 +129,5 @@ void liberar_sonidos() {
 
     free(lista_sonidos); // Liberamos la memoria del puntero.
 }
+
+

@@ -32,7 +32,8 @@ void actualizar_raton() {
         if (pantalla == PANTALLA_MENU && boton_menu_principal_pulsado(posicion_raton)) return;
         if (pantalla == PANTALLA_JUEGO) {
             if (boton_menu_pausa_pulsado(posicion_raton)) return;
-            ataque_personaje(&personaje);
+            if (boton_ajustes_pulsado(posicion_raton)) return;
+            if (!pausa) ataque_personaje(&personaje);
         }
     }
 

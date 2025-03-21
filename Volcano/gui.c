@@ -35,6 +35,8 @@ extern int segundos;
 
 extern int screenWidth;
 
+extern Font texto;
+
 void inicializar_texturas_gui() {
     barra_inferior=LoadTexture(TEXTURA_BARRA_INFERIOR);
     cuadro_nivel=LoadTexture(TEXTURA_CUADRO_NIVEL);
@@ -67,9 +69,9 @@ void interfaz_grafica_juego(Personaje p) {
     DrawTexturePro(sprite_monstruos, AREA_TEXTURA_ICONOS[ICONO_MONSTRUOS_ELIMINADOS], AREA_DIBUJADO_ICONOS[ICONO_MONSTRUOS_ELIMINADOS], (Vector2){0,0}, 0.0f, WHITE);
     DrawTexturePro(items, AREA_TEXTURA_ICONOS[ICONO_MUERTES], AREA_DIBUJADO_ICONOS[ICONO_MUERTES], (Vector2){0,0}, 0.0f, WHITE);
 
-    DrawText(TextFormat("%d", nivel_actual), (nivel_actual<10)? POSICION_X_NIVEL_UN_DIGITO : POSICION_X_NIVEL_DOBLE_DIGITO, POSICION_Y_NIVEL, TAM_FUENTE_NIVEL, WHITE);
-    DrawText(TextFormat("%d/%d", items_recogidos, total_items), AREA_DIBUJADO_ICONOS[ICONO_ITEM].x + AJUSTE_X_TEXTO,  alto_pantalla + AJUSTE_POSICION_Y, TAM_FUENTE_ESTANDAR, WHITE);
-    DrawText(TextFormat("%d/%d", monstruos_eliminados, cantidad_monstruos), AREA_DIBUJADO_ICONOS[ICONO_MONSTRUOS_ELIMINADOS].x + AJUSTE_X_TEXTO,  alto_pantalla + AJUSTE_POSICION_Y, TAM_FUENTE_ESTANDAR, WHITE);
-    DrawText(TextFormat("%d", p.total_muertes), AREA_DIBUJADO_ICONOS[ICONO_MUERTES].x + AJUSTE_X_TEXTO, alto_pantalla + AJUSTE_POSICION_Y, TAM_FUENTE_ESTANDAR, WHITE);
-    DrawText(TextFormat("%2d:%2d:%2d", horas, minutos, segundos), POSICION_X_RELOJ*ajuste_horizontal, alto_pantalla + AJUSTE_POSICION_Y, TAM_FUENTE_ESTANDAR, WHITE);
+    DrawTextEx(texto, TextFormat("%d", nivel_actual), (Vector2){(nivel_actual<10)? POSICION_X_NIVEL_UN_DIGITO : POSICION_X_NIVEL_DOBLE_DIGITO, POSICION_Y_NIVEL}, TAM_FUENTE_NIVEL, 0.0f, WHITE);
+    DrawTextEx(texto, TextFormat("%d/%d", items_recogidos, total_items), (Vector2){AREA_DIBUJADO_ICONOS[ICONO_ITEM].x + AJUSTE_X_TEXTO, alto_pantalla + AJUSTE_POSICION_Y}, TAM_FUENTE_ESTANDAR, 0.0f, WHITE);
+    DrawTextEx(texto, TextFormat("%d/%d", monstruos_eliminados, cantidad_monstruos), (Vector2){AREA_DIBUJADO_ICONOS[ICONO_MONSTRUOS_ELIMINADOS].x + AJUSTE_X_TEXTO,  alto_pantalla + AJUSTE_POSICION_Y}, TAM_FUENTE_ESTANDAR, 0.0f, WHITE);
+    DrawTextEx(texto, TextFormat("%d", p.total_muertes), (Vector2){AREA_DIBUJADO_ICONOS[ICONO_MUERTES].x + AJUSTE_X_TEXTO, alto_pantalla + AJUSTE_POSICION_Y}, TAM_FUENTE_ESTANDAR, 0.0f, WHITE);
+    DrawTextEx(texto, TextFormat("%2d:%2d:%2d", horas, minutos, segundos), (Vector2){POSICION_X_RELOJ*ajuste_horizontal, alto_pantalla + AJUSTE_POSICION_Y}, TAM_FUENTE_ESTANDAR, 0.f, WHITE);
 }
