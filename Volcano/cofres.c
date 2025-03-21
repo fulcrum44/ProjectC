@@ -35,10 +35,8 @@ void inicializa_textura_items() {
 
 void almacenar_cofre(int indice_losa) { // Estoy pasando parametro el indice del array terreno al ser conceptualmente las losas del mapa
     if (cofres == NULL) {
-        // Estas variables se inicializan o reinician solo cuando se está almacenando el primer cofre de un nivel.
-        total_cofres=0;
+        // Reiniciamos el contador de items recogidos
         items_recogidos=0;
-        total_items=0;
 
         cofres=malloc(sizeof(Cofre) * CANTIDAD_INICIAL_COFRES);
         if (cofres == NULL) {
@@ -94,6 +92,11 @@ bool cofre_pulsado(Vector2 posicion_raton) {
 void liberar_cofres() {
     free(cofres);
     cofres=NULL; // Me gusta asegurarme que un puntero liberado se le asigne NULL por precacucion. Normalmente lo hago en funciones de inicializar pero aquí en cofres.c no hay una función como tal. Lo hago aquí pues.
+
+    // Reiniciamos estas dos variables antes de empezar el siguiente nivel. Obligatorio hacerlo aqui porque si nos encontramos un nivel sin cofres debemos tener estas dos variables preparadas ya que no hay ninguna funcion de inicialización como tal para los cofres.
+    // La "inicialización" de los cofres es cuando al leer los datos de un nivel se detectan cofres, se van almacenando uno a uno, y en dicha función no podemos estar iniciando o reiniciando estas dos variables
+    total_cofres=0;
+    total_items=0;
 }
 
 void animacion_cofre(Cofre *c) {
@@ -120,10 +123,12 @@ void asignar_cofre_objeto_recolectable() {
 
     if (total_cofres == 0) return; // Si no hay cofres no asignamos nada.
 
+    printf("PORQUE");
     int indice_aleatorio=rand()%total_cofres;
 
     cofres[indice_aleatorio].item_recolectable=true;
     total_items++;
+
 }
 
 void dibujar_recolectable() {

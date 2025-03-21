@@ -64,14 +64,22 @@ void inicializar() {
 
     InitWindow(screenWidth, screenHeight, "Volcano");
 
+    // Primero recogemos los datos del monitor donde ejecutamos el juego
     int monitor=GetCurrentMonitor();
     int ancho_pantalla=GetMonitorWidth(monitor);
     int alto_pantalla=GetMonitorHeight(monitor);
 
-    SetWindowSize(ancho_pantalla, alto_pantalla);
-    SetWindowPosition(0,20);
+    // Ajustamos la proporcion de la ventana según el monitor
+    float ancho_pantalla_ajustado=ancho_pantalla*0.75;
+    float alto_pantalla_ajustado=alto_pantalla*0.75;
 
-    //ToggleFullscreen();
+    // Dimensionamos la ventana
+    SetWindowSize(ancho_pantalla_ajustado, alto_pantalla_ajustado);
+
+    // Posicionamos la ventana al centro
+    SetWindowPosition(ancho_pantalla_ajustado/5,alto_pantalla_ajustado/5);
+
+    //ToggleFullscreen(); // Prueba. La intencion es crear un boton dentro del juego donde controlar esto.
     SetTargetFPS(60);
 
     // Cargamos y establecemos icono para la ventana
@@ -101,7 +109,7 @@ void inicializar() {
 
     // Cámara
     camara=(Camera2D) {
-        (Vector2){(IsWindowFullscreen())? ancho_pantalla/2 : screenWidth/2, (IsWindowFullscreen())? alto_pantalla/2 : screenHeight/2},
+        (Vector2){(IsWindowFullscreen())? ancho_pantalla_ajustado/2 : GetScreenWidth()/2, (IsWindowFullscreen())? alto_pantalla_ajustado/2 : GetScreenHeight()/2},
         Vector2Zero(),
         0.0f,
         2.5f

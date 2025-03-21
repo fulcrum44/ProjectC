@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1742563518 source:c:\users\joelc\documents\programacion\projectc\volcano\main.c
+1742566543 source:c:\users\joelc\documents\programacion\projectc\volcano\main.c
 	"stdio.h"
 	"stdlib.h"
 	"raylib.h"
@@ -17,7 +17,7 @@
 
 1742561989 c:\users\joelc\documents\programacion\projectc\volcano\room.h
 
-1742553206 source:c:\users\joelc\documents\programacion\projectc\volcano\room.c
+1742566978 source:c:\users\joelc\documents\programacion\projectc\volcano\room.c
 	"stdio.h"
 	"stdlib.h"
 	"string.h"
@@ -116,7 +116,7 @@
 1742437488 c:\users\joelc\documents\programacion\projectc\volcano\mouse.h
 	"raylib.h"
 
-1742564789 source:c:\users\joelc\documents\programacion\projectc\volcano\cofres.c
+1742567043 source:c:\users\joelc\documents\programacion\projectc\volcano\cofres.c
 	"stdio.h"
 	"stdlib.h"
 	"time.h"
@@ -134,7 +134,7 @@
 1742564274 c:\users\joelc\documents\programacion\projectc\volcano\menu.h
 	"raylib.h"
 
-1742564881 source:c:\users\joelc\documents\programacion\projectc\volcano\menu.c
+1742566725 source:c:\users\joelc\documents\programacion\projectc\volcano\menu.c
 	"stdio.h"
 	"stdlib.h"
 	"raylib.h"

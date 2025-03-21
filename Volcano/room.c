@@ -69,7 +69,6 @@ void inicializa_nivel(int nivel) {
     // Leemos los datos del archivo y almacenamos
     datos_archivo=LoadFileText(nombre_archivo);
 
-
     // Buscamos los datos comunes referentes a las salas construidas y el tileset usado.
     sscanf(strstr(datos_archivo, ETIQ_ALTO_LOSA)+strlen(ETIQ_ALTO_LOSA), "%d", &alto_losa);
     sscanf(strstr(datos_archivo, ETIQ_ANCHO_SALA)+strlen(ETIQ_ANCHO_SALA), "%d", &ancho_sala); // TODAS LAS CAPAS TIENEN LAS MISMAS DIMENSIONES
@@ -206,6 +205,8 @@ void inicializa_nivel(int nivel) {
 
     // Elegimos aleatoriamente el cofre que tendrá el objeto recolectable
     asignar_cofre_objeto_recolectable();
+
+    printf("\nHOLA");
 
     // Cargamos texturas
     for (int i=0; i<cantidad_tilesets; i++) {
