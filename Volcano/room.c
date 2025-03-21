@@ -206,8 +206,6 @@ void inicializa_nivel(int nivel) {
     // Elegimos aleatoriamente el cofre que tendrá el objeto recolectable
     asignar_cofre_objeto_recolectable();
 
-    printf("\nHOLA");
-
     // Cargamos texturas
     for (int i=0; i<cantidad_tilesets; i++) {
         texturas_escenario[i]=LoadTexture(nombre_tileset[i]);

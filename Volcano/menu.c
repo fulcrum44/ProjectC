@@ -289,7 +289,7 @@ void liberar_menu_pausa() {
 void iniciar_partida() {
     // Inicializamos lo necesario para empezar la partida. Lo hacemos ordenadamente.
 
-    inicializa_nivel(2);
+    inicializa_nivel(NIVEL_INICIAL);
     // Personaje
     crear_personaje(&personaje);
     inicializa_textura_personaje();

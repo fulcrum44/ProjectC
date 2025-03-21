@@ -15,7 +15,7 @@ Cofre *cofres;
 // En mobs.c cuando asigno memoria para los monstruos primero se asigna teniendo en cuenta los cofres sin item, restando total_cofres-total_items. Si no hay cofres no se inicializa nunca realmente.
 // En el estado actual del juego esos dos valores no cogen basura si no son inicializados pero, como medida de seguridad, inicializo aquí también preventivamente.
 int total_cofres=0;
-int items_recogidos;
+int items_recogidos=0;
 int total_items=0;
 
 extern int *terreno;
@@ -35,9 +35,6 @@ void inicializa_textura_items() {
 
 void almacenar_cofre(int indice_losa) { // Estoy pasando parametro el indice del array terreno al ser conceptualmente las losas del mapa
     if (cofres == NULL) {
-        // Reiniciamos el contador de items recogidos
-        items_recogidos=0;
-
         cofres=malloc(sizeof(Cofre) * CANTIDAD_INICIAL_COFRES);
         if (cofres == NULL) {
             printf("\nERROR al reservar memoria para cofres");
@@ -97,6 +94,8 @@ void liberar_cofres() {
     // La "inicialización" de los cofres es cuando al leer los datos de un nivel se detectan cofres, se van almacenando uno a uno, y en dicha función no podemos estar iniciando o reiniciando estas dos variables
     total_cofres=0;
     total_items=0;
+    // Reiniciamos el contador de items recogidos
+    items_recogidos=0;
 }
 
 void animacion_cofre(Cofre *c) {
@@ -123,7 +122,6 @@ void asignar_cofre_objeto_recolectable() {
 
     if (total_cofres == 0) return; // Si no hay cofres no asignamos nada.
 
-    printf("PORQUE");
     int indice_aleatorio=rand()%total_cofres;
 
     cofres[indice_aleatorio].item_recolectable=true;
